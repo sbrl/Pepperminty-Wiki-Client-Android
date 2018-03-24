@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Pepperminty-Wiki-Android</string>
+	<string name="add_wiki_url">Wiki Url</string>
+	<string name="add_wiki_password">Password</string>
+	<string name="add_wiki_username">Username</string>
+	<string name="add_wiki_add_wiki">Add Wiki</string>
+	<string name="add_wiki_name">Wiki Name</string>
+	<string name="nav_main_add_wiki">Add New Wiki</string>
+</resources>
