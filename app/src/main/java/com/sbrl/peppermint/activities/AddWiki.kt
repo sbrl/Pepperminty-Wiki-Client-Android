@@ -45,7 +45,7 @@ class AddWiki : AppCompatActivity() {
             return
         
         // Add the wiki to our internal preferences
-        prefs.SetCredentials(wikiName, newCredentials)
+        prefs.AddWiki(wikiName, newCredentials)
         
         // Tell the user we've added the wiki
         Toast.makeText(this, "$wikiName added successfully", LENGTH_LONG).show()
