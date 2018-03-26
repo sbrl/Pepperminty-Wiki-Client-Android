@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@color/colorBackgroundAccent">
+	
 	<group android:id="@+id/nav_main_wikis"
 		android:checkableBehavior="single">
 		
@@ -8,7 +10,9 @@
 	<group>
 		<item android:id="@+id/nav_main_add_wiki"
 			android:icon="@drawable/icon_add"
+			android:iconTint="@color/colorAccent"
 			android:title="@string/nav_main_add_wiki"
 			android:orderInCategory="9999" />
 	</group>
+	
 </menu>
