@@ -22,6 +22,9 @@ class Main : AppCompatActivity() {
 	
 	private lateinit var masterView : DrawerLayout
 	private lateinit var navigationDrawer : NavigationView
+	
+	private var currentWiki : String = ""
+	
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

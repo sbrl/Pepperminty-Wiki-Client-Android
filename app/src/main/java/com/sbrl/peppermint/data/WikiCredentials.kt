@@ -6,10 +6,12 @@ import org.json.JSONObject
 class WikiCredentials
 {
 	public val RootUrl : String
-	public val Username : String
-	public val Password : String
+	public val Username : String?
+	public val Password : String?
 	
-	constructor(inRootUrl : String, inUsername : String, inPassword: String) {
+	constructor(inRootUrl: String) : this(inRootUrl, null, null)
+	
+	constructor(inRootUrl : String, inUsername : String?, inPassword: String?) {
 		RootUrl = inRootUrl
 		Username = inUsername
 		Password = inPassword
