@@ -30,6 +30,7 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
     private lateinit var prefs : PreferencesManager
 	
 	private lateinit var masterView : DrawerLayout
+	private lateinit var toolbar : Toolbar
 	private lateinit var navigationDrawer : NavigationView
 	
 	private lateinit var pageListFragment : WikiPageList
@@ -43,13 +44,13 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
 		prefs = PreferencesManager(this)
 		
 		masterView = findViewById(R.id.main_area)
+		toolbar = findViewById(R.id.toolbar)
 		navigationDrawer = findViewById(R.id.main_drawer)
 		
 		pageListFragment = supportFragmentManager.findFragmentById(R.id.frag_page_list) as WikiPageList
 		// TODO: Register selection listener here
 		
 		// Setup the toolbar
-		val toolbar = findViewById<Toolbar>(R.id.toolbar)
 		setSupportActionBar(toolbar)
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
 		supportActionBar?.setHomeAsUpIndicator(R.drawable.icon_nav_main)
@@ -161,6 +162,8 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
 		}
 		
 		runOnUiThread({
+			toolbar.title = newWikiName
+			
 			pageListFragment.PopulatePageList(pageList)
 		})
 	}
