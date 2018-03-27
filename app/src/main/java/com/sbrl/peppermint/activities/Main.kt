@@ -1,6 +1,5 @@
 package com.sbrl.peppermint.activities
 
-import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -12,13 +11,15 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.bricks.notify_send
+import com.sbrl.peppermint.data.ConnectionStatus
 import com.sbrl.peppermint.data.PreferencesManager
 import com.sbrl.peppermint.data.Wiki
 import com.sbrl.peppermint.display.WikiPageInfo
 import com.sbrl.peppermint.fragments.WikiPageList
+import kotlin.concurrent.thread
 
 class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener {
 	
@@ -55,8 +56,8 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
 		
 		// Setup the event listeners
 		navigationDrawer.setNavigationItemSelectedListener { onNavigationSelection(it) }
-		
-		changeWiki()
+	
+		thread(start = true) { changeWiki() }
     }
 	
 	@Suppress("RedundantOverride")
@@ -84,7 +85,7 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
 		
 		// Handle wiki names
 		if(selectedItem.groupId == R.id.nav_main_wikis) {
-			changeWiki(selectedItem.title.toString())
+			thread(start = true) { changeWiki(selectedItem.title.toString()) }
 			return true
 		}
 		
@@ -136,14 +137,32 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
 			return
 		
 		if(!prefs.HasCredentials(newWikiName)) {
-			Toast.makeText(this, "Unknown wiki name $newWikiName.", Toast.LENGTH_LONG).show()
+			runOnUiThread {
+				notify_send(this, "Unknown wiki name $newWikiName.")
+			}
 			return
 		}
 		
 		val wikiData = prefs.GetCredentials(newWikiName)
 		currentWiki = Wiki(this, newWikiName, wikiData)
 		
-		pageListFragment.PopulatePageList(currentWiki!!.GetPageList(true))
+		val wikiStatus = currentWiki!!.TestConnection()
+		val pageList: List<String> = if(wikiStatus == ConnectionStatus.Ok)
+			currentWiki!!.GetPageList(false)
+		else {
+			runOnUiThread {
+				notify_send(
+					this,
+					"Unable to connect to wiki (status $wikiStatus)"
+				)
+			}
+			
+			arrayListOf<String>() // Return value
+		}
+		
+		runOnUiThread({
+			pageListFragment.PopulatePageList(pageList)
+		})
 	}
 	
 	override fun onPageSelection(item: WikiPageInfo) {
