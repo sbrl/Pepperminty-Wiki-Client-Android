@@ -2,7 +2,6 @@ package com.sbrl.peppermint.data
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.sbrl.peppermint.bricks.DataStorer
 import com.sbrl.peppermint.bricks.TextDownloader
 import khttp.responses.Response
@@ -27,6 +26,7 @@ class Wiki {
 	private val LogTag = "Wiki"
 	
 	private val cacheIdPageList get() = "$Name-page-list.txt"
+	private fun cacheIdPageHtml(pageName: String) : String = "$Name/pages/$pageName"
 	
 	public val Name : String
 	public val Info : WikiCredentials
@@ -107,5 +107,28 @@ class Wiki {
 		storage.CacheString(cacheIdPageList, rawList.text)
 		
 		return rawList.text
+	}
+	
+	public fun GetPageHTML(pageName: String, refreshFromInternet: Boolean) : String {
+		return if(refreshFromInternet || !storage.HasCachedData(cacheIdPageHtml(pageName)))
+			downloadPageHTML(pageName)
+		else
+			storage.GetCachedString(cacheIdPageHtml(pageName))!!
+	}
+	
+	
+	private fun downloadPageHTML(pageName : String) : String {
+		val response = khttp.get(
+			Info.RootUrl,
+			params = mapOf(
+				"action" to "view",
+				"mode" to "parsedsourceonly",
+				"page" to pageName
+			)
+		)
+		
+		storage.CacheString(cacheIdPageHtml(pageName), response.text)
+		
+		return response.text
 	}
 }

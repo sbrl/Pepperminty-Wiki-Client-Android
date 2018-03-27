@@ -169,6 +169,9 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
 	}
 	
 	override fun onPageSelection(item: WikiPageInfo) {
-		TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+		val intent = Intent(this, ViewPage::class.java)
+		intent.putExtra("wiki-name", currentWiki!!.Name)
+		intent.putExtra("page-name", item.Name)
+		startActivity(intent)
 	}
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pepperminty Wiki</string>
+	<string name="app_name">Pepperminty Wiki</string>
 	<string name="add_wiki_url">Wiki Url</string>
 	<string name="add_wiki_password">Password</string>
 	<string name="add_wiki_username">Username</string>
