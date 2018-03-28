@@ -22,8 +22,11 @@ public abstract class TemplateNavigation : AppCompatActivity()
 	protected lateinit var toolbar : Toolbar
 	protected lateinit var navigationDrawer : NavigationView
 	
+	protected abstract val contentId : Int
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		setContentView(contentId)
 		
 		// ---------------------------------------
 		

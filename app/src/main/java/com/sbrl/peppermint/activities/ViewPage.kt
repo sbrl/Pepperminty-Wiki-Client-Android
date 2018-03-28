@@ -18,9 +18,9 @@ class ViewPage : TemplateNavigation() {
 	private lateinit var wiki : Wiki
 	private lateinit var pageDisplay : WebView
 	
+	protected override val contentId : Int = R.layout.activity_view_page
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_view_page)
 		
 		// --------------------------------------------
 		

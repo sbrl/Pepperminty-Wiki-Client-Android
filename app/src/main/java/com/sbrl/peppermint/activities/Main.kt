@@ -24,10 +24,10 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 	private lateinit var pageListFragment : WikiPageList
 	
 	private var currentWiki : Wiki? = null
-    
+ 
+	protected override val contentId = R.layout.activity_main
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 		
 		pageListFragment = supportFragmentManager.findFragmentById(R.id.frag_page_list) as WikiPageList
 		
