@@ -41,17 +41,6 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		populateWikiList()
 	}
 	
-	public override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		return when(item.itemId) {
-			android.R.id.home -> {
-				masterView.openDrawer(GravityCompat.START)
-				Log.i(LogTag, "Opening navigation drawer")
-				true // Return value
-			}
-			else -> super.onOptionsItemSelected(item)
-		}
-	}
-	
 	
 	private fun populateWikiList()
 	{

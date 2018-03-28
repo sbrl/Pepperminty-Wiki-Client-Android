@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -55,6 +56,17 @@ public abstract class TemplateNavigation : AppCompatActivity()
 		
 		navigationDrawer.setNavigationItemSelectedListener { onNavigationSelection(it) }
 		
+	}
+	
+	public override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		return when(item.itemId) {
+			android.R.id.home -> {
+				masterView.openDrawer(GravityCompat.START)
+				Log.i(this::class.java.name, "Opening navigation drawer")
+				true // Return value
+			}
+			else -> super.onOptionsItemSelected(item)
+		}
 	}
 	
 	private fun onNavigationSelection(selectedItem : MenuItem) : Boolean {

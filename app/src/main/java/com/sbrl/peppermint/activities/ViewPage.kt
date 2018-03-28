@@ -40,14 +40,16 @@ class ViewPage : TemplateNavigation() {
 	}
 	
 	private fun showPage(newPageName : String, refreshFromInternet : Boolean) {
-		pageName = newPageName // Update the current page name
-		toolbar.title = "$newPageName - ${wiki.Name}"
+		// Update the current page name
+		pageName = newPageName
+		
 		// Fetch and load the new page's HTML into the WebView
 		val pageHTML = wiki.GetPageHTML(newPageName, refreshFromInternet)
 		val encodedPageHTML = Base64.encodeToString(pageHTML.toByteArray(), Base64.DEFAULT)
 		
 		runOnUiThread {
 			pageDisplay.loadData(encodedPageHTML, "text/html", "base64")
+			toolbar.title = "$newPageName - ${wiki.Name}"
 		}
 	}
 	
