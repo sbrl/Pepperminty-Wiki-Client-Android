@@ -1,6 +1,6 @@
 package com.sbrl.peppermint.activities
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
 import android.webkit.WebView
@@ -9,11 +9,10 @@ import com.sbrl.peppermint.data.PreferencesManager
 import com.sbrl.peppermint.data.Wiki
 import kotlin.concurrent.thread
 
-class ViewPage : AppCompatActivity() {
+class ViewPage : TemplateNavigation() {
+	
 	private val INTENT_PARAM_WIKI_NAME = "wiki-name"
 	private val INTENT_PARAM_PAGE_NAME = "page-name"
-	
-	private lateinit var prefs : PreferencesManager
 	
 	private lateinit var pageName : String
 	private lateinit var wiki : Wiki
@@ -50,4 +49,20 @@ class ViewPage : AppCompatActivity() {
 			pageDisplay.loadData(encodedPageHTML, "text/html", "base64")
 		}
 	}
+	
+	// -----------------------------------------------------------------------------
+	
+	override fun changeWiki(wikiName: String) {
+		// If the selected wiki is the one that's currently open, then just exit this
+		// activity
+		if(wikiName == wiki.Name)
+			finish()
+		
+		// If not, then push a new one onto the stack.
+		val intent = Intent(this, Main::class.java)
+		intent.putExtra("wiki-name", wikiName)
+		startActivity(intent)
+	}
+	
+	// -----------------------------------------------------------------------------
 }

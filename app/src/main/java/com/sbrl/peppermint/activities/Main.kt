@@ -2,36 +2,24 @@ package com.sbrl.peppermint.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.NavigationView
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.notify_send
 import com.sbrl.peppermint.data.ConnectionStatus
-import com.sbrl.peppermint.data.PreferencesManager
 import com.sbrl.peppermint.data.Wiki
 import com.sbrl.peppermint.display.WikiPageInfo
 import com.sbrl.peppermint.fragments.WikiPageList
 import kotlin.concurrent.thread
 
-class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener {
+class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListener {
 	
 	private val LogTag = "[activity] Main"
 	
 	private val INTENT_WIKI_NAME = "wiki-name"
-	
-    private lateinit var prefs : PreferencesManager
-	
-	private lateinit var masterView : DrawerLayout
-	private lateinit var toolbar : Toolbar
-	private lateinit var navigationDrawer : NavigationView
 	
 	private lateinit var pageListFragment : WikiPageList
 	
@@ -41,24 +29,9 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 		
-		prefs = PreferencesManager(this)
-		
-		masterView = findViewById(R.id.main_area)
-		toolbar = findViewById(R.id.toolbar)
-		navigationDrawer = findViewById(R.id.main_drawer)
-		
 		pageListFragment = supportFragmentManager.findFragmentById(R.id.frag_page_list) as WikiPageList
-		// TODO: Register selection listener here
 		
-		// Setup the toolbar
-		setSupportActionBar(toolbar)
-		supportActionBar?.setDisplayHomeAsUpEnabled(true)
-		supportActionBar?.setHomeAsUpIndicator(R.drawable.icon_nav_main)
-		
-		// Setup the event listeners
-		navigationDrawer.setNavigationItemSelectedListener { onNavigationSelection(it) }
-	
-		thread(start = true) { changeWiki() }
+		thread(start = true) { changeWiki("") }
     }
 	
 	@Suppress("RedundantOverride")
@@ -79,27 +52,6 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
 		}
 	}
 	
-	private fun onNavigationSelection(selectedItem : MenuItem) : Boolean {
-		Log.i(LogTag, "Navigation selection made")
-		
-		selectedItem.isChecked = true
-		
-		// Handle wiki names
-		if(selectedItem.groupId == R.id.nav_main_wikis) {
-			thread(start = true) { changeWiki(selectedItem.title.toString()) }
-			return true
-		}
-		
-		return when(selectedItem.itemId) {
-			R.id.nav_main_add_wiki -> {
-				val addWikiIntent = Intent(this, AddWiki::class.java)
-				startActivity(addWikiIntent)
-				
-				true
-			}
-			else -> super.onOptionsItemSelected(selectedItem)
-		}
-	}
 	
 	private fun populateWikiList()
 	{
@@ -119,9 +71,9 @@ class Main : AppCompatActivity(), WikiPageList.OnListFragmentInteractionListener
 		}
 	}
 	
-	private fun changeWiki(wikiName : String? = null) {
+	override fun changeWiki(wikiName: String) {
 		lateinit var newWikiName : String
-		if(wikiName != null) {
+		if(wikiName.isNotEmpty()) {
 			newWikiName = wikiName
 		} else {
 			newWikiName = if (intent.hasExtra(INTENT_WIKI_NAME))
