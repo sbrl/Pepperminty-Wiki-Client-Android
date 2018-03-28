@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.util.Base64
 import android.webkit.WebView
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.bricks.PageHTMLProcessor
 import com.sbrl.peppermint.data.PreferencesManager
 import com.sbrl.peppermint.data.Wiki
 import kotlin.concurrent.thread
+import kotlin.text.toByteArray
 
 class ViewPage : TemplateNavigation() {
 	
@@ -44,7 +46,10 @@ class ViewPage : TemplateNavigation() {
 		pageName = newPageName
 		
 		// Fetch and load the new page's HTML into the WebView
-		val pageHTML = wiki.GetPageHTML(newPageName, refreshFromInternet)
+		val pageProcessor = PageHTMLProcessor(this)
+		val pageHTML = pageProcessor.transform(
+			wiki.GetPageHTML(newPageName, refreshFromInternet)
+		)
 		val encodedPageHTML = Base64.encodeToString(pageHTML.toByteArray(), Base64.DEFAULT)
 		
 		runOnUiThread {
