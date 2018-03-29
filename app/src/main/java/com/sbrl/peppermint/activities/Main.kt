@@ -31,7 +31,11 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		
 		pageListFragment = supportFragmentManager.findFragmentById(R.id.frag_page_list) as WikiPageList
 		
-		thread(start = true) { changeWiki("") }
+		if(prefs.GetWikiList().size == 0) {
+			pageListFragment.DisplayEmpty()
+		} else {
+			thread(start = true) { changeWiki("") }
+		}
     }
 	
 	@Suppress("RedundantOverride")

@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:orientation="horizontal">
+	android:orientation="vertical">
+	
+	<ProgressBar android:id="@+id/page_list_progress"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:visibility="visible" />
+	
+	<TextView android:id="@+id/page_list_nothing_here"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		android:gravity="center"
+		android:text="@string/page_list_nothing_here_yet" />
 	
 	<ListView android:id="@+id/page_list_main"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:smoothScrollbar="true" />
-</LinearLayout>
+</RelativeLayout>

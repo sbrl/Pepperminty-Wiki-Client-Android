@@ -11,7 +11,8 @@ import android.widget.ListView
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.display.WikiPageInfo
 import android.widget.AdapterView
-
+import android.widget.ProgressBar
+import android.widget.TextView
 
 
 /**
@@ -26,23 +27,19 @@ import android.widget.AdapterView
  * fragment (e.g. upon screen orientation changes).
  */
 class WikiPageList : Fragment() {
+	private lateinit var containingView : View;
 	
 	private var interactionListener : OnListFragmentInteractionListener? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View? {
-		val view = inflater.inflate(R.layout.fragment_page_list, container, false)
+		containingView = inflater.inflate(R.layout.fragment_page_list, container, false)
 		
-		// Setup the adapter
-		
-		// TODO Fill this in
-		
-		return view
+		return containingView
 	}
 	
 	override fun onAttach(context: Context?) {
@@ -72,7 +69,22 @@ class WikiPageList : Fragment() {
 				adapterView, view, position, id ->
 			interactionListener?.onPageSelection(pageList[position])
 		}
+		toggleProgressDisplay(false)
 	}
+	
+	public fun DisplayEmpty() {
+		val nothingHereMessage : TextView = containingView.findViewById(R.id.page_list_nothing_here)
+		nothingHereMessage.visibility = View.VISIBLE
+		
+		toggleProgressDisplay(false)
+	}
+	
+	protected fun toggleProgressDisplay(visible : Boolean) {
+		val progressDisplay : ProgressBar = containingView.findViewById(R.id.page_list_progress)
+		progressDisplay.visibility = if(visible) View.VISIBLE else View.GONE
+	}
+	
+	/* ********************************************************************** */
 	
 	/**
 	 * This interface must be implemented by activities that contain this

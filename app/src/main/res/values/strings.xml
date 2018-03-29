@@ -6,4 +6,5 @@
 	<string name="add_wiki_add_wiki">Add Wiki</string>
 	<string name="add_wiki_name">Wiki Name</string>
 	<string name="nav_main_add_wiki">Add New Wiki</string>
+	<string name="page_list_nothing_here_yet">Nothing here yet! Try adding a wiki in the sidebar first.</string>
 </resources>
