@@ -69,6 +69,12 @@ class WikiPageList : Fragment() {
 				adapterView, view, position, id ->
 			interactionListener?.onPageSelection(pageList[position])
 		}
+		
+		// ---------
+		
+		val nothingHereMessage : TextView = containingView.findViewById(R.id.page_list_nothing_here)
+		nothingHereMessage.visibility = View.GONE
+		
 		toggleProgressDisplay(false)
 	}
 	
