@@ -3,6 +3,7 @@ package com.sbrl.peppermint.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
+import android.webkit.WebSettings
 import android.webkit.WebView
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.PageHTMLProcessor
@@ -53,6 +54,17 @@ class ViewPage : TemplateNavigation() {
 		val encodedPageHTML = Base64.encodeToString(pageHTML.toByteArray(), Base64.DEFAULT)
 		
 		runOnUiThread {
+			// Configure the WebView
+			pageDisplay.settings.javaScriptEnabled = true
+			pageDisplay.settings.domStorageEnabled = false
+			pageDisplay.settings.databaseEnabled = false
+			pageDisplay.settings.javaScriptCanOpenWindowsAutomatically = false
+			pageDisplay.settings.mediaPlaybackRequiresUserGesture = true
+			pageDisplay.settings.allowFileAccess = false
+			pageDisplay.settings.allowFileAccessFromFileURLs = false
+			pageDisplay.settings.allowUniversalAccessFromFileURLs = false
+			
+			
 			pageDisplay.loadData(encodedPageHTML, "text/html", "base64")
 			toolbar.title = "$newPageName - ${wiki.Name}"
 		}

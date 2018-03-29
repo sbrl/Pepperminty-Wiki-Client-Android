@@ -18,6 +18,7 @@ public class PageHTMLProcessor {
 	}
 	
 	public fun transform(pageHtml : String) : String {
+		// TODO: Strip <script> tags, javascript: urls, and on* attributes from raw pageHTML
 		return htmlTemplate
 			.replace("{footer}", footerInjectionCode())
 			.replace("{content}", pageHtml)
