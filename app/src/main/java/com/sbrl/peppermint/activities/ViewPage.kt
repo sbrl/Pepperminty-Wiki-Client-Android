@@ -31,13 +31,14 @@ class ViewPage : TemplateNavigation() {
 		
 		prefs = PreferencesManager(this)
 		pageName = intent.getStringExtra(INTENT_PARAM_PAGE_NAME)
-		wiki = Wiki(
-			this,
-			intent.getStringExtra(INTENT_PARAM_WIKI_NAME),
-			prefs.GetCredentials(intent.getStringExtra(INTENT_PARAM_WIKI_NAME))
-		)
 		
 		thread(start = true) {
+			wiki = Wiki(
+				this,
+				intent.getStringExtra(INTENT_PARAM_WIKI_NAME),
+				prefs.GetCredentials(intent.getStringExtra(INTENT_PARAM_WIKI_NAME))
+			)
+			
 			showPage(pageName, false)
 		}
 	}
