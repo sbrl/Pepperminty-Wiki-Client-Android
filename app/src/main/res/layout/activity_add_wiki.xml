@@ -10,20 +10,6 @@
     <LinearLayout android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/add_wiki_name"
-            android:text="@string/add_wiki_name"
-            style="@style/TextAppearance.AppCompat.Large" />
-    
-        <EditText android:id="@+id/add_wiki_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textUri" />
-    
-        <!-- - - - - - - - - -->
         
         <TextView
             android:layout_width="match_parent"
@@ -33,6 +19,34 @@
             style="@style/TextAppearance.AppCompat.Large" />
     
         <EditText android:id="@+id/add_wiki_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri" />
+        
+        <!-- - - - - - - - - -->
+        
+        <LinearLayout android:id="@+id/add_wiki_status_container"
+	        android:orientation="horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+	        <ImageView android:id="@+id/add_wiki_status_icon"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" />
+	        <TextView android:id="@+id/add_wiki_status_text"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"/>
+        </LinearLayout>
+        
+        <!-- - - - - - - - - -->
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/add_wiki_name"
+            android:text="@string/add_wiki_name"
+            style="@style/TextAppearance.AppCompat.Large" />
+    
+        <EditText android:id="@+id/add_wiki_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textUri" />
