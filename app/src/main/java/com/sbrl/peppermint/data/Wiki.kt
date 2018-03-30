@@ -47,24 +47,29 @@ class Wiki {
 		TestConnection() // Test the connection - logging in if required
 	}
 	
-	public fun TestConnection() : ConnectionStatus {
+	public fun TestConnection(doLogin: Boolean = true) : ConnectionStatus {
 		lateinit var status : Response
 		try {
-			status = khttp.get(
-				Info.RootUrl,
-				headers = mapOf(
-					"accept" to "application/json"
-				),
+			status = khttp.request(
+				method = "GET",
+				url = Info.RootUrl,
 				params = mapOf(
 					"action" to "status",
 					"minified" to "true"
 				),
-				allowRedirects = false,
-				cookies = mapOf( loginCookieName to prefs.GetSessionToken() )
+				headers = mapOf(
+					"Accept" to "application/json"
+				),
+				cookies = mapOf( loginCookieName to prefs.GetSessionToken() ),
+				allowRedirects = false
 			)
-			
-			if(responseRequiresLogin(status))
-				login()
+			Log.i(LogTag, "Status code: ${status.statusCode}")
+			Log.i(LogTag, "Sent accept header: " + status.request.headers["Accept"])
+			if(responseRequiresLogin(status) && doLogin) {
+				Log.i(LogTag, "TestConnection: Attempting login")
+				login() // Login
+				return TestConnection(false)
+			}
 		} catch(error : ConnectException) {
 			Log.w(LogTag, error.message)
 			error.printStackTrace()
@@ -156,11 +161,18 @@ class Wiki {
 			params = mapOf(
 				"action" to "checklogin"
 			),
+			headers = mapOf(
+				"accept" to "application/json"
+			),
 			data = mapOf(
 				"user" to Info.Username,
-				"password" to Info.Password
-			)
+				"pass" to Info.Password
+			),
+			allowRedirects = false
 		)
+		Log.i(LogTag, "Login status code: ${response.statusCode}")
+		Log.i(LogTag, response.text)
+		Log.i(LogTag, "Login successful: ${response.headers["x-login-success"]}")
 		if(response.headers["x-login-success"] == "yes") {
 			prefs.SaveSessionToken(response.cookies[loginCookieName]!!)
 			return true

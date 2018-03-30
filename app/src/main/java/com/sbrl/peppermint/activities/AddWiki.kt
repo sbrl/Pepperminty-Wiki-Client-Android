@@ -66,7 +66,6 @@ class AddWiki : AppCompatActivity() {
 		}
 		
 		Log.i(LogTag, "Check wiki: Status code ${statusResponse.statusCode}")
-		Log.i(LogTag, statusResponse.text)
 		runOnUiThread {
 			// If it's a non-200 code, then it (probably) requires a login
 			if(statusResponse.statusCode !in 200..300)
