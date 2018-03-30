@@ -13,6 +13,7 @@ public class PreferencesManager {
 	
 	private val credentialsPrefix = "wiki_"
 	private val idWikiList = "wiki_list"
+	private val idSessionToken = "login_session_token"
 	
 	private val prefsStorage: SharedPreferences
 	
@@ -59,11 +60,20 @@ public class PreferencesManager {
 		editor.apply()
 	}
 	
-	fun AddWiki(wikiName : String, credentials: WikiCredentials) {
+	public fun AddWiki(wikiName : String, credentials: WikiCredentials) {
 		val wikiList : MutableList<String> = GetWikiList()
 		wikiList.add(wikiName)
 		setWikiList(wikiList)
 		SetCredentials(wikiName, credentials)
+	}
+	
+	public fun SaveSessionToken(tokenValue : String) {
+		val editor = prefsStorage.edit()
+		editor.putString(idSessionToken, tokenValue)
+		editor.apply()
+	}
+	public fun GetSessionToken() : String {
+		return prefsStorage.getString(idSessionToken, "")
 	}
 }
 

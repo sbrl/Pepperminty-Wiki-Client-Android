@@ -3,7 +3,6 @@ package com.sbrl.peppermint.data
 import android.content.Context
 import android.util.Log
 import com.sbrl.peppermint.bricks.DataStorer
-import com.sbrl.peppermint.bricks.TextDownloader
 import khttp.responses.Response
 import org.json.JSONException
 import org.json.JSONObject
@@ -25,6 +24,8 @@ public enum class ConnectionStatus {
 class Wiki {
 	private val LogTag = "Wiki"
 	
+	private val loginCookieName = "PHPSESSID"
+	
 	private val cacheIdPageList get() = "$Name-page-list.txt"
 	private fun cacheIdPageHtml(pageName: String) : String = "$Name/pages/$pageName"
 	
@@ -33,7 +34,7 @@ class Wiki {
 	
 	private val context : Context
 	private val storage : DataStorer
-	private val downloader = TextDownloader()
+	private val prefs : PreferencesManager
 	
 	constructor(inContext : Context, inName : String, wikiInfo : WikiCredentials) {
 		Name = inName
@@ -41,7 +42,9 @@ class Wiki {
 		
 		context = inContext
 		storage = DataStorer(context)
-		// TODO: Login here if credentials are provided
+		prefs = PreferencesManager(context)
+		
+		TestConnection() // Test the connection - logging in if required
 	}
 	
 	public fun TestConnection() : ConnectionStatus {
@@ -55,14 +58,20 @@ class Wiki {
 				params = mapOf(
 					"action" to "status",
 					"minified" to "true"
-				)
+				),
+				allowRedirects = false,
+				cookies = mapOf( loginCookieName to prefs.GetSessionToken() )
 			)
+			
+			if(responseRequiresLogin(status))
+				login()
 		} catch(error : ConnectException) {
 			Log.w(LogTag, error.message)
 			error.printStackTrace()
 			return ConnectionStatus.ConnectionFailed
 		}
-		if(status.statusCode < 200 || status.statusCode > 299)
+		
+		if(status.statusCode !in 200..299)
 			return ConnectionStatus.WrongHttpCode
 		
 		try {
@@ -97,11 +106,14 @@ class Wiki {
 	}
 	
 	private fun downloadPageList() : String {
-		val params = mapOf(
-			"action" to "list",
-			"format" to "text"
+		val rawList = khttp.get(
+			Info.RootUrl,
+			params = mapOf(
+				"action" to "list",
+				"format" to "text"
+			),
+			cookies = mapOf( loginCookieName to prefs.GetSessionToken() )
 		)
-		val rawList = khttp.get(Info.RootUrl, params = params)
 		Log.i(LogTag, "Downloaded ${rawList.text.length} byte page list.")
 		
 		storage.CacheString(cacheIdPageList, rawList.text)
@@ -124,11 +136,36 @@ class Wiki {
 				"action" to "view",
 				"mode" to "parsedsourceonly",
 				"page" to pageName
-			)
+			),
+			allowRedirects = false,
+			cookies = mapOf( loginCookieName to prefs.GetSessionToken() )
 		)
 		
 		storage.CacheString(cacheIdPageHtml(pageName), response.text)
 		
 		return response.text
+	}
+	
+	private fun responseRequiresLogin(response : Response) : Boolean {
+		return response.headers.contains("x-login-required")
+	}
+	
+	private fun login() : Boolean {
+		val response = khttp.post(
+			Info.RootUrl,
+			params = mapOf(
+				"action" to "checklogin"
+			),
+			data = mapOf(
+				"user" to Info.Username,
+				"password" to Info.Password
+			)
+		)
+		if(response.headers["x-login-success"] == "yes") {
+			prefs.SaveSessionToken(response.cookies[loginCookieName]!!)
+			return true
+		}
+		
+		return false
 	}
 }
