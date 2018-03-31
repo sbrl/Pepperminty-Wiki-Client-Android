@@ -42,26 +42,6 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 	override fun onResume() {
 		super.onResume()
 		
-		populateWikiList()
-	}
-	
-	
-	private fun populateWikiList()
-	{
-		Log.i(LogTag, "Populating wiki list.")
-		
-		val wikiList : MutableList<String> = prefs.GetWikiList()
-		
-		navigationDrawer.menu.removeGroup(R.id.nav_main_wikis)
-		
-		for(wikiName : String in wikiList) {
-			val newItem : MenuItem = navigationDrawer.menu.add(
-				R.id.nav_main_wikis,
-				Menu.NONE, Menu.FIRST,
-				wikiName
-			)
-			newItem.icon = ContextCompat.getDrawable(this, R.drawable.icon_wiki)
-		}
 	}
 	
 	override fun changeWiki(wikiName: String) {
