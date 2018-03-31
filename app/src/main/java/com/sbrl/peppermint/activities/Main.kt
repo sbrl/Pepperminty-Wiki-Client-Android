@@ -89,6 +89,8 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		runOnUiThread({
 			toolbar.title = newWikiName
 			
+			masterView.closeDrawers()
+			
 			pageListFragment.PopulatePageList(pageList)
 		})
 	}

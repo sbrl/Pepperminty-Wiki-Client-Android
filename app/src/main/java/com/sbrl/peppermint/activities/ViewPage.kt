@@ -112,6 +112,8 @@ class ViewPage : TemplateNavigation() {
 		if(wikiName == wiki.Name)
 			finish()
 		
+		masterView.closeDrawers()
+		
 		// If not, then push a new one onto the stack.
 		val intent = Intent(this, Main::class.java)
 		intent.putExtra("wiki-name", wikiName)
