@@ -56,7 +56,7 @@ class WikiPageList : Fragment() {
 	}
 	
 	public fun PopulatePageList(rawPageList : List<String>) {
-		val pageListDisplay : ListView = view!!.findViewById(R.id.page_list_main)
+		val pageListDisplay : ListView = containingView!!.findViewById(R.id.page_list_main)
 		
 		val pageList : ArrayList<WikiPageInfo> = arrayListOf<WikiPageInfo>()
 		for(nextPageName : String in rawPageList)
