@@ -52,7 +52,7 @@ class ViewPage : TemplateNavigation() {
 		val pageHTML = pageProcessor.transform(
 			wiki.GetPageHTML(newPageName, refreshFromInternet)
 		)
-		val encodedPageHTML = Base64.encodeToString(pageHTML.toByteArray(), Base64.DEFAULT)
+		//val encodedPageHTML = "data:" + Base64.encodeToString(pageHTML.toByteArray(), Base64.DEFAULT)
 		
 		runOnUiThread {
 			// Configure the WebView
@@ -66,7 +66,13 @@ class ViewPage : TemplateNavigation() {
 			pageDisplay.settings.allowUniversalAccessFromFileURLs = false
 			
 			
-			pageDisplay.loadData(encodedPageHTML, "text/html", "base64")
+			pageDisplay.loadDataWithBaseURL(
+				wiki.Info.RootUrl,
+				pageHTML,
+				"text/html",
+				"UTF-8",
+				null
+			)
 			toolbar.title = "$newPageName - ${wiki.Name}"
 		}
 	}
