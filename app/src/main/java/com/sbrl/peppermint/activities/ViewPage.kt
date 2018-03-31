@@ -3,6 +3,7 @@ package com.sbrl.peppermint.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
+import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebView
 import com.sbrl.peppermint.R
@@ -36,7 +37,8 @@ class ViewPage : TemplateNavigation() {
 			wiki = Wiki(
 				this,
 				intent.getStringExtra(INTENT_PARAM_WIKI_NAME),
-				prefs.GetCredentials(intent.getStringExtra(INTENT_PARAM_WIKI_NAME))
+				prefs.GetCredentials(intent.getStringExtra(INTENT_PARAM_WIKI_NAME)),
+				false
 			)
 			
 			showPage(pageName, false)
@@ -56,8 +58,10 @@ class ViewPage : TemplateNavigation() {
 		
 		runOnUiThread {
 			// Configure the WebView
+			pageDisplay.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
 			pageDisplay.settings.javaScriptEnabled = true
-			pageDisplay.settings.domStorageEnabled = false
+			pageDisplay.settings.domStorageEnabled = true // Required for displaying images
+			pageDisplay.settings.loadsImagesAutomatically = true
 			pageDisplay.settings.databaseEnabled = false
 			pageDisplay.settings.javaScriptCanOpenWindowsAutomatically = false
 			pageDisplay.settings.mediaPlaybackRequiresUserGesture = true

@@ -1,6 +1,6 @@
 window.addEventListener("load", function(event) {
-	document.querySelectorAll("a").forEach(function(event) {
-		event.target.addEventListener("click", handle_link_click)
+	document.querySelectorAll("a").forEach(function(element) {
+		element.addEventListener("click", handle_link_click);
 	});
 });
 

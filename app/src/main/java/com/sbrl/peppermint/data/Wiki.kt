@@ -36,7 +36,7 @@ class Wiki {
 	private val storage : DataStorer
 	private val prefs : PreferencesManager
 	
-	constructor(inContext : Context, inName : String, wikiInfo : WikiCredentials) {
+	constructor(inContext : Context, inName : String, wikiInfo : WikiCredentials, testAndLogin : Boolean = true) {
 		Name = inName
 		Info = wikiInfo
 		
@@ -44,7 +44,8 @@ class Wiki {
 		storage = DataStorer(context)
 		prefs = PreferencesManager(context)
 		
-		TestConnection() // Test the connection - logging in if required
+		if(testAndLogin)
+			TestConnection() // Test the connection - logging in if required
 	}
 	
 	public fun TestConnection(doLogin: Boolean = true) : ConnectionStatus {
