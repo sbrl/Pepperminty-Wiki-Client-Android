@@ -16,8 +16,14 @@
 		android:gravity="center"
 		android:text="@string/page_list_nothing_here_yet" />
 	
+	<SearchView android:id="@+id/page_list_filter"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:queryHint="@string/page_list_search_placeholder" />
+	
 	<ListView android:id="@+id/page_list_main"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_below="@id/page_list_filter"
 		android:smoothScrollbar="true" />
 </RelativeLayout>

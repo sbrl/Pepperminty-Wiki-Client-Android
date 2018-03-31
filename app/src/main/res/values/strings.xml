@@ -11,4 +11,5 @@
 	<string name="add_wiki_connection_ok">Connection ok!</string>
 	<string name="add_wiki_connection_ok_login">Connection ok, but a login is required.</string>
 	<string name="view_page_refresh">Refresh</string>
+	<string name="page_list_search_placeholder">Start typing to filter....</string>
 </resources>

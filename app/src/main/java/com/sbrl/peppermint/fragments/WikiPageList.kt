@@ -6,13 +6,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
+import android.widget.*
 
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.display.WikiPageInfo
-import android.widget.AdapterView
-import android.widget.ProgressBar
-import android.widget.TextView
 
 
 /**
@@ -31,13 +28,18 @@ class WikiPageList : Fragment() {
 	
 	private var interactionListener : OnListFragmentInteractionListener? = null
 	
+	private lateinit var pageListAdapter : PageListAdapter
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View? {
 		containingView = inflater.inflate(R.layout.fragment_page_list, container, false)
+		
+		attachFilterQueryUpdateListeners(containingView.findViewById<SearchView>(R.id.page_list_filter))
 		
 		return containingView
 	}
@@ -55,15 +57,28 @@ class WikiPageList : Fragment() {
 		interactionListener = null
 	}
 	
+	private fun attachFilterQueryUpdateListeners(target : SearchView) {
+		target.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+			override fun onQueryTextChange(query : String?): Boolean {
+				TODO("Not Implemented")
+			}
+			
+			override fun onQueryTextSubmit(query : String?): Boolean {
+				TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+			}
+			
+		})
+	}
+	
 	public fun PopulatePageList(rawPageList : List<String>) {
-		val pageListDisplay : ListView = containingView!!.findViewById(R.id.page_list_main)
+		val pageListDisplay : ListView = containingView.findViewById(R.id.page_list_main)
 		
 		val pageList : ArrayList<WikiPageInfo> = arrayListOf<WikiPageInfo>()
 		for(nextPageName : String in rawPageList)
 			pageList.add(WikiPageInfo(nextPageName, false))
 		
-		val adapter = PageListAdapter(pageList, context!!)
-		pageListDisplay.adapter = adapter
+		pageListAdapter = PageListAdapter(pageList, context!!)
+		pageListDisplay.adapter = pageListAdapter
 		
 		pageListDisplay.onItemClickListener = AdapterView.OnItemClickListener {
 				adapterView, view, position, id ->
