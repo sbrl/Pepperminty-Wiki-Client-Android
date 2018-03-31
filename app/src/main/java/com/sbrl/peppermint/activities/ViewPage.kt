@@ -3,9 +3,11 @@ package com.sbrl.peppermint.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.webkit.WebSettings
-import android.webkit.WebView
+import android.webkit.*
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.PageHTMLProcessor
 import com.sbrl.peppermint.data.PreferencesManager
@@ -14,6 +16,7 @@ import kotlin.concurrent.thread
 import kotlin.text.toByteArray
 
 class ViewPage : TemplateNavigation() {
+	private val LogTag = "[activity] ViewPage"
 	
 	private val INTENT_PARAM_WIKI_NAME = "wiki-name"
 	private val INTENT_PARAM_PAGE_NAME = "page-name"
@@ -45,6 +48,22 @@ class ViewPage : TemplateNavigation() {
 		}
 	}
 	
+	/* ********************************************************************** */
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.view_page_options, menu)
+		return true
+	}
+	override fun onOptionsItemSelected(item: MenuItem) : Boolean = when(item.itemId) {
+		R.id.view_page_menu_refresh -> {
+			thread(start = true) {
+				showPage(pageName, true)
+			}
+			true
+		}
+		else -> super.onOptionsItemSelected(item)
+	}
+	/* ********************************************************************** */
+	
 	private fun showPage(newPageName : String, refreshFromInternet : Boolean) {
 		// Update the current page name
 		pageName = newPageName
@@ -60,7 +79,7 @@ class ViewPage : TemplateNavigation() {
 			// Configure the WebView
 			pageDisplay.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
 			pageDisplay.settings.javaScriptEnabled = true
-			pageDisplay.settings.domStorageEnabled = true // Required for displaying images
+			pageDisplay.settings.domStorageEnabled = false // Required for displaying images
 			pageDisplay.settings.loadsImagesAutomatically = true
 			pageDisplay.settings.databaseEnabled = false
 			pageDisplay.settings.javaScriptCanOpenWindowsAutomatically = false
@@ -69,7 +88,11 @@ class ViewPage : TemplateNavigation() {
 			pageDisplay.settings.allowFileAccessFromFileURLs = false
 			pageDisplay.settings.allowUniversalAccessFromFileURLs = false
 			
+			// Give the WebView the authentication cookie
+			val cookieManager = CookieManager.getInstance()
+			cookieManager.setCookie(wiki.Info.RootUrl, "${wiki.LoginCookieName}=${prefs.GetSessionToken()}; path=/")
 			
+			Log.i(LogTag, "Base url: ${wiki.Info.RootUrl}")
 			pageDisplay.loadDataWithBaseURL(
 				wiki.Info.RootUrl,
 				pageHTML,

@@ -10,4 +10,5 @@
 	<string name="add_wiki_connection_failure">Unable to connect to wiki. Try checking the url!</string>
 	<string name="add_wiki_connection_ok">Connection ok!</string>
 	<string name="add_wiki_connection_ok_login">Connection ok, but a login is required.</string>
+	<string name="view_page_refresh">Refresh</string>
 </resources>

@@ -24,7 +24,7 @@ public enum class ConnectionStatus {
 class Wiki {
 	private val LogTag = "Wiki"
 	
-	private val loginCookieName = "PHPSESSID"
+	public val LoginCookieName = "PHPSESSID"
 	
 	private val cacheIdPageList get() = "$Name-page-list.txt"
 	private fun cacheIdPageHtml(pageName: String) : String = "$Name/pages/$pageName"
@@ -61,7 +61,7 @@ class Wiki {
 				headers = mapOf(
 					"Accept" to "application/json"
 				),
-				cookies = mapOf( loginCookieName to prefs.GetSessionToken() ),
+				cookies = mapOf( LoginCookieName to prefs.GetSessionToken() ),
 				allowRedirects = false
 			)
 			Log.i(LogTag, "Status code: ${status.statusCode}")
@@ -118,7 +118,7 @@ class Wiki {
 				"action" to "list",
 				"format" to "text"
 			),
-			cookies = mapOf( loginCookieName to prefs.GetSessionToken() )
+			cookies = mapOf( LoginCookieName to prefs.GetSessionToken() )
 		)
 		Log.i(LogTag, "Downloaded ${rawList.text.length} byte page list.")
 		
@@ -144,7 +144,7 @@ class Wiki {
 				"page" to pageName
 			),
 			allowRedirects = false,
-			cookies = mapOf( loginCookieName to prefs.GetSessionToken() )
+			cookies = mapOf( LoginCookieName to prefs.GetSessionToken() )
 		)
 		
 		storage.CacheString(cacheIdPageHtml(pageName), response.text)
@@ -175,7 +175,7 @@ class Wiki {
 		Log.i(LogTag, response.text)
 		Log.i(LogTag, "Login successful: ${response.headers["x-login-success"]}")
 		if(response.headers["x-login-success"] == "yes") {
-			prefs.SaveSessionToken(response.cookies[loginCookieName]!!)
+			prefs.SaveSessionToken(response.cookies[LoginCookieName]!!)
 			return true
 		}
 		
