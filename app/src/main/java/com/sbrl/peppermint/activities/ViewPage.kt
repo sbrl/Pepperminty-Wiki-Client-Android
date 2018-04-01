@@ -2,7 +2,6 @@ package com.sbrl.peppermint.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -10,16 +9,17 @@ import android.view.View
 import android.webkit.*
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.PageHTMLProcessor
+import com.sbrl.peppermint.bricks.notify_send
 import com.sbrl.peppermint.data.PreferencesManager
 import com.sbrl.peppermint.data.Wiki
+import com.sbrl.peppermint.display.ViewPageWebInterface
 import kotlin.concurrent.thread
-import kotlin.text.toByteArray
 
 class ViewPage : TemplateNavigation() {
 	private val LogTag = "[activity] ViewPage"
 	
-	private val INTENT_PARAM_WIKI_NAME = "wiki-name"
-	private val INTENT_PARAM_PAGE_NAME = "page-name"
+	public val INTENT_PARAM_WIKI_NAME = "wiki-name"
+	public val INTENT_PARAM_PAGE_NAME = "page-name"
 	
 	private lateinit var pageName : String
 	private lateinit var wiki : Wiki
@@ -44,7 +44,7 @@ class ViewPage : TemplateNavigation() {
 				false
 			)
 			
-			showPage(pageName, false)
+			ChangePage(pageName, false)
 		}
 	}
 	
@@ -62,15 +62,28 @@ class ViewPage : TemplateNavigation() {
 	override fun onOptionsItemSelected(item: MenuItem) : Boolean = when(item.itemId) {
 		R.id.view_page_menu_refresh -> {
 			thread(start = true) {
-				showPage(pageName, true)
+				ChangePage(pageName, true)
 			}
 			true
 		}
 		else -> super.onOptionsItemSelected(item)
 	}
+	
 	/* ********************************************************************** */
 	
-	private fun showPage(newPageName : String, refreshFromInternet : Boolean) {
+	public fun GetCurrentWikiName() : String = wiki.Name
+	
+	public fun NotifyRedlink(pageName : String) {
+		runOnUiThread {
+			notify_send(this, "$pageName doesn't exist.")
+		}
+	}
+	
+	/* ********************************************************************** */
+	
+	
+	
+	public fun ChangePage(newPageName : String, refreshFromInternet : Boolean) {
 		// Update the current page name
 		pageName = newPageName
 		
@@ -97,6 +110,9 @@ class ViewPage : TemplateNavigation() {
 			// Give the WebView the authentication cookie
 			val cookieManager = CookieManager.getInstance()
 			cookieManager.setCookie(wiki.Info.RootUrl, "${wiki.LoginCookieName}=${prefs.GetSessionToken()}; path=/")
+			
+			// Add the javascript interface
+			pageDisplay.addJavascriptInterface(ViewPageWebInterface(this), "App")
 			
 			Log.i(LogTag, "Base url: ${wiki.Info.RootUrl}")
 			pageDisplay.loadDataWithBaseURL(
