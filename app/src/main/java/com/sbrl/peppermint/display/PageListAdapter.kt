@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.fragments
+package com.sbrl.peppermint.display
 
 import android.content.Context
 import android.view.View

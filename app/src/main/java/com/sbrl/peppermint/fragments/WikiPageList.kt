@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.display.PageListAdapter
 import com.sbrl.peppermint.display.WikiPageInfo
 
 
