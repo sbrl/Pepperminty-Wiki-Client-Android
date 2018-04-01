@@ -85,7 +85,7 @@ class WikiPageList : Fragment() {
 		
 		pageListDisplay.onItemClickListener = AdapterView.OnItemClickListener {
 				adapterView, view, position, id ->
-			interactionListener?.onPageSelection(pageList[position])
+			interactionListener?.onPageSelection(pageListAdapter.getItem(position))
 		}
 		
 		// ---------
