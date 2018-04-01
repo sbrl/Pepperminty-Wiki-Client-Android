@@ -17,6 +17,11 @@ function handle_link_click(event) {
 		return false;
 	}
 	
-	App.ChangePage(event.target.innerText);
+	var pageName = depostify(event.target.href.replace(/^[^\?]*\?/, "")).page
+	
+	App.ChangePage(pageName);
 	
 }
+
+// Microsnippet #1 - 130 bytes
+function depostify(a){return a.split("&").reduce(function(c,d){d=d.split("=").map(decodeURIComponent);c[d[0]]=+d[1]||d[1];return c;},{})}
