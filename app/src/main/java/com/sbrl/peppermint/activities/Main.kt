@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.notify_send
 import com.sbrl.peppermint.data.ConnectionStatus

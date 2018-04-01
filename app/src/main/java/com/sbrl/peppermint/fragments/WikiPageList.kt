@@ -61,11 +61,13 @@ class WikiPageList : Fragment() {
 	private fun attachFilterQueryUpdateListeners(target : SearchView) {
 		target.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 			override fun onQueryTextChange(query : String?): Boolean {
-				TODO("Not Implemented")
+				pageListAdapter.filter.filter(query)
+				return true
 			}
 			
 			override fun onQueryTextSubmit(query : String?): Boolean {
-				TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+				pageListAdapter.filter.filter(query)
+				return true
 			}
 			
 		})

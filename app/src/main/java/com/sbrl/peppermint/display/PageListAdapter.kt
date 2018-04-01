@@ -3,16 +3,15 @@ package com.sbrl.peppermint.display
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.display.WikiPageInfo
-import android.widget.TextView
 import android.view.LayoutInflater
-import android.widget.ImageView
+import android.widget.*
 
 
-class PageListAdapter : ArrayAdapter<WikiPageInfo> {
+class PageListAdapter : ArrayAdapter<WikiPageInfo>, Filterable {
 	private val items: List<WikiPageInfo>
+	private var itemsFiltered : List<WikiPageInfo>
 	private val appContext: Context
 	
 	constructor(
@@ -20,7 +19,18 @@ class PageListAdapter : ArrayAdapter<WikiPageInfo> {
 		inContext: Context
 	) : super(inContext, R.layout.fragment_page_list_item, inItems) {
 		this.items = inItems
+		this.itemsFiltered = this.items
 		this.appContext = inContext
+	}
+	
+	override fun getCount(): Int {
+		return itemsFiltered.count()
+	}
+	override fun getItem(position: Int): WikiPageInfo {
+		return itemsFiltered[position]
+	}
+	override fun getItemId(position: Int): Long {
+		return position.toLong()
 	}
 	
 	override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -33,7 +43,7 @@ class PageListAdapter : ArrayAdapter<WikiPageInfo> {
 		if (rowView == null) // Inflate a new one if convertView was null
 			rowView = inflater.inflate(R.layout.fragment_page_list_item, parent, false)
 		
-		populateDisplayItem(rowView!!, items[position])
+		populateDisplayItem(rowView!!, itemsFiltered[position])
 		
 		// 5. Return processed row view
 		return rowView
@@ -52,4 +62,36 @@ class PageListAdapter : ArrayAdapter<WikiPageInfo> {
 		)
 		descriptionDisplay.text = pageInfo.Name
 	}
+	
+	override fun getFilter(): Filter {
+		return object : Filter() {
+			override fun performFiltering(constraint: CharSequence?): FilterResults {
+				val query : String = if(constraint == null || constraint.isEmpty())
+					""
+				else constraint.toString().toLowerCase()
+				
+				val result = FilterResults()
+				val resultList = arrayListOf<WikiPageInfo>()
+				for(pageData : WikiPageInfo in items) {
+					if(pageData.Name.toLowerCase().contains(query))
+						resultList.add(pageData)
+				}
+				result.values = resultList
+				
+				return result
+			}
+			
+			override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+				@Suppress("UNCHECKED_CAST")
+				itemsFiltered = if(results == null)
+					items
+				else
+					results.values as List<WikiPageInfo>
+				
+				notifyDataSetChanged()
+			}
+			
+		}
+	}
+	
 }
