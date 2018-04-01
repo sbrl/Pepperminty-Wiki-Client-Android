@@ -14,18 +14,11 @@ import com.sbrl.peppermint.display.WikiPageInfo
 
 
 /**
- * A fragment representing a list of Items.
- *
- *
- * Activities containing this fragment MUST implement the [OnListFragmentInteractionListener]
- * interface.
- */
-/**
  * Mandatory empty constructor for the fragment manager to instantiate the
  * fragment (e.g. upon screen orientation changes).
  */
 class WikiPageList : Fragment() {
-	private lateinit var containingView : View;
+	private lateinit var containingView : View
 	
 	private var interactionListener : OnListFragmentInteractionListener? = null
 	
@@ -33,7 +26,7 @@ class WikiPageList : Fragment() {
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		
+		pageListAdapter = PageListAdapter(arrayListOf(), context!!)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -76,7 +69,7 @@ class WikiPageList : Fragment() {
 	public fun PopulatePageList(rawPageList : List<String>) {
 		val pageListDisplay : ListView = containingView.findViewById(R.id.page_list_main)
 		
-		val pageList : ArrayList<WikiPageInfo> = arrayListOf<WikiPageInfo>()
+		val pageList : ArrayList<WikiPageInfo> = arrayListOf()
 		for(nextPageName : String in rawPageList)
 			pageList.add(WikiPageInfo(nextPageName, false))
 		

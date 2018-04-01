@@ -70,6 +70,15 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 			return
 		}
 		
+		// We're clear to go ahead and switch to it - we think :P
+		runOnUiThread {
+			toolbar.title = newWikiName
+			
+			pageListFragment.PopulatePageList(arrayListOf()) // Blank the page list
+			masterView.closeDrawers()
+			setSelectedWiki(newWikiName)
+		}
+		
 		val wikiData = prefs.GetCredentials(newWikiName)
 		currentWiki = Wiki(this, newWikiName, wikiData)
 		
@@ -88,10 +97,6 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		}
 		
 		runOnUiThread({
-			toolbar.title = newWikiName
-			
-			masterView.closeDrawers()
-			
 			pageListFragment.PopulatePageList(pageList)
 		})
 	}

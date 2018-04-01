@@ -48,6 +48,12 @@ class ViewPage : TemplateNavigation() {
 		}
 	}
 	
+	override fun onResume() {
+		super.onResume()
+		
+		setSelectedWiki(intent.getStringExtra(INTENT_PARAM_WIKI_NAME))
+	}
+	
 	/* ********************************************************************** */
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 		menuInflater.inflate(R.menu.view_page_options, menu)

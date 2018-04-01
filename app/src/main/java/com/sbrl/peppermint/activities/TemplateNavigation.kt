@@ -76,14 +76,28 @@ public abstract class TemplateNavigation : AppCompatActivity()
 			else -> super.onOptionsItemSelected(item)
 		}
 	}
-	
+	protected fun setSelectedWiki(wikiName : String) {
+		
+		var i = 0; var nextItem : MenuItem
+		while(i < navigationDrawer.menu.size()) {
+			nextItem = navigationDrawer.menu.getItem(i)
+			
+			Log.i(this::class.java.name, "setSelectedWiki: ${nextItem.title} / $wikiName")
+			
+			Log.i(this::class.java.name, "setSelectedWiki: Making ${nextItem.title} " + if(nextItem.title != wikiName) "selected" else "unselected")
+			nextItem.isChecked = nextItem.title == wikiName
+			
+			i++
+		}
+		
+	}
 	private fun onNavigationSelection(selectedItem : MenuItem) : Boolean {
 		Log.i(this::class.java.name, "Navigation selection made")
 		
-		selectedItem.isChecked = true
 		
 		// Handle wiki names
 		if(selectedItem.groupId == R.id.nav_main_wikis) {
+			selectedItem.isChecked = true
 			thread(start = true) { changeWiki(selectedItem.title.toString()) }
 			return true
 		}
