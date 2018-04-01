@@ -1,5 +1,8 @@
 html, body { font-size: 100%; }
 body
 {
+    background: #faf8fb;
+    
+    color: #111111;
     font-family: sans-serif;
 }
