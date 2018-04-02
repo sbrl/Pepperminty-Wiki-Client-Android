@@ -20,6 +20,7 @@ class ViewPage : TemplateNavigation() {
 	
 	public val INTENT_PARAM_WIKI_NAME = "wiki-name"
 	public val INTENT_PARAM_PAGE_NAME = "page-name"
+	public val INTENT_PARAM_PAGE_SECTION = "page-section"
 	
 	private lateinit var pageName : String
 	private lateinit var wiki : Wiki

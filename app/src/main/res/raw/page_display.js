@@ -19,6 +19,10 @@ function handle_link_click(event) {
 	
 	var pageName = depostify(event.target.href.replace(/^[^\?]*\?/, "")).page
 	
+	// If we can't figure out the page name, then don't try to navigate to it
+	if(typeof pageName == "undefined")
+		return false;
+	
 	App.ChangePage(pageName);
 	
 }

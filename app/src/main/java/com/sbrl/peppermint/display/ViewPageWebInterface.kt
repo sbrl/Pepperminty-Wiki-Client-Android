@@ -11,7 +11,20 @@ class ViewPageWebInterface(private val parent : ViewPage) {
 	public fun ChangePage(newPageName : String) {
 		val intent = Intent(parent, ViewPage::class.java)
 		intent.putExtra(parent.INTENT_PARAM_WIKI_NAME, parent.GetCurrentWikiName())
-		intent.putExtra(parent.INTENT_PARAM_PAGE_NAME, newPageName)
+		
+		val parsedPageName = if (!newPageName.contains('#')) newPageName
+			else newPageName.slice(0..newPageName.indexOf('#'))
+		
+		if(parsedPageName.isEmpty())
+			return
+		
+		intent.putExtra(parent.INTENT_PARAM_PAGE_NAME, parsedPageName)
+		
+		if(newPageName.contains('#'))
+			intent.putExtra(
+				parent.INTENT_PARAM_PAGE_SECTION,
+				newPageName.slice((newPageName.indexOf('#') + 1)..newPageName.length)
+			)
 		
 		parent.startActivity(intent)
 	}
