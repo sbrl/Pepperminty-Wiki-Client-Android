@@ -7,12 +7,20 @@
 		
 	</group>
 	
-	<group>
+	<group android:id="@+id/nav_main_wiki_options">
 		<item android:id="@+id/nav_main_add_wiki"
 			android:icon="@drawable/icon_add"
 			android:iconTint="@color/colorAccent"
 			android:title="@string/nav_main_add_wiki"
 			android:orderInCategory="9999" />
+	</group>
+	
+	<group android:id="@+id/nav_main_app_options">
+		<item android:id="@+id/nav_main_credits"
+			android:icon="@drawable/icon_credits"
+			android:iconTint="@color/colorAccent"
+			android:title="@string/navigation_drawer_credits"
+			android:orderInCategory="10000" />
 	</group>
 	
 </menu>

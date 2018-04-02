@@ -10,6 +10,7 @@ import android.webkit.*
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.PageHTMLProcessor
 import com.sbrl.peppermint.bricks.notify_send
+import com.sbrl.peppermint.bricks.readTextAndClose
 import com.sbrl.peppermint.data.PreferencesManager
 import com.sbrl.peppermint.data.Wiki
 import com.sbrl.peppermint.display.ViewPageWebInterface
@@ -22,8 +23,10 @@ class ViewPage : TemplateNavigation() {
 	public val INTENT_PARAM_PAGE_NAME = "page-name"
 	public val INTENT_PARAM_PAGE_SECTION = "page-section"
 	
+	public val SPECIAL_PAGE_ID_CREDITS = "@@___credits"
+	
 	private lateinit var pageName : String
-	private lateinit var wiki : Wiki
+	private var wiki : Wiki? = null
 	private lateinit var pageDisplay : WebView
 	
 	protected override val contentId : Int = R.layout.activity_view_page
@@ -38,12 +41,13 @@ class ViewPage : TemplateNavigation() {
 		pageName = intent.getStringExtra(INTENT_PARAM_PAGE_NAME)
 		
 		thread(start = true) {
-			wiki = Wiki(
-				this,
-				intent.getStringExtra(INTENT_PARAM_WIKI_NAME),
-				prefs.GetCredentials(intent.getStringExtra(INTENT_PARAM_WIKI_NAME)),
-				false
-			)
+			if(intent.hasExtra(INTENT_PARAM_WIKI_NAME))
+				wiki = Wiki(
+					this,
+					intent.getStringExtra(INTENT_PARAM_WIKI_NAME),
+					prefs.GetCredentials(intent.getStringExtra(INTENT_PARAM_WIKI_NAME)),
+					false
+				)
 			
 			ChangePage(pageName, false)
 		}
@@ -52,7 +56,10 @@ class ViewPage : TemplateNavigation() {
 	override fun onResume() {
 		super.onResume()
 		
-		setSelectedWiki(intent.getStringExtra(INTENT_PARAM_WIKI_NAME))
+		setSelectedWiki(if(intent.hasExtra(INTENT_PARAM_WIKI_NAME))
+			intent.getStringExtra(INTENT_PARAM_WIKI_NAME)
+		else
+			intent.getStringExtra(INTENT_PARAM_PAGE_NAME))
 	}
 	
 	/* ********************************************************************** */
@@ -72,7 +79,7 @@ class ViewPage : TemplateNavigation() {
 	
 	/* ********************************************************************** */
 	
-	public fun GetCurrentWikiName() : String = wiki.Name
+	public fun GetCurrentWikiName() : String = wiki?.Name ?: ""
 	
 	public fun NotifyRedlink(pageName : String) {
 		runOnUiThread {
@@ -90,8 +97,10 @@ class ViewPage : TemplateNavigation() {
 		
 		// Fetch and load the new page's HTML into the WebView
 		val pageProcessor = PageHTMLProcessor(this)
+		
 		val pageHTML = pageProcessor.transform(
-			wiki.GetPageHTML(newPageName, refreshFromInternet)
+			getSpecialPageContent(newPageName) ?:
+				wiki!!.GetPageHTML(newPageName, refreshFromInternet)
 		)
 		//val encodedPageHTML = "data:" + Base64.encodeToString(pageHTML.toByteArray(), Base64.DEFAULT)
 		
@@ -109,21 +118,41 @@ class ViewPage : TemplateNavigation() {
 			pageDisplay.settings.allowUniversalAccessFromFileURLs = false
 			
 			// Give the WebView the authentication cookie
-			val cookieManager = CookieManager.getInstance()
-			cookieManager.setCookie(wiki.Info.RootUrl, "${wiki.LoginCookieName}=${prefs.GetSessionToken()}; path=/")
+			if(wiki != null) {
+				val cookieManager = CookieManager.getInstance()
+				cookieManager.setCookie(wiki!!.Info.RootUrl, "${wiki!!.LoginCookieName}=${prefs.GetSessionToken()}; path=/")
+			}
 			
 			// Add the javascript interface
 			pageDisplay.addJavascriptInterface(ViewPageWebInterface(this), "App")
 			
-			Log.i(LogTag, "Base url: ${wiki.Info.RootUrl}")
-			pageDisplay.loadDataWithBaseURL(
-				wiki.Info.RootUrl,
-				pageHTML,
-				"text/html",
-				"UTF-8",
-				null
-			)
-			toolbar.title = "$newPageName - ${wiki.Name}"
+			if(wiki != null) {
+				Log.i(LogTag, "Base url: ${wiki!!.Info.RootUrl}")
+				pageDisplay.loadDataWithBaseURL(
+					wiki!!.Info.RootUrl,
+					pageHTML,
+					"text/html",
+					"UTF-8",
+					null
+				)
+			} else {
+				pageDisplay.loadData(
+					pageHTML,
+					"text/html",
+					"UTF-8"
+				)
+			}
+			toolbar.title = when(newPageName) {
+				SPECIAL_PAGE_ID_CREDITS -> "Credits"
+				else -> "$newPageName - ${wiki!!.Name}"
+			}
+		}
+	}
+	
+	private fun getSpecialPageContent(specialPageId : String) : String? {
+		return when(specialPageId) {
+			SPECIAL_PAGE_ID_CREDITS -> resources.openRawResource(R.raw.credits).readTextAndClose()
+			else -> null
 		}
 	}
 	
@@ -132,7 +161,7 @@ class ViewPage : TemplateNavigation() {
 	override fun changeWiki(wikiName: String) {
 		// If the selected wiki is the one that's currently open, then just exit this
 		// activity
-		if(wikiName == wiki.Name)
+		if(wikiName == wiki?.Name)
 			finish()
 		
 		masterView.closeDrawers()

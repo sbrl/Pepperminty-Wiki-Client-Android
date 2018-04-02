@@ -16,4 +16,5 @@
 	<string name="add_wiki_invalid_status">That wiki appears to have an invalid status of {0}</string>
 	<string name="add_wiki_invalid_status_response">That wiki doesn\'t appear to have a valid status page.</string>
 	<string name="add_wiki_old_version">That wiki appears to be running an old version of Pepperminty Wiki, which may not work correctly with this app. Please contact the wiki administrator to update it!</string>
+	<string name="navigation_drawer_credits">Credits</string>
 </resources>
