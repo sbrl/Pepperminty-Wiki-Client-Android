@@ -7,7 +7,7 @@
 	<string name="add_wiki_name">Wiki Name</string>
 	<string name="nav_main_add_wiki">Add New Wiki</string>
 	<string name="page_list_nothing_here_yet">Nothing here yet! Try adding a wiki in the sidebar first.</string>
-	<string name="add_wiki_connection_failure">Unable to connect to wiki. Try checking the url!</string>
+	<string name="add_wiki_connection_failure">Unable to connect to wiki. Try checking the url!\nDetails: {0}</string>
 	<string name="add_wiki_connection_ok">Connection ok!</string>
 	<string name="add_wiki_connection_ok_login">Connection ok, but a login is required.</string>
 	<string name="view_page_refresh">Refresh</string>

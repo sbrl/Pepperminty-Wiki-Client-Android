@@ -61,25 +61,25 @@ class AddWiki : AppCompatActivity() {
 				),
 				allowRedirects = false
 			)
-		} catch(error : ConnectException) {
-			runOnUiThread { setWikiStatus(false, false) }
-			return
-		} catch(error : MalformedURLException) {
-			runOnUiThread { setWikiStatus(false, false) }
+		} catch(error : Exception) {
+			Log.e(LogTag, error.toString())
+			error.printStackTrace()
+			runOnUiThread { setWikiStatus(false, false, error.message) }
 			return
 		}
 		
 		Log.i(LogTag, "Check wiki: Status code ${statusResponse.statusCode}")
 		runOnUiThread {
-			// If it's a non-200 code, then it (probably) requires a login
-			if(statusResponse.statusCode !in 200..300)
+			// Check for the presence of the x-login-required header
+			if(statusResponse.headers.contains("x-login-required") &&
+				statusResponse.headers["x-login-required"] == "yes")
 				setWikiStatus(true, true)
 			else // FUTURE: Pull out the wiki name from the status and auto-fill the box
 				setWikiStatus(true, false)
 		}
 	}
 	
-	private fun setWikiStatus(canConnect : Boolean, requiresLogin : Boolean)
+	private fun setWikiStatus(canConnect : Boolean, requiresLogin : Boolean, errorMessage : String? = null)
 	{
 		val statusContainer : LinearLayout = findViewById(R.id.add_wiki_status_container)
 		val statusIconDisplay : ImageView = findViewById(R.id.add_wiki_status_icon)
@@ -93,6 +93,7 @@ class AddWiki : AppCompatActivity() {
 				ContextCompat.getColor(this, R.color.colorWarning)
 			)
 			statusTextDisplay.text = getString(R.string.add_wiki_connection_failure)
+				.replace("{0}", errorMessage ?: "")
 		} else {
 			statusIconDisplay.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icon_ok))
 			statusIconDisplay.colorFilter = LightingColorFilter(
