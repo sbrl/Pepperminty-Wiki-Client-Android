@@ -84,8 +84,10 @@ class AddWiki : AppCompatActivity() {
 		Log.i(LogTag, "Check wiki: Status code ${statusResponse.statusCode}")
 		// Check for the presence of the x-login-required header
 		if(statusResponse.headers.contains("x-login-required") &&
-			statusResponse.headers["x-login-required"] == "yes")
+			statusResponse.headers["x-login-required"] == "yes") {
 			runOnUiThread { setWikiStatus(TestConnectionStatus.RequiresLogin) }
+			return
+		}
 		
 		// There's no login header, but it might still be a wiki
 		
