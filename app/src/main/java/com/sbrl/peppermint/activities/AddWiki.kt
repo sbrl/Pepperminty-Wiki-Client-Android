@@ -17,9 +17,17 @@ import com.sbrl.peppermint.R
 import com.sbrl.peppermint.data.PreferencesManager
 import com.sbrl.peppermint.data.WikiCredentials
 import khttp.responses.Response
+import org.json.JSONException
+import org.json.JSONObject
 import java.net.ConnectException
 import java.net.MalformedURLException
 import kotlin.concurrent.thread
+
+enum class TestConnectionStatus {
+	Ok,
+	RequiresLogin,
+	Error
+}
 
 class AddWiki : AppCompatActivity() {
 	private val LogTag = "[activity] AddWiki"
@@ -64,29 +72,51 @@ class AddWiki : AppCompatActivity() {
 		} catch(error : Exception) {
 			Log.e(LogTag, error.toString())
 			error.printStackTrace()
-			runOnUiThread { setWikiStatus(false, false, error.message) }
+			runOnUiThread { setWikiStatus(TestConnectionStatus.Error, error.message) }
+			return
+		}
+		
+		if(statusResponse.statusCode == 406) {
+			runOnUiThread { setWikiStatus(TestConnectionStatus.Error, getString(R.string.add_wiki_old_version)) }
 			return
 		}
 		
 		Log.i(LogTag, "Check wiki: Status code ${statusResponse.statusCode}")
-		runOnUiThread {
-			// Check for the presence of the x-login-required header
-			if(statusResponse.headers.contains("x-login-required") &&
-				statusResponse.headers["x-login-required"] == "yes")
-				setWikiStatus(true, true)
-			else // FUTURE: Pull out the wiki name from the status and auto-fill the box
-				setWikiStatus(true, false)
+		// Check for the presence of the x-login-required header
+		if(statusResponse.headers.contains("x-login-required") &&
+			statusResponse.headers["x-login-required"] == "yes")
+			runOnUiThread { setWikiStatus(TestConnectionStatus.RequiresLogin) }
+		
+		// There's no login header, but it might still be a wiki
+		
+		// Try parsing the response as JSON
+		try {
+			val statusObj = JSONObject(statusResponse.text)
+			if(!statusObj.has("status")) {
+				runOnUiThread { setWikiStatus(TestConnectionStatus.Error, getString(R.string.add_wiki_no_status_param))}
+				return
+			}
+			if(statusObj.get("status") == "ok") {
+				runOnUiThread { setWikiStatus(TestConnectionStatus.Ok) }
+				return
+			} else {
+				runOnUiThread { setWikiStatus(TestConnectionStatus.Error, getString(R.string.add_wiki_invalid_status).replace("{0}", statusObj.getString("status")))}
+			}
+		} catch(error : JSONException) {
+			runOnUiThread { setWikiStatus(TestConnectionStatus.Error, getString(R.string.add_wiki_invalid_status_response)) }
 		}
+		
+		
 	}
 	
-	private fun setWikiStatus(canConnect : Boolean, requiresLogin : Boolean, errorMessage : String? = null)
+	private fun setWikiStatus(status: TestConnectionStatus, errorMessage : String? = null)
 	{
 		val statusContainer : LinearLayout = findViewById(R.id.add_wiki_status_container)
 		val statusIconDisplay : ImageView = findViewById(R.id.add_wiki_status_icon)
 		val statusTextDisplay : TextView = findViewById(R.id.add_wiki_status_text)
 		
 		statusContainer.visibility = View.VISIBLE
-		if(!canConnect) {
+		if(status == TestConnectionStatus.Error) {
 			statusIconDisplay.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icon_warning))
 			statusIconDisplay.colorFilter = LightingColorFilter(
 				ContextCompat.getColor(this, R.color.colorWarning),
@@ -100,7 +130,7 @@ class AddWiki : AppCompatActivity() {
 				ContextCompat.getColor(this, R.color.colorOk),
 				ContextCompat.getColor(this, R.color.colorOk)
 			)
-			statusTextDisplay.text = if(requiresLogin)
+			statusTextDisplay.text = if(status == TestConnectionStatus.RequiresLogin)
 				getString(R.string.add_wiki_connection_ok_login)
 			else
 				getString(R.string.add_wiki_connection_ok)
