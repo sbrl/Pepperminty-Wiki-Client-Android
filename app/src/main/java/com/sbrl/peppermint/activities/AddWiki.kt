@@ -18,6 +18,7 @@ import com.sbrl.peppermint.data.PreferencesManager
 import com.sbrl.peppermint.data.WikiCredentials
 import khttp.responses.Response
 import java.net.ConnectException
+import java.net.MalformedURLException
 import kotlin.concurrent.thread
 
 class AddWiki : AppCompatActivity() {
@@ -61,6 +62,9 @@ class AddWiki : AppCompatActivity() {
 				allowRedirects = false
 			)
 		} catch(error : ConnectException) {
+			runOnUiThread { setWikiStatus(false, false) }
+			return
+		} catch(error : MalformedURLException) {
 			runOnUiThread { setWikiStatus(false, false) }
 			return
 		}
