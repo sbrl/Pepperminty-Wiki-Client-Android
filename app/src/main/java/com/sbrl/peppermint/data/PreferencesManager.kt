@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.util.Log
+import com.sbrl.peppermint.R
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -15,10 +16,12 @@ public class PreferencesManager {
 	private val idWikiList = "wiki_list"
 	private val idSessionToken = "login_session_token"
 	
+	private val context : Context
 	private val prefsStorage: SharedPreferences
 	
 	public constructor(context : Context) {
-		prefsStorage = context.getSharedPreferences(sharedPrefsId, MODE_PRIVATE)
+		this.context = context
+		prefsStorage = this.context.getSharedPreferences(sharedPrefsId, MODE_PRIVATE)
 	}
 	
 	fun HasCredentials(wikiName: String) : Boolean {
@@ -74,6 +77,13 @@ public class PreferencesManager {
 	}
 	public fun GetSessionToken() : String {
 		return prefsStorage.getString(idSessionToken, "")
+	}
+	
+	fun GetImageLoadingType() : String {
+		return prefsStorage.getString(
+			context.getString(R.string.pref_key_image_loading),
+			context.getString(R.string.pref_image_loading_default_value)
+		)
 	}
 }
 
