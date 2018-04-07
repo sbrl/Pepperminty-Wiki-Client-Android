@@ -37,7 +37,7 @@ class DataManager(private val context: Context) {
 		if(!cacheFile.exists())
 			return null
 		
-		return getString(cacheFile)
+		return getStringFromFile(cacheFile)
 	}
 	
 	public fun CacheImage(cache_id: String, image: Bitmap) {
@@ -67,15 +67,22 @@ class DataManager(private val context: Context) {
 		))
 	}
 	
-	fun GetStoredString(storage_id: String): String? {
+	public fun GetStoredString(storage_id: String): String? {
 		val storageFile = getFileHandle(storage_id)
 		if(!storageFile.exists())
 			return null
-		return getString(storageFile)
+		return getStringFromFile(storageFile)
+	}
+	
+	public fun CalculateCacheSize() : Long {
+		return directorySize(context.cacheDir)
+	}
+	public fun ClearCache() {
+		clearDirectory(context.cacheDir)
 	}
 	
 	@Throws(IOException::class)
-	private fun getString(handle: File): String {
+	private fun getStringFromFile(handle: File): String {
 		val storageReader = BufferedReader(
 			InputStreamReader(
 				FileInputStream(handle)
@@ -108,5 +115,21 @@ class DataManager(private val context: Context) {
 	
 	private fun slugify(str: String): String {
 		return str.replace("[^a-z0-9\\-]+".toRegex(), "-")
+	}
+	
+	private fun directorySize(dir : File) : Long {
+		var totalSize = 0L
+		for(nextFile : File in dir.walk()) {
+			Log.i(LogTag, "File: ${nextFile.absolutePath}")
+			totalSize += nextFile.length()
+		}
+		return totalSize
+	}
+	/**
+	 * Clears out a directory of all it's content.
+	 * @param	dir		The directory to clear.
+	 */
+	private fun clearDirectory(dir : File) {
+		dir.deleteRecursively()
 	}
 }
