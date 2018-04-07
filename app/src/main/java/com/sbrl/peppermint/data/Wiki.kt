@@ -36,7 +36,10 @@ class Wiki {
 	private val storage : DataManager
 	private val prefs : PreferencesManager
 	
-	constructor(inContext : Context, inName : String, wikiInfo : WikiCredentials, testAndLogin : Boolean = true) {
+	constructor(inContext : Context,
+				inName : String,
+				wikiInfo : WikiCredentials,
+				testAndLogin : Boolean = true) {
 		Name = inName
 		Info = wikiInfo
 		
