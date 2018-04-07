@@ -13,8 +13,8 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.io.PrintWriter
 
-class DataStorer(private val context: Context) {
-	val LogTag = "DataStorer"
+class DataManager(private val context: Context) {
+	val LogTag = "DataManager"
 	
 	public fun HasCachedData(cache_id: String): Boolean {
 		val cacheFile = getCacheFileHandle(cache_id)

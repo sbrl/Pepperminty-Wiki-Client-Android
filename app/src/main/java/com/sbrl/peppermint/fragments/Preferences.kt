@@ -17,14 +17,13 @@ import com.sbrl.peppermint.R
  * create an instance of this fragment.
  *
  */
-class Preferences : PreferenceFragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+class Preferences : PreferenceFragment() {
 	
 	//private var listener: OnFragmentInteractionListener? = null
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		addPreferencesFromResource(R.xml.preferences)
-		preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 	}
 	
 	override fun onAttach(context: Context) {
@@ -39,14 +38,6 @@ class Preferences : PreferenceFragment(), SharedPreferences.OnSharedPreferenceCh
 	override fun onDetach() {
 		super.onDetach()
 		//listener = null
-	}
-	
-	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-		val pref = findPreference(key)
-		
-		if (pref is ListPreference) {
-			pref.setSummary(pref.entry)
-		}
 	}
 	
 	/**

@@ -2,7 +2,7 @@ package com.sbrl.peppermint.data
 
 import android.content.Context
 import android.util.Log
-import com.sbrl.peppermint.bricks.DataStorer
+import com.sbrl.peppermint.bricks.DataManager
 import khttp.responses.Response
 import org.json.JSONException
 import org.json.JSONObject
@@ -33,7 +33,7 @@ class Wiki {
 	public val Info : WikiCredentials
 	
 	private val context : Context
-	private val storage : DataStorer
+	private val storage : DataManager
 	private val prefs : PreferencesManager
 	
 	constructor(inContext : Context, inName : String, wikiInfo : WikiCredentials, testAndLogin : Boolean = true) {
@@ -41,7 +41,7 @@ class Wiki {
 		Info = wikiInfo
 		
 		context = inContext
-		storage = DataStorer(context)
+		storage = DataManager(context)
 		prefs = PreferencesManager(context)
 		
 		if(testAndLogin)
