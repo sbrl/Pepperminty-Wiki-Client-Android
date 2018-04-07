@@ -18,8 +18,11 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".activities.AddWiki"></activity>
-		<activity android:name=".activities.ViewPage"></activity>
+		<activity android:name=".activities.AddWiki" />
+		<activity android:name=".activities.ViewPage" />
+		<activity
+			android:name=".activities.Settings"
+			android:label="@string/title_activity_settings" />
 	</application>
 
 </manifest>

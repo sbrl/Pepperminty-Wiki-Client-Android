@@ -17,4 +17,26 @@
 	<string name="add_wiki_invalid_status_response">That wiki doesn\'t appear to have a valid status page.</string>
 	<string name="add_wiki_old_version">That wiki appears to be running an old version of Pepperminty Wiki, which may not work correctly with this app. Please contact the wiki administrator to update it!</string>
 	<string name="navigation_drawer_credits">Credits</string>
+	<string name="title_activity_settings">Settings</string>
+	
+	<!-- ================ -->
+	<!-- === Settings === -->
+	<!-- ================ -->
+	<string-array name="pref_image_loading" translatable="true">
+		<item>Always</item>
+		<item>Only over WiFi</item>
+		<item>Never</item>
+	</string-array>
+	<string-array name="pref_image_loading_values" translatable="false">
+		<item>always</item>
+		<item>wifi_only</item>
+		<item>never</item>
+	</string-array>
+	<string name="pref_image_loading_default_value" translatable="false">wifi_only</string>
+	<string name="pref_clear_cache">Clear cache</string>
+	<string name="pref_image_loading">Load images</string>
+	
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="nav_main_settings">Settings</string>
 </resources>

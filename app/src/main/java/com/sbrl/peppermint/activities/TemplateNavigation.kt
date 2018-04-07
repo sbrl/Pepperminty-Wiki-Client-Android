@@ -109,6 +109,11 @@ public abstract class TemplateNavigation : AppCompatActivity()
 				
 				true
 			}
+			R.id.nav_main_settings -> {
+				val settingsIntent = Intent(this, Settings::class.java)
+				startActivity(settingsIntent)
+				true
+			}
 			R.id.nav_main_credits -> {
 				val creditsIntent = Intent(this, ViewPage::class.java)
 				creditsIntent.putExtra("page-name", "@@___credits")

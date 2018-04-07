@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	
+	<ListPreference android:key="preference_image_loading"
+		android:title="@string/pref_image_loading"
+		android:entries="@array/pref_image_loading"
+		android:entryValues="@array/pref_image_loading_values"
+		android:defaultValue="@string/pref_image_loading_default_value" />
+	
+	<Preference android:title="@string/pref_clear_cache"
+		android:key="@string/pref_clear_cache" />
+	
+</PreferenceScreen>
