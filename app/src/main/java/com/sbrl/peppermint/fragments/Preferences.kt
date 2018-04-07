@@ -58,7 +58,7 @@ class Preferences : PreferenceFragment() {
 	}
 	
 	private fun updateCacheSize() {
-		cacheButton.summary = human_filesize(dataManager.CalculateCacheSize())
+		cacheButton.summary = getString(R.string.pref_cache_clear_current_size) + human_filesize(dataManager.CalculateCacheSize())
 	}
 	
 	private fun handlePrefCacheClearClick(preference : Preference) {
