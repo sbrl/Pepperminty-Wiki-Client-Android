@@ -74,7 +74,7 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		runOnUiThread {
 			toolbar.title = newWikiName
 			
-			pageListFragment.PopulatePageList(arrayListOf()) // Blank the page list
+			pageListFragment.PopulatePageList(arrayListOf(), false) // Blank the page list
 			masterView.closeDrawers()
 			setSelectedWiki(newWikiName)
 		}
@@ -82,9 +82,13 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		val wikiData = prefs.GetCredentials(newWikiName)
 		currentWiki = Wiki(this, newWikiName, wikiData)
 		
+		updatePageList(false)
+	}
+	
+	private fun updatePageList(refreshFromInternet : Boolean) {
 		val wikiStatus = currentWiki!!.TestConnection()
-		val pageList: List<String> = if(wikiStatus == ConnectionStatus.Ok)
-			currentWiki!!.GetPageList(false)
+		val pageList: List<String> = if (wikiStatus == ConnectionStatus.Ok)
+			currentWiki!!.GetPageList(refreshFromInternet)
 		else {
 			runOnUiThread {
 				notify_send(
@@ -92,13 +96,18 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 					"Unable to connect to wiki (status $wikiStatus)"
 				)
 			}
-			
 			arrayListOf<String>() // Return value
 		}
 		
 		runOnUiThread({
-			pageListFragment.PopulatePageList(pageList)
+			pageListFragment.PopulatePageList(pageList, true)
 		})
+	}
+	
+	override fun onRefreshRequest() {
+		thread(start = true) {
+			updatePageList(true)
+		}
 	}
 	
 	override fun onPageSelection(item: WikiPageInfo) {

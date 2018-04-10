@@ -3,6 +3,8 @@ package com.sbrl.peppermint.fragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +20,13 @@ import com.sbrl.peppermint.display.WikiPageInfo
  * fragment (e.g. upon screen orientation changes).
  */
 class WikiPageList : Fragment() {
+	private val LogTag = "WikiPageList"
+	
 	private lateinit var containingView : View
 	
 	private var interactionListener : OnListFragmentInteractionListener? = null
+	
+	private lateinit var swipeDetector : SwipeRefreshLayout
 	
 	private lateinit var pageListAdapter : PageListAdapter
 	
@@ -33,6 +39,10 @@ class WikiPageList : Fragment() {
 							  savedInstanceState: Bundle?): View? {
 		containingView = inflater.inflate(R.layout.fragment_page_list, container, false)
 		
+		
+		swipeDetector = containingView.findViewById(R.id.page_list_refresh_detector)
+		
+		attachRefreshListener(swipeDetector)
 		attachFilterQueryUpdateListeners(containingView.findViewById<SearchView>(R.id.page_list_filter))
 		
 		return containingView
@@ -66,7 +76,15 @@ class WikiPageList : Fragment() {
 		})
 	}
 	
-	public fun PopulatePageList(rawPageList : List<String>) {
+	private fun attachRefreshListener(target : SwipeRefreshLayout) {
+		target.setOnRefreshListener {
+			Log.i(LogTag, "Refresh requested via swipe gesture")
+			
+			interactionListener!!.onRefreshRequest()
+		}
+	}
+	
+	public fun PopulatePageList(rawPageList : List<String>, loadingComplete : Boolean) {
 		val pageListDisplay : ListView = containingView.findViewById(R.id.page_list_main)
 		
 		val pageList : ArrayList<WikiPageInfo> = arrayListOf()
@@ -86,7 +104,7 @@ class WikiPageList : Fragment() {
 		val nothingHereMessage : TextView = containingView.findViewById(R.id.page_list_nothing_here)
 		nothingHereMessage.visibility = View.GONE
 		
-		toggleProgressDisplay(false)
+		if(loadingComplete) toggleProgressDisplay(false)
 	}
 	
 	public fun DisplayEmpty() {
@@ -97,8 +115,7 @@ class WikiPageList : Fragment() {
 	}
 	
 	protected fun toggleProgressDisplay(visible : Boolean) {
-		val progressDisplay : ProgressBar = containingView.findViewById(R.id.page_list_progress)
-		progressDisplay.visibility = if(visible) View.VISIBLE else View.GONE
+		swipeDetector.isRefreshing = visible
 	}
 	
 	/* ********************************************************************** */
@@ -113,6 +130,8 @@ class WikiPageList : Fragment() {
 	 * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
 	 */
 	interface OnListFragmentInteractionListener {
+		fun onRefreshRequest()
+		
 		fun onPageSelection(item: WikiPageInfo)
 	}
 }

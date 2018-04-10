@@ -3,6 +3,10 @@ This is the changelog for the Pepperminty Wiki Android Client. This is the maste
 
 ## v0.2-dev
 
+### Added
+ - Added swipe-down gesture to main page list that re-fetches the page list from the internet
+ - 
+
 ### Fixed
  - Tidied up the connection tester when adding a wiki. It's more helpful, has new icons, and disables the "Add Wiki" button when there's an error! :D
 

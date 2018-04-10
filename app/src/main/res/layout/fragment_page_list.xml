@@ -4,10 +4,10 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 	
-	<ProgressBar android:id="@+id/page_list_progress"
+	<!-- <ProgressBar android:id="@+id/page_list_progress"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:visibility="visible" />
+		android:visibility="visible" /> -->
 	
 	<TextView android:id="@+id/page_list_nothing_here"
 		android:layout_width="match_parent"
@@ -21,9 +21,16 @@
 		android:layout_height="wrap_content"
 		android:queryHint="@string/page_list_search_placeholder" />
 	
-	<ListView android:id="@+id/page_list_main"
+	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/page_list_refresh_detector"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_below="@id/page_list_filter"
-		android:smoothScrollbar="true" />
+		android:layout_below="@id/page_list_filter">
+		
+		<ListView android:id="@+id/page_list_main"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:smoothScrollbar="true" />
+		
+	</android.support.v4.widget.SwipeRefreshLayout>
+	
 </RelativeLayout>
