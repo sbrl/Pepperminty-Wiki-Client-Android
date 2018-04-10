@@ -12,4 +12,5 @@
 	
 	<color name="colorOk">#279f0c</color>
 	<color name="colorWarning">#edac22</color>
+	<color name="colorError">#ed2b21</color>
 </resources>

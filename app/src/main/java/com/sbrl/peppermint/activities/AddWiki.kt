@@ -26,6 +26,7 @@ import kotlin.concurrent.thread
 enum class TestConnectionStatus {
 	Ok,
 	RequiresLogin,
+	Warning,
 	Error
 }
 
@@ -33,6 +34,8 @@ class AddWiki : AppCompatActivity() {
 	private val LogTag = "[activity] AddWiki"
 	
     private lateinit var prefs : PreferencesManager
+	
+	private lateinit var addButton : Button;
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +46,7 @@ class AddWiki : AppCompatActivity() {
 		// ---------------------------
 		// ----- Event listeners -----
 		// ---------------------------
-        val addButton : Button = findViewById(R.id.add_wiki_submit)
+        addButton = findViewById(R.id.add_wiki_submit)
         addButton.setOnClickListener { addWiki(it) }
 		
 		val urlBox : EditText = findViewById(R.id.add_wiki_url)
@@ -72,7 +75,12 @@ class AddWiki : AppCompatActivity() {
 		} catch(error : Exception) {
 			Log.e(LogTag, error.toString())
 			error.printStackTrace()
-			runOnUiThread { setWikiStatus(TestConnectionStatus.Error, error.message) }
+			runOnUiThread {
+				setWikiStatus(
+					TestConnectionStatus.Error,
+					if(error.message != null) getString(R.string.connection_test_error).replace("{0}", error.message!!) else null
+				)
+			}
 			return
 		}
 		
@@ -118,27 +126,42 @@ class AddWiki : AppCompatActivity() {
 		val statusTextDisplay : TextView = findViewById(R.id.add_wiki_status_text)
 		
 		statusContainer.visibility = View.VISIBLE
-		if(status == TestConnectionStatus.Error) {
-			statusIconDisplay.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icon_warning))
-			statusIconDisplay.colorFilter = LightingColorFilter(
-				ContextCompat.getColor(this, R.color.colorWarning),
-				ContextCompat.getColor(this, R.color.colorWarning)
-			)
-			statusTextDisplay.text = getString(R.string.add_wiki_connection_failure)
-				.replace("{0}", errorMessage ?: "")
-		} else {
-			statusIconDisplay.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.icon_ok))
-			statusIconDisplay.colorFilter = LightingColorFilter(
-				ContextCompat.getColor(this, R.color.colorOk),
-				ContextCompat.getColor(this, R.color.colorOk)
-			)
-			statusTextDisplay.text = if(status == TestConnectionStatus.RequiresLogin)
-				getString(R.string.add_wiki_connection_ok_login)
-			else
-				getString(R.string.add_wiki_connection_ok)
-				
+		
+		val icon = ContextCompat.getDrawable(this, when(status) {
+			TestConnectionStatus.Ok,
+			TestConnectionStatus.RequiresLogin
+				-> R.drawable.icon_ok
+			
+			TestConnectionStatus.Warning ->
+				R.drawable.icon_warning
+			
+			TestConnectionStatus.Error ->
+				R.drawable.icon_error
+		})
+		val iconColor = when(status) {
+			TestConnectionStatus.Ok,
+			TestConnectionStatus.RequiresLogin
+				-> R.color.colorOk
+			
+			TestConnectionStatus.Warning -> R.color.colorWarning
+			
+			TestConnectionStatus.Error -> R.color.colorError
+		}
+		val displayText = when(status) {
+			TestConnectionStatus.Ok -> getString(R.string.add_wiki_connection_ok)
+			TestConnectionStatus.RequiresLogin -> getString(R.string.add_wiki_connection_ok_login)
+			
+			else -> errorMessage!!
 		}
 		
+		statusIconDisplay.setImageDrawable(icon)
+		statusIconDisplay.colorFilter = LightingColorFilter(
+			ContextCompat.getColor(this, iconColor),
+			ContextCompat.getColor(this, iconColor)
+		)
+		statusTextDisplay.text = displayText
+		
+		addButton.isEnabled = status != TestConnectionStatus.Error
 	}
     
     @SuppressLint("WrongViewCast")
