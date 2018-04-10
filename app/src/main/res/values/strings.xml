@@ -42,4 +42,5 @@
 	<string name="pref_cache_clear_current_size">Current size:</string>
 	<string name="pref_key_image_loading">preference_image_loading</string>
 	<string name="connection_test_error">Error: {0}. Try checking the url!</string>
+	<string name="page_list_refreshed_list">Page list refreshed</string>
 </resources>

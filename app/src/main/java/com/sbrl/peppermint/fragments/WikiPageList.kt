@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.bricks.notify_send
 import com.sbrl.peppermint.display.PageListAdapter
 import com.sbrl.peppermint.display.WikiPageInfo
 
@@ -104,7 +105,10 @@ class WikiPageList : Fragment() {
 		val nothingHereMessage : TextView = containingView.findViewById(R.id.page_list_nothing_here)
 		nothingHereMessage.visibility = View.GONE
 		
-		if(loadingComplete) ToggleProgressDisplay(false)
+		if(loadingComplete) {
+			ToggleProgressDisplay(false)
+			notify_send(context!!, getString(R.string.page_list_refreshed_list))
+		}
 	}
 	
 	public fun DisplayEmpty() {
