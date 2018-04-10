@@ -1,7 +1,9 @@
 # Changelog
 This is the changelog for the Pepperminty Wiki Android Client. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
-## v0.2-dev
+## v0.3-dev
+
+## v0.2
 
 ### Added
  - Added swipe-down gesture to main page list that re-fetches the page list from the internet

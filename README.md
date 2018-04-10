@@ -2,7 +2,7 @@
 
 > :wrench: WIP :wrench: An experimental [Pepperminty Wiki](https://github.com/sbrl/Pepperminty-Wiki) client, written in Kotlin for Android.
 
-**Latest Version:** v0.1 (internal testing) v0.2-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/blob/master/Changelog.md))
+**Latest Version:** v0.2 (internal testing) v0.3-dev (development) ([Changelog](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/blob/master/Changelog.md))
 
 ## Install
 
