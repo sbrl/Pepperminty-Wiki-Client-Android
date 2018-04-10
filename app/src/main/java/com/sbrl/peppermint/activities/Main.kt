@@ -104,6 +104,24 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		})
 	}
 	
+	/* ********************************************************************** */
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.main_options, menu)
+		return true
+	}
+	override fun onOptionsItemSelected(item: MenuItem) : Boolean = when(item.itemId) {
+		R.id.main_menu_refresh -> {
+			Log.i(LogTag, "Refresh requested via button")
+			pageListFragment.ToggleProgressDisplay(true)
+			onRefreshRequest()
+			true
+		}
+		else -> super.onOptionsItemSelected(item)
+	}
+	
+	/* ********************************************************************** */
+	
+	
 	override fun onRefreshRequest() {
 		thread(start = true) {
 			updatePageList(true)

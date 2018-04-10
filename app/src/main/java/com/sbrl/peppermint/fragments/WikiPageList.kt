@@ -104,17 +104,17 @@ class WikiPageList : Fragment() {
 		val nothingHereMessage : TextView = containingView.findViewById(R.id.page_list_nothing_here)
 		nothingHereMessage.visibility = View.GONE
 		
-		if(loadingComplete) toggleProgressDisplay(false)
+		if(loadingComplete) ToggleProgressDisplay(false)
 	}
 	
 	public fun DisplayEmpty() {
 		val nothingHereMessage : TextView = containingView.findViewById(R.id.page_list_nothing_here)
 		nothingHereMessage.visibility = View.VISIBLE
 		
-		toggleProgressDisplay(false)
+		ToggleProgressDisplay(false)
 	}
 	
-	protected fun toggleProgressDisplay(visible : Boolean) {
+	public fun ToggleProgressDisplay(visible : Boolean) {
 		swipeDetector.isRefreshing = visible
 	}
 	

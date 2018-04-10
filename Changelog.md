@@ -5,7 +5,7 @@ This is the changelog for the Pepperminty Wiki Android Client. This is the maste
 
 ### Added
  - Added swipe-down gesture to main page list that re-fetches the page list from the internet
- - 
+ - Added new 3-dots menu to main page list with option to refresh
 
 ### Fixed
  - Tidied up the connection tester when adding a wiki. It's more helpful, has new icons, and disables the "Add Wiki" button when there's an error! :D
