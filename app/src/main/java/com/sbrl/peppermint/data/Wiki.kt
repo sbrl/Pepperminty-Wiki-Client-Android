@@ -4,9 +4,11 @@ import android.content.Context
 import android.util.Log
 import com.sbrl.peppermint.bricks.DataManager
 import khttp.responses.Response
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.net.ConnectException
+import java.util.*
 
 public enum class ConnectionStatus {
 	// The connection is ok
@@ -26,8 +28,9 @@ class Wiki {
 	
 	public val LoginCookieName = "PHPSESSID"
 	
-	private val cacheIdPageList get() = "$Name-page-list.txt"
+	private val cacheIdPageList get() = "$Name/page-list.txt"
 	private fun cacheIdPageHtml(pageName: String) : String = "$Name/pages/$pageName"
+	private val cacheIdRecentChanges get() = "$Name/recent-changes.json"
 	
 	public val Name : String
 	public val Info : WikiCredentials
@@ -153,6 +156,73 @@ class Wiki {
 		storage.CacheString(cacheIdPageHtml(pageName), response.text)
 		
 		return response.text
+	}
+	
+	public fun GetRecentChanges(refreshFromInternet: Boolean) : List<RecentChange> {
+		val result = arrayListOf<RecentChange>()
+		val rawRecentChanges = JSONArray(if(refreshFromInternet || !storage.HasCachedData(cacheIdRecentChanges))
+			downloadRecentChanges()
+		else
+			storage.GetCachedString(cacheIdRecentChanges))
+		
+		var nextItem : JSONObject
+		for (i in 0..(rawRecentChanges.length() - 1)) {
+			nextItem = rawRecentChanges.getJSONObject(i)
+			result.add(when(nextItem.getString("type")) {
+				"edit" -> RecentChangeEdit(
+					// Java takes milliseconds since the epoch, but unix timestamps are in seconds
+					Date(nextItem.getLong("timestamp") * 1000),
+					nextItem.getString("page"),
+					nextItem.getString("user"),
+					nextItem.getInt("newsize"),
+					nextItem.getInt("sizediff"),
+					nextItem.has("newpage") && nextItem.getBoolean("newpage")
+				)
+				"move" -> RecentChangeMove(
+					// Java takes milliseconds since the epoch, but unix timestamps are in seconds
+					Date(nextItem.getLong("timestamp") * 1000),
+					nextItem.getString("page"),
+					nextItem.getString("user"),
+					nextItem.getString("oldpage")
+				)
+				"upload" -> RecentChangeUpload(
+					// Java takes milliseconds since the epoch, but unix timestamps are in seconds
+					Date(nextItem.getLong("timestamp") * 1000),
+					nextItem.getString("page"),
+					nextItem.getString("user"),
+					nextItem.getInt("filesize")
+				)
+				"deletion" -> RecentChangeDeletion(
+					// Java takes milliseconds since the epoch, but unix timestamps are in seconds
+					Date(nextItem.getLong("timestamp") * 1000),
+					nextItem.getString("page"),
+					nextItem.getString("user")
+				)
+				else -> RecentChange(
+					Date(nextItem.getLong("timestamp") * 1000),
+					nextItem.getString("type"),
+					nextItem.getString("page"),
+					nextItem.getString("user")
+				)
+			})
+		}
+		return result
+	}
+	
+	private fun downloadRecentChanges() : String {
+		val rawRecentChanges = khttp.get(
+			Info.RootUrl,
+			params = mapOf(
+				"action" to "recent-changes",
+				"format" to "json"
+			),
+			cookies = mapOf( LoginCookieName to prefs.GetSessionToken() )
+		)
+		Log.i(LogTag, "Downloaded ${rawRecentChanges.text.length} byte recent changes list.")
+		
+		storage.CacheString(cacheIdRecentChanges, rawRecentChanges.text)
+		
+		return rawRecentChanges.text
 	}
 	
 	private fun responseRequiresLogin(response : Response) : Boolean {

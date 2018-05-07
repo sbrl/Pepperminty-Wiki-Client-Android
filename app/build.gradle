@@ -41,7 +41,7 @@ dependencies {
 	// khttp: A simple http client
 	implementation 'com.android.support:support-v4:27.1.1'
 	implementation 'com.android.support:recyclerview-v7:27.1.1'
-	implementation ('com.github.jkcclemens:khttp:master-SNAPSHOT') {
+	implementation('com.github.jkcclemens:khttp:master-SNAPSHOT') {
 		exclude group: 'org.json', module: 'json'
 	}
 	
