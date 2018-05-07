@@ -11,7 +11,7 @@
 	<string name="add_wiki_connection_ok">Connection ok!</string>
 	<string name="add_wiki_connection_ok_login">Connection ok, but a login is required.</string>
 	<string name="view_page_refresh">Refresh</string>
-	<string name="page_list_search_placeholder">Start typing to filter....</string>
+	<string name="filter_search_placeholder">Start typing to filter....</string>
 	<string name="add_wiki_no_status_param">That doesn\'t appear to be a wiki, as the status parameter was not found.</string>
 	<string name="add_wiki_invalid_status">That wiki appears to have an invalid status of {0}</string>
 	<string name="add_wiki_invalid_status_response">That wiki doesn\'t appear to have a valid status page.</string>
@@ -43,4 +43,5 @@
 	<string name="pref_key_image_loading">preference_image_loading</string>
 	<string name="connection_test_error">Error: {0}. Try checking the url!</string>
 	<string name="page_list_refreshed_list">Page list refreshed</string>
+	<string name="recent_changes_nothing_here_yet">Nothing here yet! Try making some changes first.</string>
 </resources>

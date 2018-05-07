@@ -9,6 +9,7 @@
 	<color name="colorBackgroundAccent">#f1dac0</color>
 	
 	<color name="colorTextMain">#111111</color>
+	<color name="colorTextSecondary">#999999</color>
 	
 	<color name="colorOk">#279f0c</color>
 	<color name="colorWarning">#edac22</color>

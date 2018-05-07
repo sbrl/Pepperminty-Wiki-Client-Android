@@ -9,24 +9,24 @@
 		android:layout_height="wrap_content"
 		android:visibility="visible" /> -->
 	
-	<TextView android:id="@+id/page_list_nothing_here"
+	<TextView android:id="@+id/recent_changes_nothing_here"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:visibility="gone"
 		android:gravity="center"
-		android:text="@string/page_list_nothing_here_yet" />
+		android:text="@string/recent_changes_nothing_here_yet" />
 	
-	<SearchView android:id="@+id/page_list_filter"
+	<SearchView android:id="@+id/recent_changes_filter"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:queryHint="@string/filter_search_placeholder" />
 	
-	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/page_list_refresh_detector"
+	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/recent_changes_refresh_detector"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_below="@id/page_list_filter">
+		android:layout_below="@id/recent_changes_filter">
 		
-		<ListView android:id="@+id/page_list_main"
+		<ListView android:id="@+id/recent_changes_main"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:smoothScrollbar="true" />
