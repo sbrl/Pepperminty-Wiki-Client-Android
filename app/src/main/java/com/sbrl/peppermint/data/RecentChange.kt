@@ -3,10 +3,10 @@ package com.sbrl.peppermint.data
 import java.util.*
 
 public open class RecentChange(
-	Timestamp: Date,
-	Type: String,
-	PageName: String,
-	User: String
+	public val Timestamp: Date,
+	public val Type: String,
+	public val PageName: String,
+	public val User: String
 ) {
 
 }
@@ -15,9 +15,9 @@ public class RecentChangeEdit(
 	Timestamp: Date,
 	PageName: String,
 	User: String,
-	NewSize : Int,
-	SizeDiff : Int,
-	NewPage : Boolean = false
+	public val NewSize : Int,
+	public val SizeDiff : Int,
+	public val NewPage : Boolean = false
 ) : RecentChange(Timestamp, "edit", PageName, User) {
 
 }
@@ -26,7 +26,7 @@ public class RecentChangeMove(
 	Timestamp: Date,
 	PageName: String,
 	User: String,
-	OldPageName : String
+	public val OldPageName : String
 ) : RecentChange(Timestamp, "move", PageName, User) {
 
 }
@@ -35,7 +35,7 @@ public class RecentChangeUpload(
 	Timestamp: Date,
 	PageName: String,
 	User: String,
-	Filesize: Int
+	public val Filesize: Int
 ) : RecentChange(Timestamp, "upload", PageName, User) {
 
 }
@@ -53,8 +53,8 @@ public class RecentChangeComment(
 	Timestamp: Date,
 	PageName: String,
 	User: String,
-	CommentId : String,
-	ReplyDepth : Int
+	public val CommentId : String,
+	public val ReplyDepth : Int
 ) : RecentChange(Timestamp, "comment", PageName, User) {
 
 }

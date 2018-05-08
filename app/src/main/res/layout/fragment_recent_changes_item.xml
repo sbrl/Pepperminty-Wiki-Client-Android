@@ -4,24 +4,60 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:gravity="center"
-	android:padding="5dp">
+	android:padding="5dp"
+	android:orientation="horizontal">
 	
-	<ImageView android:id="@+id/page_list_item_icon"
+	<ImageView android:id="@+id/recent_change_item_icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="10dp"
 		android:src="@drawable/icon_edit"
 		android:tint="@color/colorAccent" />
 	
-	<TextView android:id="@+id/recent_change_item_name"
-		android:layout_width="0dp"
+	<LinearLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_weight="10" />
-	<TextView android:id="@+id/recent_change_item_datetime"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_weight="10"
-		android:textColor="@color/colorTextSecondary"
-		android:textAlignment="viewEnd"/>
+		android:orientation="vertical"
+		android:gravity="center">
+		
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+			
+			<TextView android:id="@+id/recent_change_item_page_name"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="10" />
+			<TextView android:id="@+id/recent_change_item_datetime"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="10"
+				android:textColor="@color/colorTextSecondary"
+				android:textAlignment="viewEnd" />
+		
+		</LinearLayout>
+		
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+			
+			<TextView android:id="@+id/recent_change_details"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="10" />
+			
+			<TextView android:id="@+id/recent_change_user"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="10"
+				android:textColor="@color/colorTextSecondary"
+				android:textAlignment="viewEnd" />
+		
+		</LinearLayout>
+		
+	</LinearLayout>
+	
 	
 </LinearLayout>
