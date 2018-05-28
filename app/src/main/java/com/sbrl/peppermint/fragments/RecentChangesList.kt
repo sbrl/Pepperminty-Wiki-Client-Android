@@ -12,8 +12,8 @@ import android.widget.*
 
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.notify_send
-import com.sbrl.peppermint.display.PageListAdapter
-import com.sbrl.peppermint.display.WikiPageInfo
+import com.sbrl.peppermint.data.RecentChange
+import com.sbrl.peppermint.display.RecentChangesListAdapter
 
 
 /**
@@ -29,11 +29,11 @@ class RecentChangesList : Fragment() {
 	
 	private lateinit var swipeDetector : SwipeRefreshLayout
 	
-	private lateinit var pageListAdapter : PageListAdapter
+	private lateinit var changeListAdapter : RecentChangesListAdapter
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		pageListAdapter = PageListAdapter(arrayListOf(), context!!)
+		changeListAdapter = RecentChangesListAdapter(arrayListOf(), context!!)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -65,12 +65,12 @@ class RecentChangesList : Fragment() {
 	private fun attachFilterQueryUpdateListeners(target : SearchView) {
 		target.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 			override fun onQueryTextChange(query : String?): Boolean {
-				pageListAdapter.filter.filter(query)
+				changeListAdapter.filter.filter(query)
 				return true
 			}
 			
 			override fun onQueryTextSubmit(query : String?): Boolean {
-				pageListAdapter.filter.filter(query)
+				changeListAdapter.filter.filter(query)
 				return true
 			}
 			
@@ -85,34 +85,32 @@ class RecentChangesList : Fragment() {
 		}
 	}
 	
-	public fun PopulatePageList(rawPageList : List<String>, loadingComplete : Boolean) {
-		val pageListDisplay : ListView = containingView.findViewById(R.id.page_list_main)
+	public fun PopulateRecentChangesList(rawPageList : List<RecentChange>, loadingComplete : Boolean) {
+		val changeListDisplay : ListView = containingView.findViewById(R.id.page_list_main)
 		
-		val pageList : ArrayList<WikiPageInfo> = arrayListOf()
-		for(nextPageName : String in rawPageList)
-			pageList.add(WikiPageInfo(nextPageName, false))
+		val pageList : ArrayList<RecentChange> = arrayListOf()
 		
-		pageListAdapter = PageListAdapter(pageList, context!!)
-		pageListDisplay.adapter = pageListAdapter
+		changeListAdapter = RecentChangesListAdapter(pageList, context!!)
+		changeListDisplay.adapter = changeListAdapter
 		
-		pageListDisplay.onItemClickListener = AdapterView.OnItemClickListener {
+		changeListDisplay.onItemClickListener = AdapterView.OnItemClickListener {
 				adapterView, view, position, id ->
-			interactionListener?.onPageSelection(pageListAdapter.getItem(position))
+			interactionListener?.onPageSelection(changeListAdapter.getItem(position))
 		}
 		
 		// ---------
 		
-		val nothingHereMessage : TextView = containingView.findViewById(R.id.page_list_nothing_here)
+		val nothingHereMessage : TextView = containingView.findViewById(R.id.recent_changes_nothing_here)
 		nothingHereMessage.visibility = View.GONE
 		
 		if(loadingComplete) {
 			ToggleProgressDisplay(false)
-			notify_send(context!!, getString(R.string.page_list_refreshed_list))
+			notify_send(context!!, getString(R.string.recent_changes_refreshed_list))
 		}
 	}
 	
 	public fun DisplayEmpty() {
-		val nothingHereMessage : TextView = containingView.findViewById(R.id.page_list_nothing_here)
+		val nothingHereMessage : TextView = containingView.findViewById(R.id.recent_changes_nothing_here)
 		nothingHereMessage.visibility = View.VISIBLE
 		
 		ToggleProgressDisplay(false)
@@ -136,6 +134,6 @@ class RecentChangesList : Fragment() {
 	interface OnListFragmentInteractionListener {
 		fun onRefreshRequest()
 		
-		fun onPageSelection(item: WikiPageInfo)
+		fun onPageSelection(item: RecentChange)
 	}
 }

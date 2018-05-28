@@ -18,12 +18,14 @@ import kotlin.concurrent.thread
 
 public abstract class TemplateNavigation : AppCompatActivity()
 {
+	protected val INTENT_WIKI_NAME = "wiki-name"
 	
 	protected lateinit var prefs : PreferencesManager
 	
 	protected lateinit var masterView : DrawerLayout
 	protected lateinit var toolbar : Toolbar
 	protected lateinit var navigationDrawer : NavigationView
+	
 	
 	protected abstract val contentId : Int
 	

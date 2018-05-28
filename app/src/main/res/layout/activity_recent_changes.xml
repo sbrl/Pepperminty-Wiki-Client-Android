@@ -5,5 +5,10 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	tools:context=".activities.RecentChanges">
-
+	
+	<fragment class="com.sbrl.peppermint.fragments.RecentChangesList"
+		android:id="@+id/frag_recent_changes_list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
+	
 </android.support.constraint.ConstraintLayout>

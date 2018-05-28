@@ -110,13 +110,15 @@ class RecentChangesListAdapter : ArrayAdapter<RecentChange>, Filterable {
 			override fun performFiltering(constraint: CharSequence?): FilterResults {
 				val query : String = if(constraint == null || constraint.isEmpty())
 					""
-				else constraint.toString().toLowerCase()
+				else constraint.toString().trim().toLowerCase()
 				
 				val result = FilterResults()
-				val resultList = arrayListOf<WikiPageInfo>()
-				for(pageData : WikiPageInfo in items) {
-					if(pageData.Name.toLowerCase().contains(query))
-						resultList.add(pageData)
+				val resultList = arrayListOf<RecentChange>()
+				for(changeData : RecentChange in items) {
+					if(changeData.PageName.toLowerCase().contains(query) ||
+						changeData.Type.toLowerCase().contains(query) ||
+						changeData.User.toLowerCase().contains(query))
+						resultList.add(changeData)
 				}
 				result.values = resultList
 				
@@ -128,7 +130,7 @@ class RecentChangesListAdapter : ArrayAdapter<RecentChange>, Filterable {
 				itemsFiltered = if(results == null)
 					items
 				else
-					results.values as List<WikiPageInfo>
+					results.values as List<RecentChange>
 				
 				notifyDataSetChanged()
 			}

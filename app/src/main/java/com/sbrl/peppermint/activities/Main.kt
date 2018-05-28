@@ -20,7 +20,6 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 	
 	private val LogTag = "[activity] Main"
 	
-	private val INTENT_WIKI_NAME = "wiki-name"
 	
 	private lateinit var pageListFragment : WikiPageList
 	

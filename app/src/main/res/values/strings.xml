@@ -43,7 +43,10 @@
 	<string name="pref_key_image_loading">preference_image_loading</string>
 	<string name="connection_test_error">Error: {0}. Try checking the url!</string>
 	<string name="page_list_refreshed_list">Page list refreshed</string>
+	<string name="recent_changes_refreshed_list">Recent Changes list refreshed</string>
 	<string name="recent_changes_nothing_here_yet">Nothing here yet! Try making some changes first.</string>
 	<string name="recent_change_user_by">By {0}</string>
 	<string name="recent_change_move_details">From {0}</string>
+	<string name="nav_unknown_wiki">Unknown wiki name {0}.</string>
+	<string name="nav_connection_failed">Unable to connect to wiki (status {0})</string>
 </resources>
