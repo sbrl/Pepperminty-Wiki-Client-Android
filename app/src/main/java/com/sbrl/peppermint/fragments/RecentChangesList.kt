@@ -95,7 +95,7 @@ class RecentChangesList : Fragment() {
 		
 		changeListDisplay.onItemClickListener = AdapterView.OnItemClickListener {
 				adapterView, view, position, id ->
-			interactionListener?.onPageSelection(changeListAdapter.getItem(position))
+			interactionListener?.onChangeSelection(changeListAdapter.getItem(position))
 		}
 		
 		// ---------
@@ -104,7 +104,7 @@ class RecentChangesList : Fragment() {
 		nothingHereMessage.visibility = View.GONE
 		
 		if(loadingComplete) {
-			ToggleProgressDisplay(false)
+			toggleProgressDisplay(false)
 			notify_send(context!!, getString(R.string.recent_changes_refreshed_list))
 		}
 	}
@@ -113,10 +113,10 @@ class RecentChangesList : Fragment() {
 		val nothingHereMessage : TextView = containingView.findViewById(R.id.recent_changes_nothing_here)
 		nothingHereMessage.visibility = View.VISIBLE
 		
-		ToggleProgressDisplay(false)
+		toggleProgressDisplay(false)
 	}
 	
-	public fun ToggleProgressDisplay(visible : Boolean) {
+	private fun toggleProgressDisplay(visible : Boolean) {
 		swipeDetector.isRefreshing = visible
 	}
 	
@@ -134,6 +134,6 @@ class RecentChangesList : Fragment() {
 	interface OnListFragmentInteractionListener {
 		fun onRefreshRequest()
 		
-		fun onPageSelection(item: RecentChange)
+		fun onChangeSelection(item: RecentChange)
 	}
 }

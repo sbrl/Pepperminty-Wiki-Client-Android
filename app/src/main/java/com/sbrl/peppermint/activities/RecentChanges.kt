@@ -1,14 +1,18 @@
 package com.sbrl.peppermint.activities
 
+import android.content.Intent
 import android.os.Bundle
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.notify_send
 import com.sbrl.peppermint.data.ConnectionStatus
 import com.sbrl.peppermint.data.RecentChange
 import com.sbrl.peppermint.data.Wiki
+import com.sbrl.peppermint.display.WikiPageInfo
 import com.sbrl.peppermint.fragments.RecentChangesList
+import com.sbrl.peppermint.fragments.WikiPageList
+import kotlin.concurrent.thread
 
-class RecentChanges() : TemplateNavigation() {
+class RecentChanges() : TemplateNavigation(), RecentChangesList.OnListFragmentInteractionListener {
 	private val LogTag = "[activity] RecentChanges"
 	
 	lateinit var recentChangesFragment : RecentChangesList
@@ -21,6 +25,12 @@ class RecentChanges() : TemplateNavigation() {
 		setContentView(R.layout.activity_recent_changes)
 		
 		recentChangesFragment = supportFragmentManager.findFragmentById(R.id.frag_page_list) as RecentChangesList
+		
+		if(prefs.GetWikiList().size == 0) {
+			recentChangesFragment.DisplayEmpty()
+		} else {
+			thread(start = true) { changeWiki("") }
+		}
 	}
 	
 	
@@ -84,4 +94,20 @@ class RecentChanges() : TemplateNavigation() {
 			recentChangesFragment.PopulateRecentChangesList(changeList, true)
 		})
 	}
+	
+	/* ****************************************************** */
+	
+	override fun onRefreshRequest() {
+		thread(start = true) {
+			updateChangesList(true)
+		}
+	}
+	
+	override fun onChangeSelection(item: RecentChange) {
+		val intent = Intent(this, ViewPage::class.java)
+		intent.putExtra("wiki-name", currentWiki.Name)
+		intent.putExtra("page-name", item.PageName)
+		startActivity(intent)
+	}
+	
 }
