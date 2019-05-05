@@ -1,19 +1,18 @@
-package com.sbrl.peppermint.activities
+package com.sbrl.peppermint.fragments
 
 import android.content.Intent
 import android.os.Bundle
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.activities.TemplateNavigation
+import com.sbrl.peppermint.activities.ViewPage
 import com.sbrl.peppermint.bricks.notify_send
 import com.sbrl.peppermint.data.ConnectionStatus
 import com.sbrl.peppermint.data.RecentChange
 import com.sbrl.peppermint.data.Wiki
-import com.sbrl.peppermint.display.WikiPageInfo
-import com.sbrl.peppermint.fragments.RecentChangesList
-import com.sbrl.peppermint.fragments.WikiPageList
 import kotlin.concurrent.thread
 
 class RecentChanges() : TemplateNavigation(), RecentChangesList.OnListFragmentInteractionListener {
-	private val LogTag = "[activity] RecentChanges"
+	private val LogTag = "[fragment] RecentChanges"
 	
 	lateinit var recentChangesFragment : RecentChangesList
 	
@@ -24,7 +23,7 @@ class RecentChanges() : TemplateNavigation(), RecentChangesList.OnListFragmentIn
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_recent_changes)
 		
-		recentChangesFragment = supportFragmentManager.findFragmentById(R.id.frag_page_list) as RecentChangesList
+		recentChangesFragment = supportFragmentManager.findFragmentById(R.id.frag_main_content) as RecentChangesList
 		
 		if(prefs.GetWikiList().size == 0) {
 			recentChangesFragment.DisplayEmpty()
@@ -63,7 +62,7 @@ class RecentChanges() : TemplateNavigation(), RecentChangesList.OnListFragmentIn
 		runOnUiThread {
 			toolbar.title = newWikiName
 			
-			recentChangesFragment.PopulateRecentChangesList(arrayListOf(), false) // Blank the page list
+			recentChangesFragment.PopulateRecentChangesList(arrayListOf(), false) // Blank the recent changes list
 			masterView.closeDrawers()
 			setSelectedWiki(newWikiName)
 		}
@@ -90,9 +89,9 @@ class RecentChanges() : TemplateNavigation(), RecentChangesList.OnListFragmentIn
 			arrayListOf<RecentChange>() // Return value
 		}
 		
-		runOnUiThread({
+		runOnUiThread {
 			recentChangesFragment.PopulateRecentChangesList(changeList, true)
-		})
+		}
 	}
 	
 	/* ****************************************************** */

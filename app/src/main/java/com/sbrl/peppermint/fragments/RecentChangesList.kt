@@ -46,6 +46,9 @@ class RecentChangesList : Fragment() {
 		attachRefreshListener(swipeDetector)
 		attachFilterQueryUpdateListeners(containingView.findViewById<SearchView>(R.id.page_list_filter))
 		
+		// Be empty by default
+		DisplayEmpty()
+		
 		return containingView
 	}
 	
@@ -85,10 +88,18 @@ class RecentChangesList : Fragment() {
 		}
 	}
 	
-	public fun PopulateRecentChangesList(rawPageList : List<RecentChange>, loadingComplete : Boolean) {
+	public fun PopulateRecentChangesList(rawChangesList : List<RecentChange>, loadingComplete : Boolean) {
+		if(rawChangesList.isEmpty()) {
+			DisplayEmpty()
+			return
+		}
+		
 		val changeListDisplay : ListView = containingView.findViewById(R.id.page_list_main)
 		
+		// Take a shallow copy of the list
 		val pageList : ArrayList<RecentChange> = arrayListOf()
+		for(nextItem in rawChangesList)
+			pageList.add(nextItem)
 		
 		changeListAdapter = RecentChangesListAdapter(pageList, context!!)
 		changeListDisplay.adapter = changeListAdapter

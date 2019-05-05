@@ -46,6 +46,8 @@ class WikiPageList : Fragment() {
 		attachRefreshListener(swipeDetector)
 		attachFilterQueryUpdateListeners(containingView.findViewById<SearchView>(R.id.page_list_filter))
 		
+		DisplayEmpty()
+		
 		return containingView
 	}
 	

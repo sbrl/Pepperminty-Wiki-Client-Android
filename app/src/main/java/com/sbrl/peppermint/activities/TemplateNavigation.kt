@@ -2,7 +2,6 @@ package com.sbrl.peppermint.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
@@ -41,7 +40,7 @@ public abstract class TemplateNavigation : AppCompatActivity()
 		// ---------------- Views ----------------
 		// ---------------------------------------
 		masterView = findViewById(R.id.main_area)
-		toolbar = findViewById(R.id.toolbar)
+		toolbar = findViewById(R.id.toolbar_top)
 		navigationDrawer = findViewById(R.id.main_drawer)
 		
 		// ---------------------------------------

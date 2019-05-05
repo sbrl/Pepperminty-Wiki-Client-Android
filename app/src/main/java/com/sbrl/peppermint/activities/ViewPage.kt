@@ -65,7 +65,7 @@ class ViewPage : TemplateNavigation() {
 	
 	/* ********************************************************************** */
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-		menuInflater.inflate(R.menu.view_page_options, menu)
+		menuInflater.inflate(R.menu.view_page_nav, menu)
 		return true
 	}
 	override fun onOptionsItemSelected(item: MenuItem) : Boolean = when(item.itemId) {

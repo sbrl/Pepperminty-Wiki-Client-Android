@@ -49,4 +49,6 @@
 	<string name="recent_change_move_details">From {0}</string>
 	<string name="nav_unknown_wiki">Unknown wiki name {0}.</string>
 	<string name="nav_connection_failed">Unable to connect to wiki (status {0})</string>
+	<string name="page_list">Page List</string>
+	<string name="recent_changes">Recent Changes</string>
 </resources>

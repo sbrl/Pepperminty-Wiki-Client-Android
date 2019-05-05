@@ -2,36 +2,58 @@ package com.sbrl.peppermint.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.FrameLayout
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.bricks.notify_send
 import com.sbrl.peppermint.data.ConnectionStatus
+import com.sbrl.peppermint.data.RecentChange
 import com.sbrl.peppermint.data.Wiki
 import com.sbrl.peppermint.display.WikiPageInfo
+import com.sbrl.peppermint.fragments.RecentChangesList
 import com.sbrl.peppermint.fragments.WikiPageList
 import kotlin.concurrent.thread
 
-class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListener {
+class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListener, RecentChangesList.OnListFragmentInteractionListener {
 	
-	private val LogTag = "[activity] Main"
+	private val _logTag = "[activity] Main"
 	
 	
-	private lateinit var pageListFragment : WikiPageList
+	private lateinit var fragmentPageList : WikiPageList
+	private lateinit var fragmentRecentChanges : RecentChangesList
+	
+	private lateinit var contentFragmentContainer : FrameLayout
+	private lateinit var toolbarBottom : BottomNavigationView
 	
 	private var currentWiki : Wiki? = null
  
 	protected override val contentId = R.layout.activity_main
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+		// ~~~~~
 		
-		pageListFragment = supportFragmentManager.findFragmentById(R.id.frag_page_list) as WikiPageList
+		contentFragmentContainer = findViewById(R.id.frag_main_content)
+		toolbarBottom = findViewById<BottomNavigationView>(R.id.toolbar_bottom)
 		
-		if(prefs.GetWikiList().size == 0) {
-			pageListFragment.DisplayEmpty()
-		} else {
+		// ~~~~~
+		
+		fragmentPageList = WikiPageList()
+		fragmentRecentChanges = RecentChangesList()
+		
+		setContentFragment(fragmentPageList)
+		
+		toolbarBottom.setOnNavigationItemSelectedListener(this::onBottomNavClick)
+	
+		// ~~~~~
+		
+		if(prefs.GetWikiList().size >= 0) {
 			thread(start = true) { changeWiki("") }
+		} else {
+//			fragmentPageList.DisplayEmpty()
 		}
     }
 	
@@ -70,7 +92,12 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		runOnUiThread {
 			toolbar.title = newWikiName
 			
-			pageListFragment.PopulatePageList(arrayListOf(), false) // Blank the page list
+			// Blank the lists
+			if(fragmentPageList.isAdded)
+				fragmentPageList.PopulatePageList(arrayListOf(), false)
+			else
+				fragmentRecentChanges.PopulateRecentChangesList(arrayListOf(), false)
+			
 			masterView.closeDrawers()
 			setSelectedWiki(newWikiName)
 		}
@@ -78,7 +105,18 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		val wikiData = prefs.GetCredentials(newWikiName)
 		currentWiki = Wiki(this, newWikiName, wikiData)
 		
-		updatePageList(false)
+		updateDisplayFragment(false)
+	}
+	
+	private fun updateDisplayFragment(refreshFromInternet: Boolean) {
+		if(fragmentPageList.isAdded) {
+			Log.i(this::class.java.name, "[smart updater] Updating page list")
+			updatePageList(refreshFromInternet)
+		}
+		else {
+			Log.i(this::class.java.name, "[smart updater] Updating recent changes")
+			updateChangesList(refreshFromInternet)
+		}
 	}
 	
 	private fun updatePageList(refreshFromInternet : Boolean) {
@@ -95,24 +133,75 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 			arrayListOf<String>() // Return value
 		}
 		
-		runOnUiThread({
-			pageListFragment.PopulatePageList(pageList, true)
-		})
+		runOnUiThread {
+			fragmentPageList.PopulatePageList(pageList, true)
+		}
+	}
+	
+	private fun updateChangesList(refreshFromInternet: Boolean) {
+		
+		val wikiStatus = currentWiki!!.TestConnection()
+		val changeList: List<RecentChange> = if (wikiStatus == ConnectionStatus.Ok)
+			currentWiki!!.GetRecentChanges(refreshFromInternet)
+		else {
+			runOnUiThread {
+				notify_send(
+					this,
+					getString(R.string.nav_connection_failed)
+						.replace("{0}", wikiStatus.toString())
+				)
+			}
+			arrayListOf<RecentChange>() // Return value
+		}
+		
+		runOnUiThread {
+			fragmentRecentChanges.PopulateRecentChangesList(changeList, true)
+		}
+	}
+	
+	private fun setContentFragment(fragment : Fragment) {
+		supportFragmentManager.beginTransaction()
+			.replace(R.id.main_container, fragment)
+			.addToBackStack(null)
+			.commit()
+	}
+	
+	private fun navigatePage(wikiName : String, pageName : String) {
+		val intent = Intent(this, ViewPage::class.java)
+		intent.putExtra("wiki-name", wikiName)
+		intent.putExtra("page-name", pageName)
+		startActivity(intent)
+		
 	}
 	
 	/* ********************************************************************** */
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-		menuInflater.inflate(R.menu.main_options, menu)
+		menuInflater.inflate(R.menu.main_nav_top, menu)
 		return true
 	}
 	override fun onOptionsItemSelected(item: MenuItem) : Boolean = when(item.itemId) {
 		R.id.main_menu_refresh -> {
-			Log.i(LogTag, "Refresh requested via button")
-			pageListFragment.ToggleProgressDisplay(true)
+			Log.i(_logTag, "Refresh requested via button")
+			fragmentPageList.ToggleProgressDisplay(true)
 			onRefreshRequest()
 			true
 		}
 		else -> super.onOptionsItemSelected(item)
+	}
+	
+	private fun onBottomNavClick(selectedItem : MenuItem) : Boolean {
+		when(selectedItem.itemId) {
+			R.id.nav_main_bottom_page_list -> {
+				setContentFragment(fragmentPageList)
+				thread(start = true) { updatePageList(false) }
+			}
+			R.id.nav_main_bottom_recent_changes -> {
+				setContentFragment(fragmentRecentChanges)
+				thread(start = true) { updateChangesList(false) }
+			}
+		}
+		
+		return true
 	}
 	
 	/* ********************************************************************** */
@@ -120,14 +209,16 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 	
 	override fun onRefreshRequest() {
 		thread(start = true) {
-			updatePageList(true)
+			updateDisplayFragment(true)
 		}
 	}
 	
 	override fun onPageSelection(item: WikiPageInfo) {
-		val intent = Intent(this, ViewPage::class.java)
-		intent.putExtra("wiki-name", currentWiki!!.Name)
-		intent.putExtra("page-name", item.Name)
-		startActivity(intent)
+		navigatePage(currentWiki!!.Name, item.Name)
+	}
+	
+	override fun onChangeSelection(item: RecentChange) {
+		// FUTURE: Add the ability to specify the specific page revision here
+		navigatePage(currentWiki!!.Name, item.PageName)
 	}
 }
