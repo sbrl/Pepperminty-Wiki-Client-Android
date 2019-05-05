@@ -8,7 +8,7 @@ android {
 	compileSdkVersion 28
 	defaultConfig {
 		applicationId "com.sbrl.peppermint"
-		minSdkVersion 17
+		minSdkVersion 19
 		targetSdkVersion 29
 		buildToolsVersion "28.0.3"
 		versionCode 3
@@ -41,7 +41,7 @@ dependencies {
 	// khttp: A simple http client
 	implementation 'com.android.support:support-v4:28.0.0'
 	implementation 'com.android.support:recyclerview-v7:28.0.0'
-	implementation "khttp:khttp:0.1.0"
+	implementation "io.karn:khttp-android:0.1.0"
 //	implementation('com.github.jkcclemens:khttp:master-SNAPSHOT') {
 //		exclude group: 'org.json', module: 'json'
 //	}
