@@ -2,11 +2,11 @@ package com.sbrl.peppermint.display
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sbrl.peppermint.R
-import android.view.LayoutInflater
 import android.widget.*
+import com.sbrl.peppermint.R
 import com.sbrl.peppermint.data.*
 
 
@@ -42,7 +42,7 @@ class RecentChangesListAdapter : ArrayAdapter<RecentChange>, Filterable {
 		// 2. Get rowView from inflater
 		var rowView : View? = convertView
 		if (rowView == null) // Inflate a new one if convertView was null
-			rowView = inflater.inflate(R.layout.fragment_page_list_item, parent, false)
+			rowView = inflater.inflate(R.layout.fragment_recent_changes_item, parent, false)
 		
 		populateDisplayItem(rowView!!, itemsFiltered[position])
 		
@@ -74,7 +74,10 @@ class RecentChangesListAdapter : ArrayAdapter<RecentChange>, Filterable {
 			iconDisplay.setImageResource((R.drawable.icon_wiki_page))
 		
 		pageNameDisplay.text = recentChange.PageName
-		dateDisplay.text = human_time_since(recentChange.Timestamp)
+		
+		dateDisplay.text = context.getString(R.string.human_time_since_ago)
+			.replace("{0}", human_time_since(recentChange.Timestamp))
+		
 		detailsDisplay.setTextColor(ContextCompat.getColor(context, R.color.colorTextSecondary))
 		detailsDisplay.text = when(recentChange.Type) {
 			"edit" -> {
