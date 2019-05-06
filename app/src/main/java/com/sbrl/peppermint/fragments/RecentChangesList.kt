@@ -21,7 +21,7 @@ import com.sbrl.peppermint.display.RecentChangesListAdapter
  * fragment (e.g. upon screen orientation changes).
  */
 class RecentChangesList : Fragment() {
-	private val LogTag = "WikiPageList"
+	private val LogTag = "RecentChangesList"
 	
 	private lateinit var containingView : View
 	
@@ -38,13 +38,13 @@ class RecentChangesList : Fragment() {
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
 							  savedInstanceState: Bundle?): View? {
-		containingView = inflater.inflate(R.layout.fragment_page_list, container, false)
+		containingView = inflater.inflate(R.layout.fragment_recent_changes, container, false)
 		
 		
-		swipeDetector = containingView.findViewById(R.id.page_list_refresh_detector)
+		swipeDetector = containingView.findViewById(R.id.recent_changes_refresh_detector)
 		
 		attachRefreshListener(swipeDetector)
-		attachFilterQueryUpdateListeners(containingView.findViewById<SearchView>(R.id.page_list_filter))
+		attachFilterQueryUpdateListeners(containingView.findViewById<SearchView>(R.id.recent_changes_filter))
 		
 		// Be empty by default
 		DisplayEmpty()
@@ -94,14 +94,14 @@ class RecentChangesList : Fragment() {
 			return
 		}
 		
-		val changeListDisplay : ListView = containingView.findViewById(R.id.page_list_main)
+		val changeListDisplay : ListView = containingView.findViewById(R.id.recent_changes_main)
 		
 		// Take a shallow copy of the list
-		val pageList : ArrayList<RecentChange> = arrayListOf()
+		val recentChangeList : ArrayList<RecentChange> = arrayListOf()
 		for(nextItem in rawChangesList)
-			pageList.add(nextItem)
+			recentChangeList.add(nextItem)
 		
-		changeListAdapter = RecentChangesListAdapter(pageList, context!!)
+		changeListAdapter = RecentChangesListAdapter(recentChangeList, context!!)
 		changeListDisplay.adapter = changeListAdapter
 		
 		changeListDisplay.onItemClickListener = AdapterView.OnItemClickListener {
