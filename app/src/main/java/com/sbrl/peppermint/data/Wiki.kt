@@ -168,7 +168,9 @@ class Wiki {
 		var nextItem : JSONObject
 		for (i in 0..(rawRecentChanges.length() - 1)) {
 			nextItem = rawRecentChanges.getJSONObject(i)
-			result.add(when(nextItem.getString("type")) {
+			var changeType = if(nextItem.has("type")) nextItem.getString("type") else "unknown"
+			
+			result.add(when(changeType) {
 				"edit" -> RecentChangeEdit(
 					// Java takes milliseconds since the epoch, but unix timestamps are in seconds
 					Date(nextItem.getLong("timestamp") * 1000),
@@ -198,9 +200,16 @@ class Wiki {
 					nextItem.getString("page"),
 					nextItem.getString("user")
 				)
+				"comment" -> RecentChangeComment(
+					Date(nextItem.getLong("timestamp") * 1000),
+					nextItem.getString("page"),
+					nextItem.getString("user"),
+					nextItem.getString("comment_id"),
+					nextItem.getInt("reply_depth")
+				)
 				else -> RecentChange(
 					Date(nextItem.getLong("timestamp") * 1000),
-					nextItem.getString("type"),
+					if(nextItem.has("type")) nextItem.getString("type") else "unknown",
 					nextItem.getString("page"),
 					nextItem.getString("user")
 				)
