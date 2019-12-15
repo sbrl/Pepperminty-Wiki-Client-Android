@@ -22,7 +22,8 @@
 	<SearchView android:id="@+id/page_list_filter"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:queryHint="@string/filter_search_placeholder" />
+		android:queryHint="@string/filter_search_placeholder"
+		android:textColor="@color/colorTextMain" />
 	
 	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/page_list_refresh_detector"
 		android:layout_width="match_parent"
