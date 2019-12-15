@@ -109,7 +109,6 @@ class WikiPageList : Fragment() {
 		
 		if(loadingComplete) {
 			ToggleProgressDisplay(false)
-			notify_send(context!!, getString(R.string.page_list_refreshed_list))
 		}
 	}
 	

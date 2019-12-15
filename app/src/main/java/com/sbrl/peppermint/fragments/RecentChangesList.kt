@@ -116,7 +116,6 @@ class RecentChangesList : Fragment() {
 		
 		if(loadingComplete) {
 			toggleProgressDisplay(false)
-			notify_send(context!!, getString(R.string.recent_changes_refreshed_list))
 		}
 	}
 	

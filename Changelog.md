@@ -2,6 +2,7 @@
 This is the changelog for the Pepperminty Wiki Android Client. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
 ## v0.3-dev
+ - Bugfix: Don't say that the page list / recent changes lists have been refresh when they haven't
 
 ## v0.2
 

@@ -135,6 +135,9 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		
 		runOnUiThread {
 			fragmentPageList.PopulatePageList(pageList, true)
+			if(refreshFromInternet) {
+				notify_send(applicationContext!!, getString(R.string.page_list_refreshed_list))
+			}
 		}
 	}
 	
@@ -156,6 +159,8 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		
 		runOnUiThread {
 			fragmentRecentChanges.PopulateRecentChangesList(changeList, true)
+			if(refreshFromInternet)
+				notify_send(applicationContext!!, getString(R.string.recent_changes_refreshed_list))
 		}
 	}
 	
