@@ -15,7 +15,15 @@
 6. Disconnect your phone, optionally disabling _USB Debugging_.
 
 ### Method 2: From the Google Play Store
-Currently, the _Pepperminty Wiki Android Client_ is in closed testing, which is available only upon invitation. Contact me (@sbrl) if you'd like access though!
+This app is available for beta testing in the Google Play Store!
+
+Link: [Pepperminty Wiki Client](https://play.google.com/store/apps/details?id=com.sbrl.peppermint)
+
+Be sure to leave a good review :P
+
+Any issues should be reported here as an issue. I am exponentially more likely to respond on here than to a review in the Google Play store.
+
+~~Currently, the _Pepperminty Wiki Android Client_ is in closed testing, which is available only upon invitation. Contact me (@sbrl) if you'd like access though!~~
 
 ## Contributions
 Contributions are welcome! Simply send open a pull request :smiley_cat:
