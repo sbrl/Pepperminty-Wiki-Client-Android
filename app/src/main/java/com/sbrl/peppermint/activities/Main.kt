@@ -20,7 +20,6 @@ import com.sbrl.peppermint.fragments.WikiPageList
 import kotlin.concurrent.thread
 
 class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListener, RecentChangesList.OnListFragmentInteractionListener {
-	
 	private val _logTag = "[activity] Main"
 	
 	
@@ -29,8 +28,6 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 	
 	private lateinit var contentFragmentContainer : FrameLayout
 	private lateinit var toolbarBottom : BottomNavigationView
-	
-	private var currentWiki : Wiki? = null
  
 	protected override val contentId = R.layout.activity_main
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,9 +69,9 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 	}
 	
 	private fun updatePageList(refreshFromInternet : Boolean) {
-		val wikiStatus = currentWiki!!.TestConnection()
+		val wikiStatus = wikiManager.getWiki()!!.TestConnection()
 		val pageList: List<String> = if (wikiStatus == ConnectionStatus.Ok)
-			currentWiki!!.GetPageList(refreshFromInternet)
+			wikiManager.getWiki()!!.GetPageList(refreshFromInternet)
 		else {
 			runOnUiThread {
 				notify_send(
@@ -95,9 +92,9 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 	
 	private fun updateChangesList(refreshFromInternet: Boolean) {
 		
-		val wikiStatus = currentWiki!!.TestConnection()
+		val wikiStatus = wikiManager.getWiki()!!.TestConnection()
 		val changeList: List<RecentChange> = if (wikiStatus == ConnectionStatus.Ok)
-			currentWiki!!.GetRecentChanges(refreshFromInternet)
+			wikiManager.getWiki()!!.GetRecentChanges(refreshFromInternet)
 		else {
 			runOnUiThread {
 				notify_send(
@@ -170,13 +167,16 @@ class Main : TemplateNavigation(), WikiPageList.OnListFragmentInteractionListene
 		}
 	}
 	
+	// TODO: Expose API on TemplateNavigation that we call in the fragment to navigate to a page instead?
+	// NOTE: Don't forget about keeping that note about page revisions too for later
+	
 	override fun onPageSelection(item: WikiPageInfo) {
-		navigatePage(currentWiki!!.Name, item.Name)
+		navigatePage(wikiManager.getWiki()!!.Name, item.Name)
 	}
 	
 	override fun onChangeSelection(item: RecentChange) {
 		// FUTURE: Add the ability to specify the specific page revision here
-		navigatePage(currentWiki!!.Name, item.PageName)
+		navigatePage(wikiManager.getWiki()!!.Name, item.PageName)
 	}
 	
 	override fun onWikiChangePre(wiki_name: String) {

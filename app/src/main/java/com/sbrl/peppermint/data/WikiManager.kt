@@ -14,10 +14,17 @@ class WikiManager(val activity : TemplateNavigation, val listener : WikiManagerE
 	}
 	
 	/**
+	 * Returns the currently active wiki, or null if one isn't set yet.
+	 */
+	public fun getWiki() : Wiki? {
+		return currentWiki
+	}
+	
+	/**
 	 * Sets the currently active wiki in the wiki manager.
 	 * @return {Boolean}	Whether we were successful in setting the  currently active wiki (it may fail if the wiki doesn't exist in the preferences manager).
 	 */
-	fun setWiki(in_wiki_name: String) : Boolean {
+	public fun setWiki(in_wiki_name: String) : Boolean {
 		var wiki_name: String = resolveWikiName(in_wiki_name) ?: return false
 		
 		// We don't change wiki if there aren't any wikis registered and we haven't been
