@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.activities.TemplateNavigation
 import com.sbrl.peppermint.bricks.notify_send
 import com.sbrl.peppermint.display.PageListAdapter
 import com.sbrl.peppermint.display.WikiPageInfo
@@ -22,6 +23,9 @@ import com.sbrl.peppermint.display.WikiPageInfo
  */
 class WikiPageList : Fragment() {
 	private val LogTag = "WikiPageList"
+	
+	private val parentActivity : TemplateNavigation
+		get() = activity as TemplateNavigation
 	
 	private lateinit var containingView : View
 	
@@ -86,6 +90,8 @@ class WikiPageList : Fragment() {
 			interactionListener!!.onRefreshRequest()
 		}
 	}
+	
+	public fun
 	
 	public fun PopulatePageList(rawPageList : List<String>, loadingComplete : Boolean) {
 		val pageListDisplay : ListView = containingView.findViewById(R.id.page_list_main)
