@@ -68,6 +68,25 @@ class ViewPage : TemplateNavigation() {
 		menuInflater.inflate(R.menu.view_page_nav, menu)
 		return true
 	}
+	
+	override fun onWikiChangePre(wiki_name: String) {
+		// noop
+	}
+	
+	override fun onWikiChangePost(wiki_name: String) {
+		// If the selected wiki is the one that's currently open, then just exit this
+		// activity
+		if(wiki_name == wiki?.Name)
+			finish()
+		
+		masterView.closeDrawers()
+		
+		// If not, then push a new one onto the stack.
+		val intent = Intent(this, Main::class.java)
+		intent.putExtra("wiki-name", wiki_name)
+		startActivity(intent)
+	}
+	
 	override fun onOptionsItemSelected(item: MenuItem) : Boolean = when(item.itemId) {
 		R.id.view_page_menu_refresh -> {
 			thread(start = true) {
@@ -158,26 +177,10 @@ class ViewPage : TemplateNavigation() {
 	}
 	
 	private fun getSpecialPageContent(specialPageId : String) : String? {
-		return when(specialPageId) {
+		return when (specialPageId) {
 			SPECIAL_PAGE_ID_CREDITS -> resources.openRawResource(R.raw.credits).readTextAndClose()
 			else -> null
 		}
-	}
-	
-	// -----------------------------------------------------------------------------
-	
-	override fun changeWiki(wikiName: String) {
-		// If the selected wiki is the one that's currently open, then just exit this
-		// activity
-		if(wikiName == wiki?.Name)
-			finish()
-		
-		masterView.closeDrawers()
-		
-		// If not, then push a new one onto the stack.
-		val intent = Intent(this, Main::class.java)
-		intent.putExtra("wiki-name", wikiName)
-		startActivity(intent)
 	}
 	
 	// -----------------------------------------------------------------------------

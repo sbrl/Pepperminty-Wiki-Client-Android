@@ -18,12 +18,15 @@ class Settings : TemplateNavigation() {
 		// Don't need setContentView() here 'cause TemplateNavigation does it for us
 	}
 	
-	override fun changeWiki(wikiName: String) {
+	override fun onWikiChangePre(wiki_name: String) {
 		masterView.closeDrawers()
+	}
+	
+	override fun onWikiChangePost(wiki_name: String) {
 		// We're on the settings screen, so just launch a new activity
 		// FUTURE: We might want to replace our current activity instead of launching a new one
 		val intent = Intent(this, Main::class.java)
-		intent.putExtra("wiki-name", wikiName)
+		intent.putExtra("wiki-name", wiki_name)
 		startActivity(intent)
 	}
 }

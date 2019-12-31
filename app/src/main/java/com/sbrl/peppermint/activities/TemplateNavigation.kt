@@ -13,17 +13,21 @@ import android.view.Menu
 import android.view.MenuItem
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.data.PreferencesManager
+import com.sbrl.peppermint.data.WikiCredentials
+import com.sbrl.peppermint.data.WikiManager
 import kotlin.concurrent.thread
 
-public abstract class TemplateNavigation : AppCompatActivity()
+public abstract class TemplateNavigation : AppCompatActivity(), WikiManager.WikiManagerEventListener
 {
-	protected val INTENT_WIKI_NAME = "wiki-name"
+	val INTENT_WIKI_NAME = "wiki-name"
 	
-	protected lateinit var prefs : PreferencesManager
+	lateinit var prefs : PreferencesManager
 	
 	protected lateinit var masterView : DrawerLayout
 	protected lateinit var toolbar : Toolbar
 	protected lateinit var navigationDrawer : NavigationView
+	
+	protected lateinit var wikiManager: WikiManager
 	
 	
 	protected abstract val contentId : Int
@@ -35,6 +39,7 @@ public abstract class TemplateNavigation : AppCompatActivity()
 		// ---------------------------------------
 		
 		prefs = PreferencesManager(this)
+		wikiManager = WikiManager(this, this)
 		
 		// ---------------------------------------
 		// ---------------- Views ----------------
@@ -99,7 +104,7 @@ public abstract class TemplateNavigation : AppCompatActivity()
 		// Handle wiki names
 		if(selectedItem.groupId == R.id.nav_main_wikis) {
 			selectedItem.isChecked = true
-			thread(start = true) { changeWiki(selectedItem.title.toString()) }
+			thread(start = true) { wikiManager.setWiki(selectedItem.title.toString()) }
 			return true
 		}
 		
@@ -142,6 +147,4 @@ public abstract class TemplateNavigation : AppCompatActivity()
 			newItem.icon = ContextCompat.getDrawable(this, R.drawable.icon_wiki)
 		}
 	}
-	
-	protected abstract fun changeWiki(wikiName: String)
 }

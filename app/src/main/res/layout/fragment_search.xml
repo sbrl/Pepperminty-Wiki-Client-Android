@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	
+	<SearchView android:id="@+id/search_box"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:queryHint="@string/filter_search_placeholder"
+		android:textColor="@color/colorTextMain" />
+	
+	<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/page_list_refresh_detector"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/search_box">
+		
+		<ListView android:id="@+id/search_results"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:smoothScrollbar="true" />
+	
+	</android.support.v4.widget.SwipeRefreshLayout>
+
+
+</RelativeLayout>
