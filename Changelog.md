@@ -4,6 +4,7 @@ This is the changelog for the Pepperminty Wiki Android Client. This is the maste
 ## v0.3-dev
  - Bugfix: Don't say that the page list / recent changes lists have been refresh when they haven't
  - Fix colours on Android 9 Pie dark mode thingy (todo: implement a dark theme, but this is a step towards it)
+ - Extensive refactoring to aid maintainability (let me know if there are any bugs)
 
 ## v0.2
 
