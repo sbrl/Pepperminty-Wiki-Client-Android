@@ -76,14 +76,17 @@ public class PreferencesManager {
 		editor.apply()
 	}
 	public fun GetSessionToken() : String {
-		return prefsStorage.getString(idSessionToken, "")
+		return prefsStorage.getString(idSessionToken, "").orEmpty()
 	}
 	
 	fun GetImageLoadingType() : String {
-		return prefsStorage.getString(
+		val default_value = context.getString(R.string.pref_image_loading_default_value)
+		val result = prefsStorage.getString(
 			context.getString(R.string.pref_key_image_loading),
-			context.getString(R.string.pref_image_loading_default_value)
+			default_value
 		)
+		if(result == null) return default_value
+		return result
 	}
 }
 
