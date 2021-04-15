@@ -4,6 +4,8 @@ import com.sbrl.peppermint.lib.helpers.HashMapBuilder
 
 
 class Wiki(inName: String, inEndpoint: String, inCredentials: WikiCredentials?) {
+	constructor(inName: String, inEndpoint: String) : this(inName, inEndpoint, null)
+	
 	var api: WikiAPIBroker = WikiAPIBroker(inEndpoint, inCredentials)
 	
 	var name: String = inName

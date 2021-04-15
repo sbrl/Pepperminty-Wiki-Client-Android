@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PeppermintyWiki">
         <activity
-            android:name=".ui.notifications.SettingsActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
         <activity
             android:name=".MainActivity"

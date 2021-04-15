@@ -7,8 +7,8 @@ class WikiManager {
 	 * Loads a new instance of the wiki with the given ID.
 	 * @param id: The ID of the wiki to load.
 	 */
-	private fun getWiki(id: String) : Wiki {
-
+	private fun getWiki(id: String) : Wiki? {
+		return Wiki("Test Wiki", "https://starbeamrainbowlabs.com/labs/peppermint/build/")
 	}
 
 
@@ -18,6 +18,8 @@ class WikiManager {
 	 * @return Boolean: Whether the operation was successful or not (e.g. if the wiki doesn't exist, we can't switch to it)
 	 */
 	fun setWiki(id: String): Boolean {
-		currentWiki = getWiki(id)
+		val newWiki = getWiki(id) ?: return false
+		currentWiki = newWiki
+		return true
 	}
 }

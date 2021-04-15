@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sbrl.peppermint.R
 
-class HomeFragment : Fragment() {
+class PageListFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
 
