@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PeppermintyWiki">
         <activity
+            android:name=".ui.notifications.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
