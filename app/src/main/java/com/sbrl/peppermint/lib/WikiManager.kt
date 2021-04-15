@@ -1,25 +1,86 @@
 package com.sbrl.peppermint.lib
 
-class WikiManager {
-	private var currentWiki: Wiki? = null;
+import com.sbrl.peppermint.lib.io.DataManager
+import org.json.JSONArray
+import org.json.JSONObject
 
-	/**
-	 * Loads a new instance of the wiki with the given ID.
-	 * @param id: The ID of the wiki to load.
-	 */
-	private fun getWiki(id: String) : Wiki? {
-		return Wiki("Test Wiki", "https://starbeamrainbowlabs.com/labs/peppermint/build/")
+class WikiManager(private val dataManager: DataManager) {
+	var currentWiki: Wiki? = null
+		get() = field
+	
+	private var wikis: MutableMap<String, Wiki>
+	
+	init {
+		wikis = loadWikis()
+		currentWiki = randomWiki()
 	}
-
-
+	
+	/**
+	 * Returns a random wiki.
+	 */
+	fun randomWiki() : Wiki {
+		return wikis[wikis.keys.asSequence().toList()[0]]!!
+	}
+	
+	/**
+	 * Determines whether a wiki exists with the given id or not.
+	 * @param id: The id of the wiki to check.
+	 */
+	fun existsById(id: String) : Boolean {
+		return wikis.containsKey(id)
+	}
+	
 	/**
 	 * Sets the current wiki.
 	 * @param id: The ID of the wiki to switch to.
 	 * @return Boolean: Whether the operation was successful or not (e.g. if the wiki doesn't exist, we can't switch to it)
 	 */
 	fun setWiki(id: String): Boolean {
-		val newWiki = getWiki(id) ?: return false
+		val newWiki = wikis[id] ?: return false
 		currentWiki = newWiki
 		return true
 	}
+	
+	/**
+	 * Adds a new wiki to the WikiManager.
+	 */
+	fun addWiki(id: String, wiki: Wiki) : Boolean {
+		if(wikis[id] == null)
+			return false
+		wikis[id] = wiki
+		
+		saveWikis()
+		return true
+	}
+	
+	// --------------------------------------------------------------------------------------------
+	
+	/**
+	 * Loads the wiki data from a JSON file on disk.
+	 */
+	private fun loadWikis() : MutableMap<String, Wiki> {
+		val wikis = JSONObject(
+			dataManager.getStoredString("meta", "wiki-list.json") ?: "{}"
+		)
+		val result: MutableMap<String, Wiki> = mutableMapOf()
+		for(wikiId in wikis.keys())
+			result[wikiId] = Wiki.load(wikis.getJSONObject(wikiId))
+		
+		// Make sure there is *always* at least 1 wiki
+		if(result.count() == 0)
+			result["__default"] = Wiki("Test Wiki", "https://starbeamrainbowlabs.com/labs/peppermint/build/")
+		return result
+	}
+	
+	/**
+	 * Saves the wiki data to a JSON file on disk.
+	 */
+	private fun saveWikis() {
+		val result = JSONObject()
+		for((id, wiki) in wikis)
+			result.put(id, wiki.save())
+		
+		dataManager.storeString("meta", "wiki-list.json", result.toString())
+	}
+	
 }

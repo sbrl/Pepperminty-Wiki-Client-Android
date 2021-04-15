@@ -1,6 +1,6 @@
 package com.sbrl.peppermint.lib
 
-import com.sbrl.peppermint.lib.helpers.HashMapBuilder
+import org.json.JSONObject
 
 
 class Wiki(inName: String, inEndpoint: String, inCredentials: WikiCredentials?) {
@@ -23,5 +23,31 @@ class Wiki(inName: String, inEndpoint: String, inCredentials: WikiCredentials?) 
 		val response = api.makeGetRequest("list") ?: return null
 
 		return response.body.lines()
+	}
+	
+	fun save() : JSONObject {
+		val result = JSONObject()
+		result.put("name", name)
+		result.put("endpoint", api.endpoint)
+		if(api.credentials !== null) {
+			result.put("username", api.credentials!!.username)
+			result.put("username", api.credentials!!.password)
+		}
+		return result
+	}
+	
+	companion object {
+		fun load(obj: JSONObject) : Wiki {
+			// If any credentials are present, extract them
+			val credentials = if(obj.has("username") && obj.has("password"))
+				WikiCredentials(obj.getString("username"), obj.getString("password"))
+			else null
+			
+			return Wiki(
+				obj.getString("name"),
+				obj.getString("endpoint"),
+				credentials
+			)
+		}
 	}
 }

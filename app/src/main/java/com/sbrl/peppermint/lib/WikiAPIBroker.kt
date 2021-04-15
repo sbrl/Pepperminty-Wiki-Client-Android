@@ -1,25 +1,22 @@
 package com.sbrl.peppermint.lib
 
-import com.sbrl.peppermint.lib.helpers.HashMapBuilder
-import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.IOException
-import java.net.URL
 import java.net.URLEncoder
 import kotlin.text.StringBuilder
 
 class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	private var client: OkHttpClient = OkHttpClient()
 	
-	private var url: String = inEndpoint
+	var endpoint: String = inEndpoint
 		get() = field
 		set(value) {
 			field = value
 			connectionStatus = ConnectionStatus.Untested
 		}
 	
-	private var credentials: WikiCredentials? = inCredentials
+	var credentials: WikiCredentials? = inCredentials
 		set(value) {
 			field = value
 			connectionStatus = ConnectionStatus.Untested
@@ -33,7 +30,7 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	
 	private fun makeUrl(action: String, properties: HashMap<String, String>?) : String {
 		val url = StringBuilder()
-		url.append(url)
+		url.append(endpoint)
 		url.append("?action=" + urlencode(action))
 		if(properties !== null) {
 			for ((key, value) in properties)
