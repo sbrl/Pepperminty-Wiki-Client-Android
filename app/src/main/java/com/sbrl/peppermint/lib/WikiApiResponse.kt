@@ -10,9 +10,13 @@ class WikiApiResponse(response: Response) {
 	val body = response.body!!.string()
 		get() = field
 	
-	private val headers: Headers = response.headers
+	val headers: Headers = response.headers
 	
 	fun isLoginRequired() : Boolean {
-		return headers["x-login-required"] == null
+		return hasHeader("x-login-required")
+	}
+	
+	fun hasHeader(headerName: String) : Boolean {
+		return headers[headerName] !== null
 	}
 }

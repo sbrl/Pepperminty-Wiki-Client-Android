@@ -1,13 +1,18 @@
 package com.sbrl.peppermint.lib
 
+import com.sbrl.peppermint.lib.net.MemoryCookieJar
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okio.IOException
 import java.net.URLEncoder
-import kotlin.text.StringBuilder
 
 class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
-	private var client: OkHttpClient = OkHttpClient()
+	private val client: OkHttpClient = OkHttpClient.Builder()
+		.followRedirects(false)    // Redirects are a valuable source of info from Pepperminty Wiki
+		.cookieJar(MemoryCookieJar())           // Without this okhttp wouldn't save any cookies
+		.build()
 	
 	var endpoint: String = inEndpoint
 		get() = field
@@ -24,28 +29,50 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	
 	var connectionStatus: ConnectionStatus = ConnectionStatus.Untested
 	
+	/**
+	 * Like Javascript's encodeURIComponent function.
+	 */
 	private fun urlencode(str: String) : String {
 		return URLEncoder.encode(str, "utf-8")
 	}
 	
-	private fun makeUrl(action: String, properties: HashMap<String, String>?) : String {
+	/**
+	 * Converts the given map of key-value pairs into a URL encoded string.
+	 * Useful for encoding GET parameters or URL-encoded POST data.
+	 * @param data: The key-value pairs to encode.
+	 */
+	private fun postify(data: Map<String, String>) : String {
+		val items = mutableListOf<String>()
+		for ((key, value) in data)
+			items.add("${urlencode(key)}=${urlencode(value)}")
+		return items.joinToString("&")
+	}
+	
+	/**
+	 * Makes a full absolute URL given an action and optionally a set of GET parameters.
+	 * @param action: The action to call against the Pepperminty Wiki API.
+	 * @param properties: The GET parameters to encode into the URL.
+	 * @return The constructed URL.
+	 */
+	private fun makeUrl(action: String, properties: Map<String, String>?) : String {
 		val url = StringBuilder()
 		url.append(endpoint)
 		url.append("?action=" + urlencode(action))
-		if(properties !== null) {
-			for ((key, value) in properties)
-				url.append("${urlencode(key)}=${urlencode(value)}")
-		}
+		if(properties !== null)
+			url.append(postify(properties))
 		return url.toString()
 	}
 	
-	fun makeGetRequest(action: String, properties: HashMap<String, String>?) : WikiApiResponse? {
-		val url = makeUrl(action, properties)
-		
-		val request = Request.Builder()
-			.url(url)
-			.build()
-		
+	private fun doLogin(): Boolean {
+		if(credentials == null) return false // Wat? This should never happen
+		val response = makePostRequest("checklogin", null, mapOf(
+			"user" to credentials!!.username,
+			"pass" to credentials!!.password
+		)) ?: return false
+		return response.hasHeader("x-login-success")
+	}
+	
+	private fun sendRequest(request: Request, isLogin: Boolean = false) : WikiApiResponse? {
 		val response = try {
 			client.newCall(request).execute()
 		}
@@ -53,9 +80,34 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 			return null
 		}
 		val result = WikiApiResponse(response)
-		
 		response.close()
+		
+		// Automatically login if necessary, but only if this isn't already a login request
+		if(result.isLoginRequired() && !isLogin) {
+			doLogin()
+			// Try sending the request again, but don't endlessly try to login
+			return sendRequest(request, true)
+		}
+		
 		return result
+	}
+	
+	fun makePostRequest(action: String, propertiesGet: Map<String, String>?, propertiesPost: Map<String, String>?) : WikiApiResponse? {
+		val url = makeUrl(action, propertiesGet)
+		
+		return sendRequest(Request.Builder()
+			.url(url)
+			.post(postify(propertiesPost ?: mapOf())
+				.toRequestBody("application/x-www-form-urlencoded".toMediaType()))
+			.build())
+	}
+	
+	fun makeGetRequest(action: String, properties: HashMap<String, String>?) : WikiApiResponse? {
+		val url = makeUrl(action, properties)
+		
+		return sendRequest(Request.Builder()
+			.url(url)
+			.build())
 	}
 	fun makeGetRequest(action: String) : WikiApiResponse? {
 		return makeGetRequest(action, HashMap<String, String>())

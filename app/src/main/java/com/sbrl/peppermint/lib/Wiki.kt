@@ -25,6 +25,8 @@ class Wiki(inName: String, inEndpoint: String, inCredentials: WikiCredentials?) 
 		return response.body.lines()
 	}
 	
+	// --------------------------------------------------------------------------------------------
+	
 	fun save() : JSONObject {
 		val result = JSONObject()
 		result.put("name", name)
