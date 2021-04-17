@@ -54,6 +54,10 @@ class PageListAdapter (
 		
 		// Fill the holder with the item's data
 		holder.viewPageName.text = item
+		
+		holder.itemView.setOnClickListener {
+		
+		}
 	}
 	
 	/**
