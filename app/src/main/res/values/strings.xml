@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Pepperminty Wiki</string>
     <string name="title_pagelist">Page List</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_recentchanges">Recent Changes</string>
+    <string name="title_search">Search</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->

@@ -7,7 +7,7 @@
     tools:context=".ui.pageview.PageViewFragment">
 
     <TextView
-        android:id="@+id/text_dashboard"
+        android:id="@+id/text_pageview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

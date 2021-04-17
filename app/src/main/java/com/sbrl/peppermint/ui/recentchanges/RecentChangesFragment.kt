@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.ui.notifications
+package com.sbrl.peppermint.ui.recentchanges
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sbrl.peppermint.R
 
-class NotificationsFragment : Fragment() {
+class RecentChangesFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
+    private lateinit var recentChangesViewModel: RecentChangesViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        notificationsViewModel =
-                ViewModelProvider(this).get(NotificationsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_notifications, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
+        recentChangesViewModel =
+                ViewModelProvider(this).get(RecentChangesViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_recentchanges, container, false)
+        val textView: TextView = root.findViewById(R.id.text_recentchanges)
+        recentChangesViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

@@ -1,13 +1,13 @@
-package com.sbrl.peppermint.ui.notifications
+package com.sbrl.peppermint.ui.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class NotificationsViewModel : ViewModel() {
+class SearchViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+        value = "This is the search Fragment"
     }
     val text: LiveData<String> = _text
 }

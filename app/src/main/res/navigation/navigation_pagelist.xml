@@ -12,13 +12,13 @@
         tools:layout="@layout/fragment_pageview" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_recentchanges"
         android:name="com.sbrl.peppermint.ui.edit.HistoryFragment"
         android:label="@string/nav_pageview_edit"
         tools:layout="@layout/fragment_edit" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_search"
         android:name="com.sbrl.peppermint.ui.history.HistoryFragment"
         android:label="@string/nav_pageview_history"
         tools:layout="@layout/fragment_history" />

@@ -23,7 +23,7 @@ class PageViewFragment : Fragment() {
     pageViewViewModel =
             ViewModelProvider(this).get(PageViewViewModel::class.java)
     val root = inflater.inflate(R.layout.fragment_pageview, container, false)
-    val textView: TextView = root.findViewById(R.id.text_home)
+    val textView: TextView = root.findViewById(R.id.text_pageview)
     pageViewViewModel.text.observe(viewLifecycleOwner, Observer {
       textView.text = it
     })

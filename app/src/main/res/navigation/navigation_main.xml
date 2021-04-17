@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_pagelist" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.sbrl.peppermint.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_recentchanges"
+        android:name="com.sbrl.peppermint.ui.recentchanges.RecentChangesFragment"
+        android:label="@string/title_recentchanges"
+        tools:layout="@layout/fragment_recentchanges" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.sbrl.peppermint.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_search"
+        android:name="com.sbrl.peppermint.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
 </navigation>
