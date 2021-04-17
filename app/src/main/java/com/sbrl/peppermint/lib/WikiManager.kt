@@ -1,12 +1,23 @@
 package com.sbrl.peppermint.lib
 
+import com.sbrl.peppermint.lib.events.EventManager
 import com.sbrl.peppermint.lib.io.DataManager
 import org.json.JSONArray
 import org.json.JSONObject
 
 class WikiManager(private val dataManager: DataManager) {
-	var currentWiki: Wiki? = null
+	var currentWiki: Wiki = defaultWiki()
 		get() = field
+		set(value) {
+			field = value
+			wikiChanged.emit(this, WikiChangedEventArgs(field))
+		}
+	
+	/**
+	 * Event that's fired when the current wiki changes.
+	 */
+	val wikiChanged: EventManager<WikiManager, WikiChangedEventArgs> = EventManager()
+	class WikiChangedEventArgs(val newCurrentWiki: Wiki)
 	
 	private var wikis: MutableMap<String, Wiki>
 	
@@ -18,8 +29,11 @@ class WikiManager(private val dataManager: DataManager) {
 	/**
 	 * Returns a random wiki.
 	 */
-	fun randomWiki() : Wiki {
+	private fun randomWiki() : Wiki {
 		return wikis[wikis.keys.asSequence().toList()[0]]!!
+	}
+	private fun defaultWiki() : Wiki {
+		return Wiki("Test Wiki", "https://starbeamrainbowlabs.com/labs/peppermint/build/")
 	}
 	
 	/**
@@ -68,7 +82,7 @@ class WikiManager(private val dataManager: DataManager) {
 		
 		// Make sure there is *always* at least 1 wiki
 		if(result.count() == 0)
-			result["__default"] = Wiki("Test Wiki", "https://starbeamrainbowlabs.com/labs/peppermint/build/")
+			result["__default"] = defaultWiki()
 		return result
 	}
 	

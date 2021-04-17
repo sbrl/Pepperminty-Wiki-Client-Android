@@ -14,9 +14,9 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.util.*
 
-class DataManager(context: Context) {
-	private val cacheDir: File = context.cacheDir
-	private val filesDir: File = context.filesDir
+class DataManager() {
+	private var cacheDir: File? = null
+	private var filesDir: File? = null
 	
 	/**
 	 * The compression format to use for storing images.
@@ -26,6 +26,10 @@ class DataManager(context: Context) {
 	else
 		Bitmap.CompressFormat.WEBP
 	
+	public fun init(inCacheDir: File, inFilesDir: File) {
+		cacheDir = inCacheDir
+		filesDir = inFilesDir
+	}
 	
 	public fun hasCachedData(namespace: String, cache_id: String): Boolean {
 		val cacheFile = getCacheFileHandle(namespace, cache_id)
@@ -102,10 +106,10 @@ class DataManager(context: Context) {
 	}
 	
 	public fun calculateCacheSize() : Long {
-		return directorySize(cacheDir)
+		return directorySize(cacheDir!!)
 	}
 	public fun clearCache() {
-		clearDirectory(cacheDir)
+		clearDirectory(cacheDir!!)
 	}
 	
 	// --------------------------------------------------------------------------------------------
@@ -133,7 +137,7 @@ class DataManager(context: Context) {
 	
 	private fun getCacheFileHandle(namespace: String, cache_id: String): File {
 		// 1: Create the namespace directory if it exists
-		val dir = File(cacheDir, slugify(namespace))
+		val dir = File(cacheDir!!, slugify(namespace))
 		if(!dir.isDirectory)
 			dir.mkdir()
 		// 2: Calculate the filename
@@ -144,14 +148,14 @@ class DataManager(context: Context) {
 	
 	private fun getFileHandle(namespace: String, storage_id: String): File {
 		// 1: Create the namespace directory if it exists
-		val dir = File(filesDir, slugify(storage_id))
+		val dir = File(filesDir!!, slugify(storage_id))
 		if(!dir.isDirectory)
 			dir.mkdir()
 		// 2: Calculate the filename
 		val filename = slugify(storage_id)
 		// 3: Return the file instance
 		// NOTE: We don't use getDataDir() here - even conditionally - because getFilesDir() gets the location the use prefers us to store stuff.
-		return File(filesDir, filename)
+		return File(filesDir!!, filename)
 	}
 	
 	/**

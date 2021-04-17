@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.sbrl.peppermint.ui.home.PageListFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_pagelist" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
