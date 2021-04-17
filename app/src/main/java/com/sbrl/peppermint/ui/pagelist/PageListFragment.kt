@@ -31,7 +31,7 @@ class PageListFragment : Fragment() {
     ): View {
         // 1: Fetch the wiki view model containing the wiki manager
         wikiviewModel =
-                ViewModelProvider(this).get(WikiViewModel::class.java)
+                ViewModelProvider(requireActivity()).get(WikiViewModel::class.java)
         wikiviewModel.init(context)
         
         // 2: Inflate the layout, attach listeners

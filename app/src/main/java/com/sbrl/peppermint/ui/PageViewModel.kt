@@ -1,5 +1,6 @@
 package com.sbrl.peppermint.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,9 +11,7 @@ class PageViewModel() : ViewModel() {
 	
 	private val _stack: Stack<String> = Stack()
 	
-	private val _currentPageName = MutableLiveData<String>().apply {
-		value = ""
-	}
+	private val _currentPageName = MutableLiveData<String>()
 	
 	/**
 	 * The current page name.
@@ -23,8 +22,9 @@ class PageViewModel() : ViewModel() {
 	 * Pushes a page onto the view stack.
 	 */
 	fun pushPage(pagename: String) {
+		Log.i("PageViewModel", "PUSH '${pagename}'")
 		_stack.push(pagename)
-		_currentPageName.value = pagename
+		_currentPageName.postValue(pagename)
 	}
 	
 	/**
@@ -35,6 +35,8 @@ class PageViewModel() : ViewModel() {
 		if(_stack.size == 0) return false
 		
 		_currentPageName.value = _stack.pop()
+		
+		Log.i("PageViewModel", "POP '${_currentPageName.value}'")
 		return true
 	}
 }

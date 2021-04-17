@@ -1,6 +1,7 @@
 package com.sbrl.peppermint.ui.pageview
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.ui.PageViewModel
-import com.sbrl.peppermint.ui.home.PageViewViewModel
 
 class PageViewFragment : Fragment() {
 	
@@ -21,11 +21,15 @@ class PageViewFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
+		// Each context gets it's own ViewModel instance
 		pageViewModel =
-			ViewModelProvider(this).get(PageViewModel::class.java)
+			ViewModelProvider(requireActivity()).get(PageViewModel::class.java)
 		val root = inflater.inflate(R.layout.fragment_pageview, container, false)
 		val textView: TextView = root.findViewById(R.id.text_pageview)
 		
+		Log.i("PageViewFragment", "Page name: ${pageViewModel.currentPageName.value}")
+		
+		textView.text = pageViewModel.currentPageName.value
 		pageViewModel.currentPageName.observe(viewLifecycleOwner, Observer {
 			textView.text = it
 		})
