@@ -12,6 +12,10 @@ import com.sbrl.peppermint.lib.io.DataManager
 class WikiViewModel() : ViewModel() {
 	val dataManager: DataManager = DataManager()
 	
+	init {
+		Log.i("WikiViewModel", "init")
+	}
+	
 	/**
 	 * Initialises this WikiViewModel instance.
 	 * The context is only needed to determine the directories in which we should put our stuff.

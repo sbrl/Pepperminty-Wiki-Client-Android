@@ -3,6 +3,9 @@ package com.sbrl.peppermint.lib.wiki_api
 import android.annotation.SuppressLint
 import android.util.Log
 import com.sbrl.peppermint.lib.net.MemoryCookieJar
+import okhttp3.Cookie
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -30,6 +33,11 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 		}
 	
 	var connectionStatus: ConnectionStatus = ConnectionStatus.Untested
+	
+
+	fun getCookies() : List<Cookie> {
+		return client.cookieJar.loadForRequest(endpoint.toHttpUrlOrNull()!!)
+	}
 	
 	/**
 	 * Like Javascript's encodeURIComponent function.

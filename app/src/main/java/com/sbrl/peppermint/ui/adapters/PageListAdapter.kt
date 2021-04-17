@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.events.EventManager
 import com.sbrl.peppermint.ui.EXTRA_PAGE_NAME
+import com.sbrl.peppermint.ui.EXTRA_WIKI_NAME
 import com.sbrl.peppermint.ui.PageActivity
 
 /**
@@ -21,6 +23,10 @@ class PageListAdapter (
 	private val context: Context,
 	private val dataset: List<String>
 	) : RecyclerView.Adapter<PageListAdapter.PageItemHolder>() {
+	
+	class ItemSelectedEventArgs(val pagename: String)
+	
+	val itemSelected: EventManager<PageListAdapter, ItemSelectedEventArgs> = EventManager()
 	
 	/**
 	 * Holds information about a single item that si being displayed in the list.
@@ -59,10 +65,7 @@ class PageListAdapter (
 		holder.viewPageName.text = item
 		
 		holder.itemView.setOnClickListener {
-			val intent = Intent(context, PageActivity::class.java).apply {
-				putExtra(EXTRA_PAGE_NAME, dataset[i])
-			}
-			context.startActivity(intent)
+			itemSelected.emit(this, ItemSelectedEventArgs(dataset[i]))
 		}
 	}
 	

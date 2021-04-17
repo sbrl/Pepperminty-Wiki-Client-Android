@@ -38,26 +38,29 @@ class PageActivity : AppCompatActivity() {
 	    pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java)
 	    wikiViewModel = ViewModelProvider(this).get(WikiViewModel::class.java)
 	    
+	    wikiViewModel.init(this)
 	    
 	    // 3: Intents
 	    
-	    // Process the wiki name, but only if it's present
-	    intent.getStringExtra(EXTRA_WIKI_NAME)?.let {
-		    wikiViewModel.wikiManager.value?.setWiki(it)
-	    }
-	    
-	    // Make sure a page name was specified
-	    if(!intent.hasExtra(EXTRA_PAGE_NAME)) {
-			Toast.makeText(this,
-				getString(R.string.error_no_page_name_specified),
-				Toast.LENGTH_SHORT).show()
-		    
+	    // Make sure a wiki and page name were specified
+	    if(!intent.hasExtra(EXTRA_WIKI_NAME)) {
+	    	Toast.makeText(this,
+			    getString(R.string.error_no_wiki_name_specified),
+			    Toast.LENGTH_SHORT).show()
 		    finish()
 	    }
-	    else {
-	    	val pagename = intent.getStringExtra(EXTRA_PAGE_NAME)!!
-		    Log.i("PageActivity", "Received intent pagename $pagename")
-	    	pageViewModel.pushPage(pagename)
+	    if(!intent.hasExtra(EXTRA_PAGE_NAME)) {
+		    Toast.makeText(this,
+			    getString(R.string.error_no_page_name_specified),
+			    Toast.LENGTH_SHORT).show()
+		    finish()
 	    }
+	    
+	    val wikiname = intent.getStringExtra(EXTRA_WIKI_NAME)!!
+	    val pagename = intent.getStringExtra(EXTRA_PAGE_NAME)!!
+	    Log.i("PageActivity", "Received intent wiki $wikiname, pagename $pagename")
+	    
+	    wikiViewModel.wikiManager.value?.setWiki(wikiname)
+	    pageViewModel.pushPage(pagename)
     }
 }

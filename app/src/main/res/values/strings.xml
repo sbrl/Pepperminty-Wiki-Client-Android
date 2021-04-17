@@ -25,4 +25,8 @@
     <string name="nav_pageview_edit">Edit</string>
     <string name="nav_pageview_history">History</string>
     <string name="error_no_page_name_specified">No page name specified</string>
+    <string name="error_no_wiki_name_specified">No wiki name specified</string>
+    
+    <string name="error_failed_load_page_content">Error: Failed to load content for page \'%1$s\'</string>
+    <string name="error_redlink">The page \'%1$s\' doesn\'t exist</string>
 </resources>

@@ -46,6 +46,7 @@ class EventManager<EventSource, EventArgs> {
 	 * @return Whether there were listeners present that were triggered or not.
 	 */
 	fun emit(source: EventSource, args: EventArgs) : Boolean {
+		Log.i("EventManager", "Emitting to ${listeners.size} listeners")
 		if(listeners.size == 0) return false
 		
 		for(fn in listeners)
