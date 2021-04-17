@@ -67,4 +67,15 @@ class PageActivity : AppCompatActivity() {
 	    wikiViewModel.wikiManager.value?.setWiki(wikiname)
 	    pageViewModel.pushPage(pagename)
     }
+	
+	override fun onBackPressed() {
+		// If there isn't left on the stack after we've tried to pop something off, then we need to let the system take over the back button operation
+		if(!pageViewModel.popPage() || pageViewModel.pageStackSize() == 0) {
+			Log.i("PageActivity", "Nothing left on the stack, allowing system back operation")
+			super.onBackPressed()
+			return
+		}
+		
+		Log.i("PageActivity", "Page stack pop success, intercepting back button operation")
+	}
 }

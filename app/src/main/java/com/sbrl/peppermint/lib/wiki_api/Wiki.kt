@@ -27,7 +27,6 @@ class Wiki(val id: String,
 		val response = api.makeGetRequest("list", mapOf<String, String>(
 			"format" to "text"
 		)) ?: return null
-		Log.i("Wiki", "Page list: '${response.body.substring(0, 100)}' [truncated to 100 chars]")
 		return response.body.lines()
 	}
 	

@@ -10,10 +10,13 @@ class ViewPageJSInterface(private val parent : PageViewFragment) {
 	@Suppress("unused")
 	@JavascriptInterface
 	fun ChangePage(newPageName : String) {
-		val parsedPageName = if (!newPageName.contains('#')) newPageName
-		else newPageName.slice(0..newPageName.indexOf('#'))
+		val hashLoc = newPageName.indexOf('#')
 		
-		val parsedPageSection = newPageName.slice((newPageName.indexOf('#') + 1)..newPageName.length)
+		val parsedPageName = if (hashLoc == -1) newPageName
+			else newPageName.slice(0..newPageName.indexOf('#'))
+		
+		val parsedPageSection = if (hashLoc == -1) ""
+			else newPageName.slice((newPageName.indexOf('#') + 1)..newPageName.length)
 		
 		if(parsedPageName.isEmpty())
 			return

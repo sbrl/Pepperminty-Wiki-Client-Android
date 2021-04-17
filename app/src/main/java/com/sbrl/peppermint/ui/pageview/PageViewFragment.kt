@@ -142,14 +142,15 @@ class PageViewFragment : Fragment() {
 		val endpoint = wikiViewModel.currentWiki.value!!.api.endpoint
 		val webviewCookies = CookieManager.getInstance()
 		for(cookie in wikiViewModel.currentWiki.value!!.api.getCookies()) {
-			Log.d("PageViewFragment", "Adding cookie '${cookie.toString()}'")
+//			Log.d("PageViewFragment", "Adding cookie '${cookie.toString()}'")
 			webviewCookies.setCookie(endpoint, cookie.toString())
 		}
+		
 		
 		// Load the data into the webview
 		webview.loadDataWithBaseURL(
 			endpoint,
-			contentHTML,
+			displayHTML,
 			"text/html",
 			"UTF-8",
 			null

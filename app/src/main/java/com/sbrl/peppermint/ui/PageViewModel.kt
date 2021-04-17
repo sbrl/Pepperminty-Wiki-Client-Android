@@ -19,6 +19,11 @@ class PageViewModel() : ViewModel() {
 	val currentPageName: LiveData<String> = _currentPageName
 	
 	/**
+	 * Returns the number of pages that are currently on the stack.
+	 */
+	fun pageStackSize() = _stack.size
+	
+	/**
 	 * Pushes a page onto the view stack.
 	 */
 	fun pushPage(pagename: String) {
@@ -33,8 +38,9 @@ class PageViewModel() : ViewModel() {
 	 */
 	fun popPage() : Boolean {
 		if(_stack.size == 0) return false
+		_stack.pop()
 		
-		_currentPageName.value = _stack.pop()
+		_currentPageName.value = if(_stack.size > 0) _stack.peek() else ""
 		
 		Log.i("PageViewModel", "POP '${_currentPageName.value}'")
 		return true
