@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.ui.home
+package com.sbrl.peppermint.ui.pagelist
 
 import android.os.Bundle
 import android.util.Log
@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
-import com.sbrl.peppermint.adapters.PageListAdapter
+import com.sbrl.peppermint.ui.adapters.PageListAdapter
 import com.sbrl.peppermint.ui.WikiViewModel
+import kotlinx.coroutines.delay
 import kotlin.concurrent.thread
 
 class PageListFragment : Fragment() {
@@ -18,19 +20,30 @@ class PageListFragment : Fragment() {
     private lateinit var root: View
 
     private lateinit var wikiviewModel: WikiViewModel
+    
+    private lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        // Fetch the wiki view model containing the wiki manager
+        // 1: Fetch the wiki view model containing the wiki manager
         wikiviewModel =
                 ViewModelProvider(this).get(WikiViewModel::class.java)
         wikiviewModel.init(context)
         
+        // 2: Inflate the layout, attach listeners
         root = inflater.inflate(R.layout.fragment_pagelist, container, false)
         
+        // Swipe-to-refresh
+        swipeRefresh = root.findViewById(R.id.swipe_refresh_pagelist)
+        swipeRefresh.setOnRefreshListener {
+            updatePageList()
+        }
+        
+        
+        // 3: Fill in the UI
         updatePageList()
         
         return root
@@ -40,6 +53,7 @@ class PageListFragment : Fragment() {
      * Fetches a page list using the current wiki and updates the currently displayed page list.
      */
     private fun updatePageList() {
+        swipeRefresh.isRefreshing = true
         Log.i("PageListFragment", "Updating page list")
         val viewPageList: RecyclerView = root.findViewById(R.id.pagelist_list)
         
@@ -57,6 +71,7 @@ class PageListFragment : Fragment() {
             activity?.runOnUiThread {
                 viewPageList.adapter = PageListAdapter(context ?: return@runOnUiThread, pageList)
                 viewPageList.setHasFixedSize(true) // Apparently improves performance
+                swipeRefresh.isRefreshing = false
             }
         }
         

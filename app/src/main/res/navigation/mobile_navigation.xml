@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.sbrl.peppermint.ui.home.PageListFragment"
-        android:label="@string/title_home"
+        android:name="com.sbrl.peppermint.ui.pagelist.PageListFragment"
+        android:label="@string/title_pagelist"
         tools:layout="@layout/fragment_pagelist" />
 
     <fragment

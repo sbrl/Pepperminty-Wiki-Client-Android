@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.adapters
+package com.sbrl.peppermint.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

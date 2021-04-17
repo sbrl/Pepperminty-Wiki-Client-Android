@@ -1,10 +1,10 @@
-package com.sbrl.peppermint.ui.home
+package com.sbrl.peppermint.ui.pagelist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class HomeViewModel : ViewModel() {
+class PageListViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
