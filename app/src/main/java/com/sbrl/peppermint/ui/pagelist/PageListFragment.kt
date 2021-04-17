@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -49,11 +50,25 @@ class PageListFragment : Fragment() {
         return root
     }
     
+    private fun uiStartPageListRefresh() {
+        swipeRefresh.isRefreshing = true
+    }
+    private fun uiFinishPageListRefresh(fromCache: Boolean) {
+        val message = getString(R.string.toast_page_list_refreshed) +
+            (if(fromCache) " from Cache" else " from the Internet")
+        
+        swipeRefresh.isRefreshing = false
+        Toast.makeText(context,
+            message,
+            Toast.LENGTH_SHORT).show()
+    }
+    
     /**
      * Fetches a page list using the current wiki and updates the currently displayed page list.
      */
     private fun updatePageList() {
-        swipeRefresh.isRefreshing = true
+        uiStartPageListRefresh()
+        
         Log.i("PageListFragment", "Updating page list")
         val viewPageList: RecyclerView = root.findViewById(R.id.pagelist_list)
         
@@ -71,9 +86,12 @@ class PageListFragment : Fragment() {
             activity?.runOnUiThread {
                 viewPageList.adapter = PageListAdapter(context ?: return@runOnUiThread, pageList)
                 viewPageList.setHasFixedSize(true) // Apparently improves performance
-                swipeRefresh.isRefreshing = false
+    
+    
+                uiFinishPageListRefresh(false)
             }
         }
         
     }
+    
 }
