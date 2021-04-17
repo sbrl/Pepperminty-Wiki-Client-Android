@@ -6,7 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.pageview.PageViewFragment">
     
-    <WebView android:id="@+id/webview_pageview"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_pageview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+        
+        <WebView android:id="@+id/webview_pageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+            
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

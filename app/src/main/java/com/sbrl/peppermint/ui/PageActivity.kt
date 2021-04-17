@@ -2,6 +2,7 @@ package com.sbrl.peppermint.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Window
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,9 @@ class PageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 	    // 0: Preamble
         super.onCreate(savedInstanceState)
+	    // Make the action bar be a thing - ref https://stackoverflow.com/a/10031400/1460422
+	    window.requestFeature(Window.FEATURE_ACTION_BAR)
+	    // Fill out the activity with content
         setContentView(R.layout.activity_pageview)
         
 	    // 1: Navigation view

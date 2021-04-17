@@ -20,6 +20,9 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="toast_page_list_refreshed">Page list refreshed</string>
+    <string name="toast_page_view_refreshed">Page content refreshed</string>
+    <string name="toast_addon_from_cache">from the cache</string>
+    <string name="toast_addon_from_internet">from the Internet</string>
     <string name="title_activity_page_view">MainActivity</string>
     <string name="nav_pageview_view">View</string>
     <string name="nav_pageview_edit">Edit</string>
