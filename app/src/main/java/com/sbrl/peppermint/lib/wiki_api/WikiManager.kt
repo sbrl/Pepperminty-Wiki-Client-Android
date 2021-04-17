@@ -1,8 +1,7 @@
-package com.sbrl.peppermint.lib
+package com.sbrl.peppermint.lib.wiki_api
 
 import com.sbrl.peppermint.lib.events.EventManager
 import com.sbrl.peppermint.lib.io.DataManager
-import org.json.JSONArray
 import org.json.JSONObject
 
 class WikiManager(private val dataManager: DataManager) {

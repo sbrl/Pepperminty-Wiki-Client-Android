@@ -1,11 +1,12 @@
 package com.sbrl.peppermint.ui
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sbrl.peppermint.lib.Wiki
-import com.sbrl.peppermint.lib.WikiManager
+import com.sbrl.peppermint.lib.wiki_api.Wiki
+import com.sbrl.peppermint.lib.wiki_api.WikiManager
 import com.sbrl.peppermint.lib.io.DataManager
 
 class WikiViewModel() : ViewModel() {
@@ -23,19 +24,22 @@ class WikiViewModel() : ViewModel() {
 			context.cacheDir,
 			context.filesDir
 		)
+		// Now that the DataManager has been initialised, we can create the WikiManager
+		_wikiManager.value = WikiManager(dataManager)
+		// Update the current wiki
+		_currentWiki.value = wikiManager.value?.currentWiki
+		
+		Log.i("WikiViewModel", "Initialisation complete")
+		
 		return true
 	}
 	
-	private val _wikiManager = MutableLiveData<WikiManager>().apply {
-		value = WikiManager(dataManager)
-		
-	}
+	private val _wikiManager = MutableLiveData<WikiManager>()
 	
 	val wikiManager: LiveData<WikiManager> = _wikiManager
 	
 	
 	private val _currentWiki = MutableLiveData<Wiki>().apply {
-		value = wikiManager.value?.currentWiki
 		wikiManager.value?.wikiChanged?.on { _sender, args ->
 			value = args.newCurrentWiki
 		}

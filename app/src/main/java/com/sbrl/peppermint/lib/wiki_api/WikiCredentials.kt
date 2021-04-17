@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.lib
+package com.sbrl.peppermint.lib.wiki_api
 
 class WikiCredentials(inUsername: String, inPassword: String) {
 	var username: String = inUsername

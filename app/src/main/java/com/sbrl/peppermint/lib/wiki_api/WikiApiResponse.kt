@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.lib
+package com.sbrl.peppermint.lib.wiki_api
 
 import okhttp3.Headers
 import okhttp3.Response

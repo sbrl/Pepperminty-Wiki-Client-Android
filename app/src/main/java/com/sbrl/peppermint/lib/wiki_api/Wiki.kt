@@ -1,5 +1,6 @@
-package com.sbrl.peppermint.lib
+package com.sbrl.peppermint.lib.wiki_api
 
+import android.util.Log
 import org.json.JSONObject
 
 
@@ -20,8 +21,10 @@ class Wiki(inName: String, inEndpoint: String, inCredentials: WikiCredentials?) 
 	}
 
 	fun pages(): List<String>? {
-		val response = api.makeGetRequest("list") ?: return null
-
+		val response = api.makeGetRequest("list", mapOf<String, String>(
+			"format" to "text"
+		)) ?: return null
+		Log.i("Wiki", "Page list: '${response.body.substring(0, 100)}' [truncated to 100 chars]")
 		return response.body.lines()
 	}
 	

@@ -1,5 +1,7 @@
-package com.sbrl.peppermint.lib
+package com.sbrl.peppermint.lib.wiki_api
 
+import android.annotation.SuppressLint
+import android.util.Log
 import com.sbrl.peppermint.lib.net.MemoryCookieJar
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -58,12 +60,16 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 		val url = StringBuilder()
 		url.append(endpoint)
 		url.append("?action=" + urlencode(action))
-		if(properties !== null)
+		if(properties !== null) {
+			url.append("&")
 			url.append(postify(properties))
+		}
+		
 		return url.toString()
 	}
 	
 	private fun doLogin(): Boolean {
+		Log.i("WikiAPIBroker", "Performing login")
 		if(credentials == null) return false // Wat? This should never happen
 		val response = makePostRequest("checklogin", null, mapOf(
 			"user" to credentials!!.username,
@@ -73,6 +79,7 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	}
 	
 	private fun sendRequest(request: Request, isLogin: Boolean = false) : WikiApiResponse? {
+		Log.i("WikiAPIBroker:sendRequest", "${request.method} ${request.url}")
 		val response = try {
 			client.newCall(request).execute()
 		}
@@ -102,7 +109,7 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 			.build())
 	}
 	
-	fun makeGetRequest(action: String, properties: HashMap<String, String>?) : WikiApiResponse? {
+	fun makeGetRequest(action: String, properties: Map<String, String>?) : WikiApiResponse? {
 		val url = makeUrl(action, properties)
 		
 		return sendRequest(Request.Builder()
@@ -110,7 +117,7 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 			.build())
 	}
 	fun makeGetRequest(action: String) : WikiApiResponse? {
-		return makeGetRequest(action, HashMap<String, String>())
+		return makeGetRequest(action, mapOf())
 	}
 	
 	fun testConnection(): ConnectionStatus {

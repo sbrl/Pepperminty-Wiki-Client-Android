@@ -37,7 +37,7 @@ class PageListAdapter (
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemHolder {
 		// Inflate a new instance of the view for this particular item
 		val itemLayout = LayoutInflater.from(parent.context)
-			.inflate(R.layout.list_pagelist, parent, false)
+			.inflate(R.layout.item_pagelist, parent, false)
 		
 		// Return a new Holder class instance
 		return PageItemHolder(itemLayout)

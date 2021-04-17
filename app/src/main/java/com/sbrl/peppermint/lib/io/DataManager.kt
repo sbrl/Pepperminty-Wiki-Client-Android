@@ -148,11 +148,11 @@ class DataManager() {
 	
 	private fun getFileHandle(namespace: String, storage_id: String): File {
 		// 1: Create the namespace directory if it exists
-		val dir = File(filesDir!!, slugify(storage_id))
+		val dir = File(filesDir!!, slugify(namespace))
 		if(!dir.isDirectory)
 			dir.mkdir()
 		// 2: Calculate the filename
-		val filename = slugify(storage_id)
+		val filename = "${slugify(namespace)}/${slugify(storage_id)}"
 		// 3: Return the file instance
 		// NOTE: We don't use getDataDir() here - even conditionally - because getFilesDir() gets the location the use prefers us to store stuff.
 		return File(filesDir!!, filename)
