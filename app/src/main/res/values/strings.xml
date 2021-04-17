@@ -24,4 +24,5 @@
     <string name="nav_pageview_view">View</string>
     <string name="nav_pageview_edit">Edit</string>
     <string name="nav_pageview_history">History</string>
+    <string name="error_no_page_name_specified">No page name specified</string>
 </resources>

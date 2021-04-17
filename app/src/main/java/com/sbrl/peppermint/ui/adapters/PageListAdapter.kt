@@ -1,12 +1,15 @@
 package com.sbrl.peppermint.ui.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.ui.EXTRA_PAGE_NAME
+import com.sbrl.peppermint.ui.PageActivity
 
 /**
  * Mediates between a dataset and a list of items being displlayed on the screen through a list of
@@ -56,7 +59,10 @@ class PageListAdapter (
 		holder.viewPageName.text = item
 		
 		holder.itemView.setOnClickListener {
-		
+			val intent = Intent(context, PageActivity::class.java).apply {
+				putExtra(EXTRA_PAGE_NAME, dataset[i])
+			}
+			context.startActivity(intent)
 		}
 	}
 	
