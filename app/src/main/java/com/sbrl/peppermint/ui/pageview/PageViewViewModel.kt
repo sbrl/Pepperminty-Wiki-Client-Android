@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class PageViewViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is the page view Fragment"
+        value = "This is the page view page. Coming soon!"
     }
     val text: LiveData<String> = _text
 }

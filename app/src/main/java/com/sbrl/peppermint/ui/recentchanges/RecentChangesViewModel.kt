@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class RecentChangesViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is the recent changes Fragment"
+        value = "This is the recent changes page. Coming soon!"
     }
     val text: LiveData<String> = _text
 }
