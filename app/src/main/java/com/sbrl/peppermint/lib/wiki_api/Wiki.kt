@@ -3,6 +3,8 @@ package com.sbrl.peppermint.lib.wiki_api
 import android.util.Log
 import org.json.JSONObject
 
+
+
 class Wiki(val id: String,
            val name: String,
            inEndpoint: String,
@@ -11,6 +13,9 @@ class Wiki(val id: String,
 	
 	var api: WikiAPIBroker = WikiAPIBroker(inEndpoint, inCredentials)
 	
+	enum class Source { Internet, Cache }
+	
+	data class WikiResult<T>(val source: Source, val value: T)
 	
 	fun connectionOk(): ConnectionStatus {
 		if(api.connectionStatus != ConnectionStatus.Untested)
@@ -23,11 +28,11 @@ class Wiki(val id: String,
 	 * Pages a list of pages currently on this wiki.
 	 * @return A lsit of pages as a list of strings.
 	 */
-	fun pages(): List<String>? {
+	fun pages(): WikiResult<List<String>>? {
 		val response = api.makeGetRequest("list", mapOf<String, String>(
 			"format" to "text"
 		)) ?: return null
-		return response.body.lines()
+		return WikiResult(Source.Internet, response.body.lines())
 	}
 	
 	/**
@@ -36,13 +41,13 @@ class Wiki(val id: String,
 	 * @param format: The format to retrieve the content in.
 	 * @return The content of the page in the specified format.
 	 */
-	fun pageContent(pagename: String, format: PageContentType = PageContentType.HTML) : String? {
+	fun pageContent(pagename: String, format: PageContentType = PageContentType.HTML) : WikiResult<String>? {
 		Log.i("Wiki", "Fetching page content for $pagename")
-		val response = api.makeGetRequest("view", mapOf(
+		val response : WikiApiResponse = api.makeGetRequest("view", mapOf(
 			"page" to pagename,
 			"mode" to "parsedsourceonly"
 		)) ?: return null
-		return response.body
+		return WikiResult(Source.Internet, response.body)
 	}
 	
 	// --------------------------------------------------------------------------------------------

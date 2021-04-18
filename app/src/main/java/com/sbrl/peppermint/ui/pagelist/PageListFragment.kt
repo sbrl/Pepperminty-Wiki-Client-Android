@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.ui.EXTRA_PAGE_NAME
 import com.sbrl.peppermint.ui.EXTRA_WIKI_NAME
 import com.sbrl.peppermint.ui.PageActivity
@@ -88,19 +89,21 @@ class PageListFragment : Fragment() {
 		// Non-blocking Kotlin is *hard* :-(
 		thread {
 			// Fetch a new page list
-			val pageList: List<String> = currentWiki.pages() ?: return@thread
+			val pageList: Wiki.WikiResult<List<String>> = currentWiki.pages() ?: return@thread
+			
+			
 			// Create a new adapter, and tell the RecyclerView about it on the main thread
 			activity?.runOnUiThread {
 				// Attach / detach event listeners
 				pageListAdapter?.itemSelected?.off(::pageListAdapterSelectionHandler)
-				pageListAdapter = PageListAdapter(context ?: return@runOnUiThread, pageList)
+				pageListAdapter = PageListAdapter(context ?: return@runOnUiThread, pageList.value)
 				pageListAdapter?.itemSelected?.on(::pageListAdapterSelectionHandler)
 				
 				viewPageList.adapter = pageListAdapter
 				viewPageList.setHasFixedSize(true) // Apparently improves performance
 				
 				
-				uiFinishPageListRefresh(false)
+				uiFinishPageListRefresh(pageList.source == Wiki.Source.Cache)
 			}
 		}
 		

@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.PageHTMLProcessor
+import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.ui.PageViewModel
 import com.sbrl.peppermint.ui.WikiViewModel
 import kotlin.concurrent.thread
@@ -108,9 +109,9 @@ class PageViewFragment : Fragment() {
 				
 				// Ref https://stackoverflow.com/a/54893709/1460422
 				(requireActivity() as AppCompatActivity).supportActionBar?.title = pagename
-				displayContent(pageContent)
+				displayContent(pageContent.value)
 				
-				uiFinishPageViewRefresh(false)
+				uiFinishPageViewRefresh(pageContent.source == Wiki.Source.Cache)
 			}
 		}
 	}
