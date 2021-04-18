@@ -11,6 +11,9 @@
 		<item name="colorOnSecondary">@color/black</item>
 		<!-- Status bar color. -->
 		<item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+		<!-- Controls the colour of the preference category header
+			ref https://stackoverflow.com/a/58765090/1460422 -->
+		<item name="colorAccent">?attr/colorSecondaryVariant</item>
 		
 		<item name="android:textSize">22sp</item>
 		

@@ -3,27 +3,33 @@
 	<string name="title_pagelist">Page List</string>
 	<string name="title_recentchanges">Recent Changes</string>
 	<string name="title_search">Search</string>
-	<string name="title_activity_settings">SettingsActivity</string>
+	<string name="title_activity_settings">Settings</string>
 	
 	<!-- Preference Titles -->
-	<string name="messages_header">Messages</string>
-	<string name="sync_header">Sync</string>
+	<string name="data_header">Data</string>
+	<string name="appearance_header">Appearance</string>
 	
 	<!-- Messages Preferences -->
 	<string name="signature_title">Your signature</string>
-	<string name="reply_title">Default reply action</string>
+	<string name="settings_load_images_title">Load images</string>
+	<string name="settings_theme_title">Theme</string>
 	
 	<!-- Sync Preferences -->
-	<string name="sync_title">Sync email periodically</string>
+	<string name="settings_offlinemode_title">Offline mode</string>
+	<string name="settings_offlinemode_off">Content will be downloaded from the Internet</string>
+	<string name="settings_offlinemode_on">Internet access disabled</string>
+	
 	<string name="attachment_title">Download incoming attachments</string>
 	<string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
 	<string name="attachment_summary_off">Only download attachments when manually requested</string>
+	
+	<!-- Custom -->
 	<string name="toast_page_list_refreshed">Page list refreshed</string>
 	<string name="toast_page_view_refreshed">Page content refreshed</string>
 	<string name="toast_addon_from_cache">from the cache</string>
 	<string name="toast_addon_from_internet">from the Internet</string>
-	<string name="title_activity_page_view">MainActivity</string>
+	<string name="title_activity_page_view">View</string>
 	<string name="nav_pageview_view">View</string>
 	<string name="nav_pageview_edit">Edit</string>
 	<string name="nav_pageview_history">History</string>

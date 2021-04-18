@@ -1,30 +1,44 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <PreferenceCategory app:title="@string/messages_header">
-
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-
+    
+    <PreferenceCategory app:title="@string/data_header">
+        <SwitchPreferenceCompat
+            app:key="comment"
+            app:title="Settings are work-in-progress" />
+        
+<!--        <EditTextPreference-->
+<!--            app:key="signature"-->
+<!--            app:title="@string/signature_title"-->
+<!--            app:useSimpleSummaryProvider="true" />-->
+    
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:key="load_images"
+            app:defaultValue="always"
+            app:entries="@array/settings_load_images_entries"
+            app:entryValues="@array/settings_load_images_values"
+            app:title="@string/settings_load_images_title"
             app:useSimpleSummaryProvider="true" />
-
+    
+    
+        <SwitchPreferenceCompat
+            app:key="offlinemode"
+            app:title="@string/settings_offlinemode_title"
+            app:summaryOff="@string/settings_offlinemode_off"
+            app:summaryOn="@string/settings_offlinemode_on" />
+        
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="@string/appearance_header">
+        <ListPreference
+            app:key="theme"
+            app:defaultValue="use_system"
+            app:entries="@array/settings_theme_entries"
+            app:entryValues="@array/settings_theme_values"
+            app:title="@string/settings_theme_title"
+            app:useSimpleSummaryProvider="true" />
+        
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
+            app:dependency="attachment"
             app:key="attachment"
             app:summaryOff="@string/attachment_summary_off"
             app:summaryOn="@string/attachment_summary_on"
