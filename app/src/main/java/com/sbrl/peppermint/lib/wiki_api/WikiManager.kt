@@ -39,6 +39,7 @@ class WikiManager(private val dataManager: DataManager) {
 	 * Returns a random wiki.
 	 */
 	private fun randomWiki() : Wiki {
+		if(wikis.size == 0) return defaultWiki()
 		return wikis[wikis.keys.asSequence().toList()[0]]!!
 	}
 	private fun defaultWiki() : Wiki {
@@ -86,6 +87,7 @@ class WikiManager(private val dataManager: DataManager) {
 	 */
 	fun reloadFromDisk() {
 		wikis = loadWikis()
+		currentWiki = wikis[currentWiki.id] ?: randomWiki()
 	}
 	
 	/**

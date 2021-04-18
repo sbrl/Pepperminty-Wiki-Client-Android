@@ -64,6 +64,11 @@ class MainActivity : AppCompatActivity() {
 		// Note to self: Do NOT call setupWithNavController here on the navDrawer - it will prevent us from listening to any events! Ref https://stackoverflow.com/a/62859704/1460422
 	}
 	
+	override fun onResume() {
+		wikiViewModel.wikiManager.value!!.reloadFromDisk()
+		super.onResume()
+	}
+	
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 		Log.i("MainActivity", "onCreateOptionsMenu")
 		menuInflater.inflate(R.menu.navdrawer_main, menu)
