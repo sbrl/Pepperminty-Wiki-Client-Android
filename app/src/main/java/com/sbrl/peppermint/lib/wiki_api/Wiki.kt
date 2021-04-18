@@ -1,15 +1,18 @@
 package com.sbrl.peppermint.lib.wiki_api
 
 import android.util.Log
+import com.sbrl.peppermint.lib.io.DataManager
 import org.json.JSONObject
 
 
 
-class Wiki(val id: String,
+class Wiki(val dataManager: DataManager,
+           val id: String,
            val name: String,
            inEndpoint: String,
            inCredentials: WikiCredentials?) {
-	constructor(inId: String, inName: String, inEndpoint: String) : this(inId, inName, inEndpoint, null)
+	constructor(inDataManager: DataManager, inId: String, inName: String, inEndpoint: String)
+		: this(inDataManager, inId, inName, inEndpoint, null)
 	
 	var api: WikiAPIBroker = WikiAPIBroker(inEndpoint, inCredentials)
 	
@@ -26,13 +29,25 @@ class Wiki(val id: String,
 	
 	/**
 	 * Pages a list of pages currently on this wiki.
-	 * @return A lsit of pages as a list of strings.
+	 * @return A list of pages as a list of strings.
 	 */
 	fun pages(): WikiResult<List<String>>? {
 		val response = api.makeGetRequest("list", mapOf<String, String>(
 			"format" to "text"
-		)) ?: return null
-		return WikiResult(Source.Internet, response.body.lines())
+		))
+		var source = Source.Internet
+		val data: String = if(response !== null) {
+				// Cache the newly downloaded string
+				dataManager.cacheString("pagelists", "$name.json", response.body);
+				response.body
+			}
+			else {
+				// Failed to fetch from the Internet, try the cache
+				source = Source.Cache
+				dataManager.getCachedString("pagelists", "$name.json") ?: return null
+			}
+		
+		return WikiResult(source, data.lines())
 	}
 	
 	/**
@@ -43,11 +58,24 @@ class Wiki(val id: String,
 	 */
 	fun pageContent(pagename: String, format: PageContentType = PageContentType.HTML) : WikiResult<String>? {
 		Log.i("Wiki", "Fetching page content for $pagename")
-		val response : WikiApiResponse = api.makeGetRequest("view", mapOf(
+		
+		val ext = when(format) { PageContentType.HTML -> "html" }
+		
+		val response : WikiApiResponse? = api.makeGetRequest("view", mapOf(
 			"page" to pagename,
 			"mode" to "parsedsourceonly"
-		)) ?: return null
-		return WikiResult(Source.Internet, response.body)
+		))
+		var source = Source.Internet
+		val data: String = if(response !== null) {
+				// Update the cache
+				dataManager.cacheString("wiki:$name", "$pagename.$ext", response.body)
+				response.body
+			} else {
+				// Oops that didn't go too well. Let's see if we can pull from the cache
+				source = Source.Cache
+				dataManager.getCachedString("wiki:$name", "$pagename.$ext") ?: return null
+			}
+		return WikiResult(source, data)
 	}
 	
 	// --------------------------------------------------------------------------------------------
@@ -64,13 +92,14 @@ class Wiki(val id: String,
 	}
 	
 	companion object {
-		fun load(id: String, obj: JSONObject) : Wiki {
+		fun load(dataManager: DataManager, id: String, obj: JSONObject) : Wiki {
 			// If any credentials are present, extract them
 			val credentials = if(obj.has("username") && obj.has("password"))
 				WikiCredentials(obj.getString("username"), obj.getString("password"))
 			else null
 			
 			return Wiki(
+				dataManager,
 				id,
 				obj.getString("name"),
 				obj.getString("endpoint"),

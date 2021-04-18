@@ -35,7 +35,7 @@ class WikiManager(private val dataManager: DataManager) {
 		return wikis[wikis.keys.asSequence().toList()[0]]!!
 	}
 	private fun defaultWiki() : Wiki {
-		return Wiki(WIKI_ID_DEFAULT, "Test Wiki", "https://starbeamrainbowlabs.com/labs/peppermint/build/")
+		return Wiki(dataManager, WIKI_ID_DEFAULT, "Test Wiki", "https://starbeamrainbowlabs.com/labs/peppermint/build/")
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class WikiManager(private val dataManager: DataManager) {
 		)
 		val result: MutableMap<String, Wiki> = mutableMapOf()
 		for(wikiId in wikis.keys())
-			result[wikiId] = Wiki.load(wikiId, wikis.getJSONObject(wikiId))
+			result[wikiId] = Wiki.load(dataManager, wikiId, wikis.getJSONObject(wikiId))
 		
 		// Make sure there is *always* at least 1 wiki
 		if(result.count() == 0)
