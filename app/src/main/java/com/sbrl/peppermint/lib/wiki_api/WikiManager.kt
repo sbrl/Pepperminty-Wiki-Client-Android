@@ -29,6 +29,13 @@ class WikiManager(private val dataManager: DataManager) {
 	}
 	
 	/**
+	 * Returns a list of wikis that are currently available.
+	 */
+	fun getWikiList() : Map<String, Wiki> {
+		return wikis
+	}
+	
+	/**
 	 * Returns a random wiki.
 	 */
 	private fun randomWiki() : Wiki {
@@ -73,6 +80,13 @@ class WikiManager(private val dataManager: DataManager) {
 	}
 	
 	// --------------------------------------------------------------------------------------------
+	
+	/**
+	 * Reloads all the wikis from disk again.
+	 */
+	fun reloadFromDisk() {
+		wikis = loadWikis()
+	}
 	
 	/**
 	 * Loads the wiki data from a JSON file on disk.

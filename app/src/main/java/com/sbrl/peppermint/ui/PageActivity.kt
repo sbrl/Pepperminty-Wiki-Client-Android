@@ -47,7 +47,7 @@ class PageActivity : AppCompatActivity() {
 	    // 3: Intents
 	    
 	    // Make sure a wiki and page name were specified
-	    if(!intent.hasExtra(EXTRA_WIKI_NAME)) {
+	    if(!intent.hasExtra(EXTRA_WIKI_ID)) {
 	    	Toast.makeText(this,
 			    getString(R.string.error_no_wiki_name_specified),
 			    Toast.LENGTH_SHORT).show()
@@ -60,11 +60,11 @@ class PageActivity : AppCompatActivity() {
 		    finish()
 	    }
 	    
-	    val wikiname = intent.getStringExtra(EXTRA_WIKI_NAME)!!
+	    val wikiId = intent.getStringExtra(EXTRA_WIKI_ID)!!
 	    val pagename = intent.getStringExtra(EXTRA_PAGE_NAME)!!
-	    Log.i("PageActivity", "Received intent wiki $wikiname, pagename $pagename")
+	    Log.i("PageActivity", "Received intent wiki $wikiId, pagename $pagename")
 	    
-	    wikiViewModel.wikiManager.value?.setWiki(wikiname)
+	    wikiViewModel.wikiManager.value?.setWiki(wikiId)
 	    pageViewModel.pushPage(pagename)
     }
 	

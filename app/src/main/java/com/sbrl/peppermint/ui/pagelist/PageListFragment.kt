@@ -14,11 +14,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.ui.EXTRA_PAGE_NAME
-import com.sbrl.peppermint.ui.EXTRA_WIKI_NAME
+import com.sbrl.peppermint.ui.EXTRA_WIKI_ID
 import com.sbrl.peppermint.ui.PageActivity
 import com.sbrl.peppermint.ui.adapters.PageListAdapter
 import com.sbrl.peppermint.ui.WikiViewModel
-import kotlinx.coroutines.delay
 import kotlin.concurrent.thread
 
 class PageListFragment : Fragment() {
@@ -123,7 +122,7 @@ class PageListFragment : Fragment() {
 		val ctx = context ?: return false
 		
 		val intent = Intent(ctx, PageActivity::class.java).apply {
-			putExtra(EXTRA_WIKI_NAME, currentWiki.id)
+			putExtra(EXTRA_WIKI_ID, currentWiki.id)
 			putExtra(EXTRA_PAGE_NAME, pagename)
 		}
 		

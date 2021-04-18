@@ -32,4 +32,7 @@
     
     <string name="error_failed_load_page_content">Error: Failed to load content for page \'%1$s\'</string>
     <string name="error_redlink">The page \'%1$s\' doesn\'t exist</string>
+	<string name="navdrawer_main_add_wiki">Add Wiki</string>
+    <string name="navdrawer_main_settings">Settings</string>
+    <string name="navdrawer_main_credits">Credits</string>
 </resources>
