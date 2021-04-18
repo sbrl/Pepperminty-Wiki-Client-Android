@@ -2,20 +2,22 @@ package com.sbrl.peppermint.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.ui.drawers.MainDrawerManager
+
 
 class MainActivity : AppCompatActivity() {
 	
@@ -41,35 +43,41 @@ class MainActivity : AppCompatActivity() {
 		drawerLayout = findViewById(R.id.container)
 		navDrawer = findViewById(R.id.navdraw_main)
 		
-		drawerManager = MainDrawerManager(this, navDrawer, wikiViewModel.wikiManager.value!!)
-		
+		drawerManager = MainDrawerManager(
+			this,
+			drawerLayout,
+			navDrawer,
+			wikiViewModel.wikiManager.value!!
+		)
 		
 		// 4: Setup the action bar
 		val navController = findNavController(R.id.nav_host_fragment)
 		// Passing each menu ID as a set of Ids because each
 		// menu should be considered as top level destinations.
-		val appBarConfiguration = AppBarConfiguration(setOf(
-			R.id.navigation_pagelist, R.id.navigation_recentchanges, R.id.navigation_search
-		), drawerLayout)
+		val appBarConfiguration = AppBarConfiguration(
+			setOf(
+				R.id.navigation_pagelist, R.id.navigation_recentchanges, R.id.navigation_search
+			), drawerLayout
+		)
 		setupActionBarWithNavController(navController, appBarConfiguration)
 		navBottom.setupWithNavController(navController)
-		navDrawer.setupWithNavController(navController)
-		
+		// Note to self: Do NOT call setupWithNavController here on the navDrawer - it will prevent us from listening to any events! Ref https://stackoverflow.com/a/62859704/1460422
+	}
+	
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		Log.i("MainActivity", "onCreateOptionsMenu")
+		menuInflater.inflate(R.menu.navdrawer_main, menu)
+		return super.onCreateOptionsMenu(menu)
 	}
 	
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		// HACK: We just blindly open the drawer here, because we can't figure out an effective way to tellt he buttons on the action bar (that's the bar at the top of the screen) apart without replacing it with our own toolbar...... grumble
-		if(drawerLayout.isDrawerOpen(navDrawer))
-			drawerLayout.closeDrawer(GravityCompat.START)
-		else
-			drawerLayout.openDrawer(GravityCompat.START)
+		
+		Log.i("MainActivity", "onOptionsItemSelected")
+		
+		drawerManager.toggleDrawer()
 		super.onOptionsItemSelected(item)
 		return true // Allow normal processing to continue
 	}
 	
-	override fun onNavigateUp(): Boolean {
-		Log.i("MainActivity", "Opening drawer")
-		drawerLayout.openDrawer(GravityCompat.START)
-		return super.onNavigateUp()
-	}
 }

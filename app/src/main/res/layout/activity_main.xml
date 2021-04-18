@@ -48,5 +48,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemTextAppearance="@style/Theme.PeppermintyWiki.NavigationDrawText"
+        android:background="@color/purple_700"
+        app:itemTextColor="@color/white_alt"
+        app:itemIconTint="@color/orange_200"
         app:menu="@menu/navdrawer_main" />
+    
 </androidx.drawerlayout.widget.DrawerLayout>
