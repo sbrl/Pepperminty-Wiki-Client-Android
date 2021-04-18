@@ -8,13 +8,17 @@ import kotlin.Exception
  * The interface is a mix between the C♯ and Javascript event systems.
  *
  */
-class EventManager<EventSource, EventArgs> {
+class EventManager<EventSource, EventArgs>(val name: String) {
 	/**
 	 * A list of the current event listeners.
 	 */
 	private val listeners: MutableList<(source: EventSource, args: EventArgs) -> Unit> = mutableListOf()
 	
-	private val listenerCountWarn: Int = 25;
+	private val listenerCountWarn: Int = 25
+	
+	// Virtual (/ computed) property
+	private val tag: String
+		get() = "EventManager/$name"
 	
 	/**
 	 * Adds a new event listener to this event manager.
@@ -25,7 +29,7 @@ class EventManager<EventSource, EventArgs> {
 		
 		if(listeners.size > listenerCountWarn)
 			Log.w(
-				"EventManager",
+				tag,
 				"Warning: ${listeners.size} event listeners attached, is there a leak?\n" +
 					Log.getStackTraceString(Exception())
 			)
@@ -46,7 +50,7 @@ class EventManager<EventSource, EventArgs> {
 	 * @return Whether there were listeners present that were triggered or not.
 	 */
 	fun emit(source: EventSource, args: EventArgs) : Boolean {
-		Log.i("EventManager", "Emitting to ${listeners.size} listeners")
+		Log.i(tag, "Emitting to ${listeners.size} listeners")
 		if(listeners.size == 0) return false
 		
 		for(fn in listeners)

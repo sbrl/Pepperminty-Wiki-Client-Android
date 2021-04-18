@@ -18,7 +18,7 @@ class WikiManager(private val dataManager: DataManager) {
 	/**
 	 * Event that's fired when the current wiki changes.
 	 */
-	val wikiChanged: EventManager<WikiManager, WikiChangedEventArgs> = EventManager()
+	val wikiChanged: EventManager<WikiManager, WikiChangedEventArgs> = EventManager("WikiManager:wikiChanged")
 	class WikiChangedEventArgs(val newCurrentWiki: Wiki)
 	
 	private var wikis: MutableMap<String, Wiki>

@@ -22,7 +22,7 @@ class PageListAdapter (
 	
 	class ItemSelectedEventArgs(val pagename: String)
 	
-	val itemSelected: EventManager<PageListAdapter, ItemSelectedEventArgs> = EventManager()
+	val itemSelected: EventManager<PageListAdapter, ItemSelectedEventArgs> = EventManager("PageListAdapter:itemSelected")
 	
 	/**
 	 * Holds information about a single item that si being displayed in the list.
