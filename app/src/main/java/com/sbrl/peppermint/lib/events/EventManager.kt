@@ -44,6 +44,13 @@ class EventManager<EventSource, EventArgs>(val name: String) {
 	}
 	
 	/**
+	 * Deletes all the listeners from this EventManager.
+	 */
+	fun clear() {
+		listeners.clear()
+	}
+	
+	/**
 	 * Emits an event to all the listeners currently attached to this EventManager.
 	 * @param source: The caller of the event.
 	 * @param args: The arguments to the event.
