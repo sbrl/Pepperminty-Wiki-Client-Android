@@ -43,6 +43,8 @@ class WebViewManager(internal val context: Context, private val webview: WebView
 		webview.settings.javaScriptCanOpenWindowsAutomatically = false
 		webview.settings.mediaPlaybackRequiresUserGesture = true
 		webview.settings.allowFileAccess = false
+		// These don't appear to be required for correct operation
+		// They're deprecated anyway, so best to see if we can do without them if possible
 //		webview.settings.allowFileAccessFromFileURLs = false
 //		webview.settings.allowUniversalAccessFromFileURLs = false
 		
