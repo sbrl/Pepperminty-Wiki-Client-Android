@@ -26,11 +26,9 @@ class PageViewFragment : Fragment() {
 	private lateinit var pageViewModel: PageViewModel
 	private lateinit var wikiViewModel: WikiViewModel
 	
-	private lateinit var swipeRefresh: SwipeRefreshLayout
-	private lateinit var webview: WebView
+	private lateinit var webviewManager: WebViewManager
 	
-	private lateinit var pageHTMLProcessor: PageHTMLProcessor
-	private var jsInterface = ViewPageJSInterface(this)
+	private lateinit var swipeRefresh: SwipeRefreshLayout
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -42,14 +40,26 @@ class PageViewFragment : Fragment() {
 		pageViewModel = ViewModelProvider(requireActivity()).get(PageViewModel::class.java)
 		wikiViewModel = ViewModelProvider(requireActivity()).get(WikiViewModel::class.java)
 		
+		
 		// 2: Inflate the layout
 		val root = inflater.inflate(R.layout.fragment_pageview, container, false)
-		webview = root.findViewById(R.id.webview_pageview)
-		pageHTMLProcessor = PageHTMLProcessor(requireContext())
 		swipeRefresh = root.findViewById(R.id.swipe_refresh_pageview)
 		
-		// 3: Initial UI updates
+		
+		// 3: Initial UI updates & webview manager
 		activity?.title = pageViewModel.currentPageName.value
+		
+		// The WebviewManager is responsible for managing the web view. Note that the page stack
+		// is managed in this fragment and not webview manager.
+		webviewManager = WebViewManager(
+			requireContext(),
+			root.findViewById(R.id.webview_pageview),
+			wikiViewModel
+		)
+		webviewManager.onLinkClicked.on { _source, args ->
+			pushPage(args.pagename, args.sectionname)
+		}
+		
 		
 		// 4: Listeners
 		pageViewModel.currentPageName.observe(viewLifecycleOwner, Observer {
@@ -81,7 +91,7 @@ class PageViewFragment : Fragment() {
 	 * @param pagename: The name of the page to push onto the stack.
 	 * @param section: The name of the section on the page to jump to.
 	 */
-	fun pushPage(pagename: String, section: String = "") {
+	private fun pushPage(pagename: String, section: String = "") {
 		// TODO: Handle page sections to jump directly to sections of pages
 		pageViewModel.pushPage(pagename)
 		/* Note that we do *not* call setPage directly here because the LiveData thing in the
@@ -109,52 +119,11 @@ class PageViewFragment : Fragment() {
 				
 				// Ref https://stackoverflow.com/a/54893709/1460422
 				(requireActivity() as AppCompatActivity).supportActionBar?.title = pagename
-				displayContent(pageContent.value)
+				webviewManager.displayContent(pageContent.value)
 				
 				uiFinishPageViewRefresh(pageContent.source == Wiki.Source.Cache)
 			}
 		}
 	}
 	
-	@SuppressLint("SetJavaScriptEnabled")
-	private fun displayContent(contentHTML: String) {
-		val displayHTML = pageHTMLProcessor.transform(contentHTML)
-		// Configure the WebView
-		webview.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
-		webview.settings.javaScriptEnabled = true
-		webview.settings.domStorageEnabled = false // Required for displaying images
-		webview.settings.loadsImagesAutomatically = true
-//		when(prefs.GetImageLoadingType()) {
-//			"always" -> true
-//			"wifi_only" -> is_wifi_enabled(this)
-//			"never" -> false
-//			else -> false
-//		}
-		webview.settings.databaseEnabled = false
-		webview.settings.javaScriptCanOpenWindowsAutomatically = false
-		webview.settings.mediaPlaybackRequiresUserGesture = true
-		webview.settings.allowFileAccess = false
-		webview.settings.allowFileAccessFromFileURLs = false
-		webview.settings.allowUniversalAccessFromFileURLs = false
-		
-		webview.addJavascriptInterface(jsInterface, "App")
-		
-		// Sort out the cookies so that the webview can fetch images
-		val endpoint = wikiViewModel.currentWiki.value!!.api.endpoint
-		val webviewCookies = CookieManager.getInstance()
-		for(cookie in wikiViewModel.currentWiki.value!!.api.getCookies()) {
-//			Log.d("PageViewFragment", "Adding cookie '${cookie.toString()}'")
-			webviewCookies.setCookie(endpoint, cookie.toString())
-		}
-		
-		
-		// Load the data into the webview
-		webview.loadDataWithBaseURL(
-			endpoint,
-			displayHTML,
-			"text/html",
-			"UTF-8",
-			null
-		)
-	}
 }
