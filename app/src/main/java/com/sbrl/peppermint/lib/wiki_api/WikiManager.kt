@@ -3,9 +3,10 @@ package com.sbrl.peppermint.lib.wiki_api
 import android.util.Log
 import com.sbrl.peppermint.lib.events.EventManager
 import com.sbrl.peppermint.lib.io.DataManager
+import com.sbrl.peppermint.lib.io.SettingsManager
 import org.json.JSONObject
 
-class WikiManager(private val dataManager: DataManager) {
+class WikiManager(private val settings: SettingsManager, private val dataManager: DataManager) {
 	private val WIKI_ID_DEFAULT: String = "::DEFAULT::"
 	
 	var currentWiki: Wiki = defaultWiki()
@@ -39,11 +40,17 @@ class WikiManager(private val dataManager: DataManager) {
 	 * Returns a random wiki.
 	 */
 	private fun randomWiki() : Wiki {
-		if(wikis.size == 0) return defaultWiki()
+		if(wikis.isEmpty()) return defaultWiki()
 		return wikis[wikis.keys.asSequence().toList()[0]]!!
 	}
 	private fun defaultWiki() : Wiki {
-		return Wiki(dataManager, WIKI_ID_DEFAULT, "Test Wiki", "https://starbeamrainbowlabs.com/labs/peppermint/build/")
+		return Wiki(
+			settings,
+			dataManager,
+			WIKI_ID_DEFAULT,
+			"Test Wiki",
+			"https://starbeamrainbowlabs.com/labs/peppermint/build/"
+		)
 	}
 	
 	/**
@@ -99,7 +106,7 @@ class WikiManager(private val dataManager: DataManager) {
 		)
 		val result: MutableMap<String, Wiki> = mutableMapOf()
 		for(wikiId in wikis.keys())
-			result[wikiId] = Wiki.load(dataManager, wikiId, wikis.getJSONObject(wikiId))
+			result[wikiId] = Wiki.load(dataManager, settings, wikiId, wikis.getJSONObject(wikiId))
 		
 		// Make sure there is *always* at least 1 wiki
 		if(result.count() == 0)

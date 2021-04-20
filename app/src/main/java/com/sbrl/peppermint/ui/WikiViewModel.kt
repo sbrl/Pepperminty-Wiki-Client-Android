@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.lib.wiki_api.WikiManager
 import com.sbrl.peppermint.lib.io.DataManager
+import com.sbrl.peppermint.lib.io.SettingsManager
 
 class WikiViewModel() : ViewModel() {
 	val dataManager: DataManager = DataManager()
@@ -24,12 +25,13 @@ class WikiViewModel() : ViewModel() {
 	fun init(context: Context?) : Boolean {
 		if(context == null) return false
 		
+		val settings = SettingsManager(context)
 		dataManager.init(
 			context.cacheDir,
 			context.filesDir
 		)
 		// Now that the DataManager has been initialised, we can create the WikiManager
-		_wikiManager.value = WikiManager(dataManager)
+		_wikiManager.value = WikiManager(settings, dataManager)
 		// Update the current wiki
 		_currentWiki.value = wikiManager.value?.currentWiki
 		

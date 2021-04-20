@@ -2,17 +2,20 @@ package com.sbrl.peppermint.lib.wiki_api
 
 import android.util.Log
 import com.sbrl.peppermint.lib.io.DataManager
+import com.sbrl.peppermint.lib.io.SettingsManager
 import org.json.JSONObject
 
 
 
-class Wiki(val dataManager: DataManager,
-           val id: String,
-           val name: String,
-           inEndpoint: String,
-           inCredentials: WikiCredentials?) {
-	constructor(inDataManager: DataManager, inId: String, inName: String, inEndpoint: String)
-		: this(inDataManager, inId, inName, inEndpoint, null)
+class Wiki(
+	private val settings: SettingsManager,
+	private val dataManager: DataManager,
+	val id: String,
+	val name: String,
+	inEndpoint: String,
+	inCredentials: WikiCredentials?) {
+	constructor(settings: SettingsManager, inDataManager: DataManager, inId: String, inName: String, inEndpoint: String)
+		: this(settings, inDataManager, inId, inName, inEndpoint, null)
 	
 	var api: WikiAPIBroker = WikiAPIBroker(inEndpoint, inCredentials)
 	
@@ -92,14 +95,14 @@ class Wiki(val dataManager: DataManager,
 	}
 	
 	companion object {
-		fun load(dataManager: DataManager, id: String, obj: JSONObject) : Wiki {
+		fun load(dataManager: DataManager, settings: SettingsManager, id: String, obj: JSONObject) : Wiki {
 			// If any credentials are present, extract them
 			val credentials = if(obj.has("username") && obj.has("password"))
 				WikiCredentials(obj.getString("username"), obj.getString("password"))
 			else null
 			
 			return Wiki(
-				dataManager,
+				settings, dataManager,
 				id,
 				obj.getString("name"),
 				obj.getString("endpoint"),
