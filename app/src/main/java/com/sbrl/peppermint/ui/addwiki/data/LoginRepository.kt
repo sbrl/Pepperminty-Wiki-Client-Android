@@ -1,6 +1,6 @@
-package com.sbrl.peppermint.ui.data
+package com.sbrl.peppermint.ui.addwiki.data
 
-import com.sbrl.peppermint.ui.data.model.LoggedInUser
+import com.sbrl.peppermint.ui.addwiki.data.model.LoggedInUser
 
 /**
  * Class that requests authentication and user information from the remote data source and

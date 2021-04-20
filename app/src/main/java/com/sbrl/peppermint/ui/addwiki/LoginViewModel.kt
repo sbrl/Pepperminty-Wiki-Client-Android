@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
 import com.sbrl.peppermint.R
-import com.sbrl.peppermint.ui.data.LoginRepository
-import com.sbrl.peppermint.ui.data.Result
+import com.sbrl.peppermint.ui.addwiki.data.LoginRepository
+import com.sbrl.peppermint.ui.addwiki.data.Result
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 	

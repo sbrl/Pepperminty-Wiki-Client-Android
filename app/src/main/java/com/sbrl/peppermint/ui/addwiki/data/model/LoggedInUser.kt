@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.ui.data.model
+package com.sbrl.peppermint.ui.addwiki.data.model
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

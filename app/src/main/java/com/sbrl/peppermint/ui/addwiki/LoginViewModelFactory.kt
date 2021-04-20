@@ -2,8 +2,8 @@ package com.sbrl.peppermint.ui.addwiki
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sbrl.peppermint.ui.data.LoginDataSource
-import com.sbrl.peppermint.ui.data.LoginRepository
+import com.sbrl.peppermint.ui.addwiki.data.LoginDataSource
+import com.sbrl.peppermint.ui.addwiki.data.LoginRepository
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

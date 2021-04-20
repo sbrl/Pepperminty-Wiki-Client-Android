@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.ui.data
+package com.sbrl.peppermint.ui.addwiki.data
 
 /**
  * A generic class that holds a value with its loading status.

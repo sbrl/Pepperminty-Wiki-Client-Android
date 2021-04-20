@@ -1,6 +1,6 @@
-package com.sbrl.peppermint.ui.data
+package com.sbrl.peppermint.ui.addwiki.data
 
-import com.sbrl.peppermint.ui.data.model.LoggedInUser
+import com.sbrl.peppermint.ui.addwiki.data.model.LoggedInUser
 import java.io.IOException
 
 /**
