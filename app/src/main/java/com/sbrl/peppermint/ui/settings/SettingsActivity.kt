@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.io.SettingsManager
 
 class SettingsActivity : AppCompatActivity() {
 	
@@ -19,13 +21,12 @@ class SettingsActivity : AppCompatActivity() {
 				.commit()
 		}
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
+		
+		SettingsManager(this).listAll()
 	}
 	
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		// HACK: We just blindly open the drawer here, because we can't figure out an effective way to tellt he buttons on the action bar (that's the bar at the top of the screen) apart without replacing it with our own toolbar...... grumble
-		
-		// TODO: Save the settings here
-		Log.w("SettingsActivity", "TODO: Save the settings here onOptionsItemSelected")
+		// Settings appear to be saved automatically, apparently
 		
 		finish()
 		

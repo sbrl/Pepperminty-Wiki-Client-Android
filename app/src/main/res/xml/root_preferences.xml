@@ -28,6 +28,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/appearance_header">
+        
         <ListPreference
             app:key="theme"
             app:defaultValue="use_system"
@@ -36,14 +37,6 @@
             app:title="@string/settings_theme_title"
             app:useSimpleSummaryProvider="true" />
         
-
-        <SwitchPreferenceCompat
-            app:dependency="attachment"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>
