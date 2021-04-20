@@ -38,7 +38,7 @@ class Wiki(val dataManager: DataManager,
 		var source = Source.Internet
 		val data: String = if(response !== null) {
 				// Cache the newly downloaded string
-				dataManager.cacheString("pagelists", "$name.json", response.body);
+				dataManager.cacheString("pagelists", "$name.json", response.body)
 				response.body
 			}
 			else {
@@ -86,7 +86,7 @@ class Wiki(val dataManager: DataManager,
 		result.put("endpoint", api.endpoint)
 		if(api.credentials !== null) {
 			result.put("username", api.credentials!!.username)
-			result.put("username", api.credentials!!.password)
+			result.put("password", api.credentials!!.password)
 		}
 		return result
 	}
