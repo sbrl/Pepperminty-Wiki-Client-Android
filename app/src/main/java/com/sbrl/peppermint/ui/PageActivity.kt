@@ -2,6 +2,7 @@ package com.sbrl.peppermint.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.Window
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,7 +37,9 @@ class PageActivity : AppCompatActivity() {
         ))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-		
+	
+		// Display a back button in the top left
+	    supportActionBar?.setDisplayHomeAsUpEnabled(true)
 	    
 	    // 2: View models
 	    pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java)
@@ -67,6 +70,22 @@ class PageActivity : AppCompatActivity() {
 	    wikiViewModel.wikiManager.value?.setWiki(wikiId)
 	    pageViewModel.pushPage(pagename)
     }
+	
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		// HACK: Blindly assume it was the back button in the top left pressed here
+		// I can't figure out a way to determine which button was actually pressed without replacing the entire bar with our own custom one.... sigh
+		
+		// If there isn't left on the stack after we've tried to pop something off, then exit this activity
+		if(!pageViewModel.popPage() || pageViewModel.pageStackSize() == 0) {
+			Log.i("PageActivity", "Nothing left on the stack, exiting")
+			finish()
+			return true
+		}
+		
+		super.onOptionsItemSelected(item)
+		return true // Allow normal processing to continue
+	}
+	
 	
 	override fun onBackPressed() {
 		// If there isn't left on the stack after we've tried to pop something off, then we need to let the system take over the back button operation
