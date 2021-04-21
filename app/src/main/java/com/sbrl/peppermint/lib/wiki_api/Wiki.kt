@@ -35,9 +35,9 @@ class Wiki(
 	 * @return A list of pages as a list of strings.
 	 */
 	fun pages(): WikiResult<List<String>>? {
-		val response = api.makeGetRequest("list", mapOf<String, String>(
+		val response = if(!settings.offline) api.makeGetRequest("list", mapOf<String, String>(
 			"format" to "text"
-		))
+		)) else null
 		var source = Source.Internet
 		val data: String = if(response !== null) {
 				// Cache the newly downloaded string
@@ -64,10 +64,10 @@ class Wiki(
 		
 		val ext = when(format) { PageContentType.HTML -> "html" }
 		
-		val response : WikiApiResponse? = api.makeGetRequest("view", mapOf(
+		val response : WikiApiResponse? = if(!settings.offline) api.makeGetRequest("view", mapOf(
 			"page" to pagename,
 			"mode" to "parsedsourceonly"
-		))
+		)) else null
 		var source = Source.Internet
 		val data: String = if(response !== null) {
 				// Update the cache

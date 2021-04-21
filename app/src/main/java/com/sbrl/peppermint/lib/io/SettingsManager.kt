@@ -34,4 +34,8 @@ class SettingsManager(val context: Context) {
 			"never" -> LoadImages.Never
 			else -> LoadImages.OnlyOverWiFi
 		}
+	
+	// Whether offline mode is enabled
+	val offline: Boolean
+		get() = prefs.getBoolean("offlinemode", false)
 }
