@@ -7,16 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.wiki_api.ConnectionStatus
 import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.ui.WikiViewModel
-import java.sql.Connection
 import kotlin.concurrent.thread
 
 class AddWikiActivity : AppCompatActivity() {
@@ -24,6 +19,7 @@ class AddWikiActivity : AppCompatActivity() {
 	private lateinit var wikiViewModel: WikiViewModel
 	private lateinit var addWikiManager: AddWikiManager
 	
+	private lateinit var labelStatus: TextView
 	private lateinit var textEndpoint: EditText
 	private lateinit var textDisplayName: EditText
 	private lateinit var textUsername: EditText
@@ -36,37 +32,23 @@ class AddWikiActivity : AppCompatActivity() {
 		
 		setContentView(R.layout.activity_add_wiki)
 		
+		labelStatus = findViewById(R.id.connection_status_display)
 		textEndpoint = findViewById(R.id.endpoint)
 		textDisplayName = findViewById(R.id.display_name)
 		textUsername = findViewById(R.id.username)
 		textPassword = findViewById(R.id.password)
-		buttonLogin = findViewById(R.id.login)
+		buttonLogin = findViewById(R.id.add_wiki)
 		progressBarLoading = findViewById(R.id.loading)
 		
 		wikiViewModel = ViewModelProvider(this).get(WikiViewModel::class.java)
 		wikiViewModel.init(this)
 		addWikiManager = AddWikiManager(this, wikiViewModel)
 		
-		textEndpoint.afterTextChanged { checkDetails() }
-		textDisplayName.afterTextChanged { checkDetails() }
-		textUsername.afterTextChanged { checkDetails() }
-		
-		textPassword.apply {
-			afterTextChanged {
-				checkDetails()
-			}
-			
-			setOnEditorActionListener { _, actionId, _ ->
-				when (actionId) {
-					EditorInfo.IME_ACTION_DONE -> doAddWiki()
-				}
-				false
-			}
-			
-			buttonLogin.setOnClickListener {
-				doAddWiki()
-			}
+		textEndpoint.setOnFocusChangeListener { _target : View, hasFocus : Boolean ->
+			if(hasFocus) return@setOnFocusChangeListener
+			checkDetails()
 		}
+		// We don't live update on the username / password, because we could leak data about the username / password combo over the Internet
 	}
 	
 	/**
@@ -97,23 +79,19 @@ class AddWikiActivity : AppCompatActivity() {
 	 * @param status: The ConnectionStatus to use to decide what the UI should look like.
 	 */
 	private fun updateUI(status: ConnectionStatus) {
-		when(status) {
-			ConnectionStatus.Ok -> updateUISuccess()
+		showStatus(when(status) {
+			ConnectionStatus.Ok -> {
+				buttonLogin.isEnabled = true
+				R.string.connection_ok
+			}
 			ConnectionStatus.Untested,
 			ConnectionStatus.ConnectionFailed ->
-				showToast(R.string.connection_failed)
+				R.string.connection_failed
 			ConnectionStatus.CredentialsIncorrect ->
-				showToast(R.string.login_failed)
+				R.string.login_failed
 			ConnectionStatus.CredentialsRequired ->
-				showToast(R.string.login_required)
-		}
-	}
-	
-	/**
-	 * Updates the UI, displaying a success message
-	 */
-	private fun updateUISuccess() {
-		buttonLogin.isEnabled = true
+				R.string.login_required
+		})
 	}
 	
 	/**
@@ -154,9 +132,12 @@ class AddWikiActivity : AppCompatActivity() {
 		}
 	}
 	
-	private fun showToast(@StringRes errorString: Int) {
-		Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+	private fun showStatus(@StringRes stringId: Int) {
+		labelStatus.visibility = View.VISIBLE
+		labelStatus.text = getString(stringId)
+		//Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
 	}
+	
 }
 
 /**
