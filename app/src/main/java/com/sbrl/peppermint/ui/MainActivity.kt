@@ -64,6 +64,9 @@ class MainActivity : AppCompatActivity() {
 		// Note to self: Do NOT call setupWithNavController here on the navDrawer - it will prevent us from listening to any events! Ref https://stackoverflow.com/a/62859704/1460422
 	}
 	
+	/**
+	 * Runs every time this activity resumes after another one has been displayed.
+	 */
 	override fun onResume() {
 		wikiViewModel.wikiManager.value!!.reloadFromDisk()
 		super.onResume()

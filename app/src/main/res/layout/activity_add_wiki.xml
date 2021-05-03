@@ -12,18 +12,49 @@
 	tools:context=".ui.addwiki.AddWikiActivity">
 	
 	<EditText
-		android:id="@+id/username"
+		android:id="@+id/endpoint"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="24dp"
 		android:layout_marginTop="96dp"
 		android:layout_marginEnd="24dp"
-		android:hint="@string/prompt_email"
-		android:inputType="textEmailAddress"
+		android:hint="@string/prompt_url"
+		android:autofillHints="url"
+		android:inputType="textUri"
 		android:selectAllOnFocus="true"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
+	
+	<EditText
+		android:id="@+id/display_name"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="24dp"
+		android:layout_marginTop="96dp"
+		android:layout_marginEnd="24dp"
+		android:hint="@string/prompt_display_name"
+		android:inputType="textUri"
+		android:importantForAutofill="no"
+		android:selectAllOnFocus="true"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/endpoint" />
+	
+	<EditText
+		android:id="@+id/username"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="24dp"
+		android:layout_marginTop="8dp"
+		android:layout_marginEnd="24dp"
+		android:hint="@string/prompt_username"
+		android:inputType="textEmailAddress"
+		android:autofillHints="username"
+		android:selectAllOnFocus="true"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/display_name" />
 	
 	<EditText
 		android:id="@+id/password"
@@ -33,9 +64,10 @@
 		android:layout_marginTop="8dp"
 		android:layout_marginEnd="24dp"
 		android:hint="@string/prompt_password"
-		android:imeActionLabel="@string/action_sign_in_short"
+		android:imeActionLabel="@string/action_add_wiki_short"
 		android:imeOptions="actionDone"
 		android:inputType="textPassword"
+		android:autofillHints="password"
 		android:selectAllOnFocus="true"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +83,7 @@
 		android:layout_marginEnd="48dp"
 		android:layout_marginBottom="64dp"
 		android:enabled="false"
-		android:text="@string/action_sign_in"
+		android:text="@string/action_add_wiki"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

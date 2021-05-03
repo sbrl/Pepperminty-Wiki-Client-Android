@@ -4,6 +4,7 @@ import android.util.Log
 import com.sbrl.peppermint.lib.events.EventManager
 import com.sbrl.peppermint.lib.io.DataManager
 import com.sbrl.peppermint.lib.io.SettingsManager
+import com.sbrl.peppermint.lib.polyfill.make_id
 import org.json.JSONObject
 
 class WikiManager(private val settings: SettingsManager, private val dataManager: DataManager) {
@@ -53,11 +54,20 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 		)
 	}
 	
-	fun makeWiki(name: String, endpoint: String, credentials: WikiCredentials?) {
+	/**
+	 * Creates a new wiki.
+	 * @param name: The name of the wiki to create.
+	 * @param endpoint: The URL stem that the wiki can be reached at.
+	 * @param credentials: Optional. The credentials object to use when creating the wiki.
+	 */
+	fun createWiki(name: String, endpoint: String, credentials: WikiCredentials?) : Wiki {
 		return Wiki(
 			settings,
 			dataManager,
-			
+			make_id(16),
+			name,
+			endpoint,
+			credentials
 		)
 	}
 	
@@ -86,10 +96,10 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 	/**
 	 * Adds a new wiki to the WikiManager.
 	 */
-	fun addWiki(id: String, wiki: Wiki) : Boolean {
-		if(wikis[id] == null)
+	fun addWiki(wiki: Wiki) : Boolean {
+		if(wikis[wiki.id] == null)
 			return false
-		wikis[id] = wiki
+		wikis[wiki.id] = wiki
 		
 		saveWikis()
 		return true
