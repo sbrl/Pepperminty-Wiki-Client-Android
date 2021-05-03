@@ -12,6 +12,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.IOException
 import java.net.URLEncoder
+import kotlin.math.truncate
 
 class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	private val client: OkHttpClient = OkHttpClient.Builder()
@@ -34,7 +35,10 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	
 	var connectionStatus: ConnectionStatus = ConnectionStatus.Untested
 	
-
+	/**
+	 * Fetches a list of cookies currently in the cookie jar for the wiki HTTP API endpoint.
+	 * Very useful if one needs to transfer the cookies, say, into a GeckoView / WebView.
+	 */
 	fun getCookies() : List<Cookie> {
 		return client.cookieJar.loadForRequest(endpoint.toHttpUrlOrNull()!!)
 	}
@@ -82,7 +86,7 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 		val response = makePostRequest("checklogin", null, mapOf(
 			"user" to credentials!!.username,
 			"pass" to credentials!!.password
-		)) ?: return false
+		), true) ?: return false
 		return response.hasHeader("x-login-success")
 	}
 	
@@ -92,6 +96,7 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 			client.newCall(request).execute()
 		}
 		catch (error: IOException) {
+			Log.w("WikiAPIBroker:sendRequest", "Caught network error: $error")
 			return null
 		}
 		val result = WikiApiResponse(response)
@@ -107,25 +112,35 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 		return result
 	}
 	
-	fun makePostRequest(action: String, propertiesGet: Map<String, String>?, propertiesPost: Map<String, String>?) : WikiApiResponse? {
+	/**
+	 * Makes a POST request against the remote wiki.
+	 * @param action: The action in the HTTP API of the remote wiki to call.
+	 * @param propertiesGet: The key - value GET parameters to encode in the request.
+	 * @param propertiesPost: The key - value POST parameters to encode in the request.
+	 * @param isLogin: Whether this request is a login request. Login requests return the raw request request result instead of automatically logging in if required.
+	 */
+	fun makePostRequest(action: String, propertiesGet: Map<String, String>?, propertiesPost: Map<String, String>?, isLogin: Boolean = false) : WikiApiResponse? {
 		val url = makeUrl(action, propertiesGet)
 		
 		return sendRequest(Request.Builder()
 			.url(url)
 			.post(postify(propertiesPost ?: mapOf())
 				.toRequestBody("application/x-www-form-urlencoded".toMediaType()))
-			.build())
+			.build(), isLogin)
 	}
 	
-	fun makeGetRequest(action: String, properties: Map<String, String>?) : WikiApiResponse? {
+	/**
+	 * Makes a GET request against the remote wiki.
+	 * @param action: The action in the HTTP API of the remote wiki to call.
+	 * @param properties: The key - value GET parameters to encode in the request.
+	 * @param isLogin: Whether this request is a login request. Login requests return the raw request request result instead of automatically logging in if required.
+	 */
+	fun makeGetRequest(action: String, properties: Map<String, String>?, isLogin: Boolean = false) : WikiApiResponse? {
 		val url = makeUrl(action, properties)
 		
 		return sendRequest(Request.Builder()
 			.url(url)
-			.build())
-	}
-	fun makeGetRequest(action: String) : WikiApiResponse? {
-		return makeGetRequest(action, mapOf())
+			.build(), isLogin)
 	}
 	
 	fun testConnection(): ConnectionStatus {

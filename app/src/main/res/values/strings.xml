@@ -46,8 +46,9 @@
 	<string name="prompt_password">Password</string>
 	<string name="action_add_wiki">Add Wiki</string>
 	<string name="action_add_wiki_short">Add Wiki</string>
+	<string name="connection_untested">Oops! Something went wrong when trying to test the connection. This is a bug - please contact the developer.</string>
 	<string name="connection_failed">❌ A connection error occurred. Is the URL correct?</string>
-	<string name="login_required" tools:ignore="Typos">Connection ok, but a login is required and has not yet been provided</string>
+	<string name="login_required" tools:ignore="Typos">✅ Connection ok, but a login is required and has not yet been provided</string>
 	<string name="login_failed">❌ Login failed: Invalid username or password </string>
 	<string name="connection_ok" tools:ignore="Typos">✅ Connection ok!</string>
 	<string name="prompt_url">URL</string>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.wiki_api.ConnectionStatus
@@ -48,6 +49,16 @@ class AddWikiActivity : AppCompatActivity() {
 			if(hasFocus) return@setOnFocusChangeListener
 			checkDetails()
 		}
+		textPassword.setOnEditorActionListener { _, actionId, _ ->
+			when (actionId) {
+				EditorInfo.IME_ACTION_DONE -> doAddWiki()
+			}
+			
+			return@setOnEditorActionListener true
+		}
+		buttonLogin.setOnClickListener {
+			doAddWiki()
+		}
 		// We don't live update on the username / password, because we could leak data about the username / password combo over the Internet
 	}
 	
@@ -84,13 +95,16 @@ class AddWikiActivity : AppCompatActivity() {
 				buttonLogin.isEnabled = true
 				R.string.connection_ok
 			}
-			ConnectionStatus.Untested,
-			ConnectionStatus.ConnectionFailed ->
-				R.string.connection_failed
+			ConnectionStatus.CredentialsRequired -> {
+				buttonLogin.isEnabled = true
+				R.string.login_required
+			}
 			ConnectionStatus.CredentialsIncorrect ->
 				R.string.login_failed
-			ConnectionStatus.CredentialsRequired ->
-				R.string.login_required
+			ConnectionStatus.ConnectionFailed ->
+				R.string.connection_failed
+			ConnectionStatus.Untested ->
+				R.string.connection_untested
 		})
 	}
 	

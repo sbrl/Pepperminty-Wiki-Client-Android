@@ -24,7 +24,7 @@ class Wiki(
 	data class WikiResult<T>(val source: Source, val value: T)
 	
 	fun connectionStatus(): ConnectionStatus {
-		if(api.connectionStatus != ConnectionStatus.Untested)
+		if(api.connectionStatus == ConnectionStatus.Untested)
 			api.connectionStatus = api.testConnection()
 		
 		return api.connectionStatus
