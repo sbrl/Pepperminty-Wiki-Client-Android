@@ -12,6 +12,7 @@ import com.sbrl.peppermint.lib.io.SettingsManager
 
 class WikiViewModel() : ViewModel() {
 	val dataManager: DataManager = DataManager()
+	lateinit var settings: SettingsManager
 	
 	init {
 		Log.i("WikiViewModel", "init")
@@ -24,8 +25,8 @@ class WikiViewModel() : ViewModel() {
 	 */
 	fun init(context: Context?) : Boolean {
 		if(context == null) return false
+		settings = SettingsManager(context)
 		
-		val settings = SettingsManager(context)
 		dataManager.init(
 			context.cacheDir,
 			context.filesDir

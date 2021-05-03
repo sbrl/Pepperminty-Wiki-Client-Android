@@ -53,6 +53,14 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 		)
 	}
 	
+	fun makeWiki(name: String, endpoint: String, credentials: WikiCredentials?) {
+		return Wiki(
+			settings,
+			dataManager,
+			
+		)
+	}
+	
 	/**
 	 * Determines whether a wiki exists with the given id or not.
 	 * @param id: The id of the wiki to check.

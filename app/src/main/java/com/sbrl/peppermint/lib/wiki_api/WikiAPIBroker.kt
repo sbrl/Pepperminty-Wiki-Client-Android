@@ -135,8 +135,12 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 		if(response.isLoginRequired())
 			return ConnectionStatus.CredentialsRequired
 		
-		if(response.statusCode < 200 || response.statusCode >= 300)
+		if(response.statusCode < 200 || response.statusCode >= 300) {
+			if(response.hasHeader("x-login-success")
+				&& response.headers["x-login-success"] !== "yes")
+					return ConnectionStatus.CredentialsIncorrect
 			return ConnectionStatus.ConnectionFailed
+		}
 		
 		return ConnectionStatus.Ok
 	}

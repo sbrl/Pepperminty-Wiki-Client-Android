@@ -15,10 +15,11 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.ui.WikiViewModel
 
 class AddWikiActivity : AppCompatActivity() {
 	
-	private lateinit var loginViewModel: LoginViewModel
+	private lateinit var wikiViewModel: WikiViewModel
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -30,38 +31,37 @@ class AddWikiActivity : AppCompatActivity() {
 		val login = findViewById<Button>(R.id.login)
 		val loading = findViewById<ProgressBar>(R.id.loading)
 		
-		loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-			.get(LoginViewModel::class.java)
+		wikiViewModel = ViewModelProvider(this).get(WikiViewModel::class.java)
 		
-		loginViewModel.loginFormState.observe(this@AddWikiActivity, Observer {
-			val loginState = it ?: return@Observer
-			
-			// disable login button unless both username / password is valid
-			login.isEnabled = loginState.isDataValid
-			
-			if (loginState.usernameError != null) {
-				username.error = getString(loginState.usernameError)
-			}
-			if (loginState.passwordError != null) {
-				password.error = getString(loginState.passwordError)
-			}
-		})
+//		loginViewModel.loginFormState.observe(this@AddWikiActivity, Observer {
+//			val loginState = it ?: return@Observer
+//
+//			// disable login button unless both username / password is valid
+//			login.isEnabled = loginState.isDataValid
+//
+//			if (loginState.usernameError != null) {
+//				username.error = getString(loginState.usernameError)
+//			}
+//			if (loginState.passwordError != null) {
+//				password.error = getString(loginState.passwordError)
+//			}
+//		})
 		
-		loginViewModel.loginResult.observe(this@AddWikiActivity, Observer {
-			val loginResult = it ?: return@Observer
-			
-			loading.visibility = View.GONE
-			if (loginResult.error != null) {
-				showLoginFailed(loginResult.error)
-			}
-			if (loginResult.success != null) {
-				updateUiWithUser(loginResult.success)
-			}
-			setResult(Activity.RESULT_OK)
-			
-			//Complete and destroy login activity once successful
-			finish()
-		})
+//		loginViewModel.loginResult.observe(this@AddWikiActivity, Observer {
+//			val loginResult = it ?: return@Observer
+//
+//			loading.visibility = View.GONE
+//			if (loginResult.error != null) {
+//				showLoginFailed(loginResult.error)
+//			}
+//			if (loginResult.success != null) {
+//				updateUiWithUser(loginResult.success)
+//			}
+//			setResult(Activity.RESULT_OK)
+//
+//			//Complete and destroy login activity once successful
+//			finish()
+//		})
 		
 		username.afterTextChanged {
 			loginViewModel.loginDataChanged(
