@@ -94,10 +94,13 @@ class MainActivity : AppCompatActivity() {
 		
 		Log.i("MainActivity", "Reloading WikiManager from disk")
 		wikiViewModel.wikiManager.value!!.reloadFromDisk()
+		Log.i("MainActivity", "Current wiki is now ${wikiViewModel.wikiManager.value!!.currentWiki.name}")
 		
 		// Recreate the Main activity
-		Log.i("MainActivity", "Restarting")
-		recreate()
+		if(resultCode == RETURN_UPDATED_SETTINGS || resultCode == RETURN_ADDED_WIKI) {
+			Log.i("MainActivity", "Got result code $resultCode, restarting activity")
+			recreate()
+		}
 	}
 	
 }

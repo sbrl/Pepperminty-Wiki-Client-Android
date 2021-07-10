@@ -11,6 +11,7 @@ import com.sbrl.peppermint.lib.io.DataManager
 import com.sbrl.peppermint.lib.io.SettingsManager
 
 class WikiViewModel() : ViewModel() {
+	var isSetup: Boolean = false
 	val dataManager: DataManager = DataManager()
 	lateinit var settings: SettingsManager
 	
@@ -24,6 +25,10 @@ class WikiViewModel() : ViewModel() {
 	 * @param context: A Context instance, because apparently you can't figure out where to put stuff on disk without it... If null is passed, then no setup is performed.
 	 */
 	fun init(context: Context?) : Boolean {
+		if(isSetup) {
+			Log.d("WikiViewModel", "We have already completed init, refusing to init again")
+			return true
+		}
 		if(context == null) return false
 		settings = SettingsManager(context)
 		
@@ -36,7 +41,15 @@ class WikiViewModel() : ViewModel() {
 		// Update the current wiki
 		_currentWiki.value = wikiManager.value?.currentWiki
 		
+		wikiManager.value?.wikiChanged?.on { _sender, args ->
+			Log.i("WikiViewModel", "Wiki changed, new wiki ${args.newCurrentWiki.name} (#${args.newCurrentWiki.id}")
+			
+			_currentWiki.value = args.newCurrentWiki
+		}
+		
 		Log.i("WikiViewModel", "Initialisation complete")
+		
+		isSetup = true
 		
 		return true
 	}
@@ -46,11 +59,7 @@ class WikiViewModel() : ViewModel() {
 	val wikiManager: LiveData<WikiManager> = _wikiManager
 	
 	
-	private val _currentWiki = MutableLiveData<Wiki>().apply {
-		wikiManager.value?.wikiChanged?.on { _sender, args ->
-			value = args.newCurrentWiki
-		}
-	}
+	private val _currentWiki = MutableLiveData<Wiki>()
 	
 	val currentWiki: LiveData<Wiki> = _currentWiki
 	

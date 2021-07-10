@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -39,6 +40,10 @@ class PageListFragment : Fragment() {
 		wikiviewModel =
 			ViewModelProvider(requireActivity()).get(WikiViewModel::class.java)
 		wikiviewModel.init(context)
+		wikiviewModel.currentWiki.observe(viewLifecycleOwner, {
+			Log.i("PageListFragment", "Current wiki changed, updating page list")
+			updatePageList()
+		})
 		
 		// 2: Inflate the layout, attach listeners
 		root = inflater.inflate(R.layout.fragment_pagelist, container, false)
@@ -108,7 +113,7 @@ class PageListFragment : Fragment() {
 		
 	}
 	
-	private fun pageListAdapterSelectionHandler(source: PageListAdapter, args: PageListAdapter.ItemSelectedEventArgs) {
+	private fun pageListAdapterSelectionHandler(_source: PageListAdapter, args: PageListAdapter.ItemSelectedEventArgs) {
 		viewPage(args.pagename)
 	}
 	

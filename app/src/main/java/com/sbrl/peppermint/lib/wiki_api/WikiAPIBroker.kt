@@ -138,8 +138,6 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	fun makeGetRequest(action: String, properties: Map<String, String>?, isLogin: Boolean = false) : WikiApiResponse? {
 		val url = makeUrl(action, properties)
 		
-		Log.i("WikiAPIBroker", "DEBUG endpoint '$endpoint', makeUrl result '$url")
-		
 		return sendRequest(Request.Builder()
 			.url(url)
 			.build(), isLogin)

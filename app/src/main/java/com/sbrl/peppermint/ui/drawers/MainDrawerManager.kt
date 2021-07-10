@@ -14,9 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.wiki_api.WikiManager
-import com.sbrl.peppermint.ui.EXTRA_WIKI_ID
-import com.sbrl.peppermint.ui.MainActivity
-import com.sbrl.peppermint.ui.PageViewModel
+import com.sbrl.peppermint.ui.*
 import com.sbrl.peppermint.ui.addwiki.AddWikiActivity
 import com.sbrl.peppermint.ui.settings.SettingsActivity
 
@@ -27,7 +25,12 @@ class MainDrawerManager(val context: Context,
 	init {
 		navDrawer.setNavigationItemSelectedListener {
 			Log.i("MainDrawerManager", "setNavigationItemSelectedListener")
-			handleItemSelected(it)
+			val result = handleItemSelected(it)
+			if(result) {
+				Log.i("MainDrawerManager", "Handler returned true, closing drawer")
+				drawerLayout.closeDrawer(navDrawer)
+			}
+			result
 		}
 //		navDrawer.setNavigationItemSelectedListener(::handleItemSelected)
 		navDrawer.bringToFront()
@@ -52,13 +55,13 @@ class MainDrawerManager(val context: Context,
 		return when(it.itemId) {
 			R.id.navdrawer_main_add_wiki -> {
 				val addWikiIntent = Intent(context, AddWikiActivity::class.java)
-				(context as Activity).startActivityForResult(addWikiIntent, 0)
+				(context as Activity).startActivityForResult(addWikiIntent, RETURN_ADDED_WIKI)
 				
 				true
 			}
 			R.id.navdrawer_main_settings -> {
 				val settingsIntent = Intent(context, SettingsActivity::class.java)
-				(context as Activity).startActivityForResult(settingsIntent, 0)
+				(context as Activity).startActivityForResult(settingsIntent, RETURN_UPDATED_SETTINGS)
 				true
 			}
 			R.id.navdrawer_main_credits -> {
@@ -83,6 +86,7 @@ class MainDrawerManager(val context: Context,
 		
 		Log.i("MainDrawerManager", "Selecting wiki with id $wikiId and display text ${it.title}")
 		wikiManager.setWiki(wikiId)
+		drawerLayout.closeDrawer(navDrawer)
 		return true
 	}
 	
@@ -101,7 +105,7 @@ class MainDrawerManager(val context: Context,
 	 */
 	private fun populateWikiList() {
 		// TODO: Clear the group out first to ensure we don't double up
-		for((id, wiki) in wikiManager.getWikiList()) {
+		for((_id, wiki) in wikiManager.getWikiList()) {
 			val nextMenuItem: MenuItem = navDrawer.menu.add(
 				R.id.navdrawer_main_wikilist,
 				Menu.NONE, Menu.FIRST,
