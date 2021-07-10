@@ -1,5 +1,6 @@
 package com.sbrl.peppermint.ui.drawers
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -7,11 +8,14 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.contains
+import androidx.core.view.iterator
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.wiki_api.WikiManager
 import com.sbrl.peppermint.ui.EXTRA_WIKI_ID
+import com.sbrl.peppermint.ui.MainActivity
 import com.sbrl.peppermint.ui.PageViewModel
 import com.sbrl.peppermint.ui.addwiki.AddWikiActivity
 import com.sbrl.peppermint.ui.settings.SettingsActivity
@@ -48,13 +52,13 @@ class MainDrawerManager(val context: Context,
 		return when(it.itemId) {
 			R.id.navdrawer_main_add_wiki -> {
 				val addWikiIntent = Intent(context, AddWikiActivity::class.java)
-				context.startActivity(addWikiIntent)
+				(context as Activity).startActivityForResult(addWikiIntent, 0)
 				
 				true
 			}
 			R.id.navdrawer_main_settings -> {
 				val settingsIntent = Intent(context, SettingsActivity::class.java)
-				context.startActivity(settingsIntent)
+				(context as Activity).startActivityForResult(settingsIntent, 0)
 				true
 			}
 			R.id.navdrawer_main_credits -> {

@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -26,6 +27,7 @@ class AddWikiActivity : AppCompatActivity() {
 	private lateinit var textUsername: EditText
 	private lateinit var textPassword: EditText
 	private lateinit var progressBarLoading: ProgressBar
+	private lateinit var buttonTest: Button
 	private lateinit var buttonLogin: Button
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +40,7 @@ class AddWikiActivity : AppCompatActivity() {
 		textDisplayName = findViewById(R.id.display_name)
 		textUsername = findViewById(R.id.username)
 		textPassword = findViewById(R.id.password)
+		buttonTest = findViewById(R.id.test_connection)
 		buttonLogin = findViewById(R.id.add_wiki)
 		progressBarLoading = findViewById(R.id.loading)
 		
@@ -49,16 +52,17 @@ class AddWikiActivity : AppCompatActivity() {
 			if(hasFocus) return@setOnFocusChangeListener
 			checkDetails()
 		}
-		textPassword.setOnEditorActionListener { _, actionId, _ ->
-			when (actionId) {
-				EditorInfo.IME_ACTION_DONE -> doAddWiki()
-			}
-			
-			return@setOnEditorActionListener true
+		textPassword.setOnFocusChangeListener { _target: View, hasFocus: Boolean ->
+			if (hasFocus) return@setOnFocusChangeListener
+			checkDetails()
+		}
+		buttonTest.setOnClickListener {
+			checkDetails()
 		}
 		buttonLogin.setOnClickListener {
 			doAddWiki()
 		}
+		
 		// We don't live update on the username / password, because we could leak data about the username / password combo over the Internet
 	}
 	
@@ -90,6 +94,7 @@ class AddWikiActivity : AppCompatActivity() {
 	 * @param status: The ConnectionStatus to use to decide what the UI should look like.
 	 */
 	private fun updateUI(status: ConnectionStatus) {
+		buttonLogin.isEnabled = false
 		showStatus(when(status) {
 			ConnectionStatus.Ok -> {
 				buttonLogin.isEnabled = true
@@ -112,6 +117,7 @@ class AddWikiActivity : AppCompatActivity() {
 	 * Reads the data from the UI and adds a wiki to the WikiManager.
 	 */
 	private fun doAddWiki() {
+		Log.i("AddWikiActivity", "doAddWiki start")
 		progressBarLoading.visibility = View.VISIBLE
 		
 		val endpoint: String = textEndpoint.text.toString()
@@ -120,8 +126,8 @@ class AddWikiActivity : AppCompatActivity() {
 		val password: String = textPassword.text.toString()
 		
 		val wiki: Wiki = addWikiManager.createWiki(
-			endpoint,
 			displayName,
+			endpoint,
 			username,
 			password
 		)
@@ -130,8 +136,10 @@ class AddWikiActivity : AppCompatActivity() {
 			val status = wiki.connectionStatus()
 			
 			runOnUiThread {
+				Log.i("AddWikiActivity", "doAddWiki end, connection status = $status")
+				
+				updateUI(status)
 				if(status !== ConnectionStatus.Ok) {
-					updateUI(status)
 					return@runOnUiThread
 				}
 				

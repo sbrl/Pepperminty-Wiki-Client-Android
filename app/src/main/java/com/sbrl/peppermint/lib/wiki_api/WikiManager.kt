@@ -97,8 +97,8 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 	 * Adds a new wiki to the WikiManager.
 	 */
 	fun addWiki(wiki: Wiki) : Boolean {
-		if(wikis[wiki.id] == null)
-			return false
+		if(wikis.contains(wiki.id)) return false
+		
 		wikis[wiki.id] = wiki
 		
 		saveWikis()

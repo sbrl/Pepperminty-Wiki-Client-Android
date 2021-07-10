@@ -1,5 +1,6 @@
 package com.sbrl.peppermint.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -86,6 +87,17 @@ class MainActivity : AppCompatActivity() {
 		drawerManager.toggleDrawer()
 		super.onOptionsItemSelected(item)
 		return true // Allow normal processing to continue
+	}
+	
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		
+		Log.i("MainActivity", "Reloading WikiManager from disk")
+		wikiViewModel.wikiManager.value!!.reloadFromDisk()
+		
+		// Recreate the Main activity
+		Log.i("MainActivity", "Restarting")
+		recreate()
 	}
 	
 }
