@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -28,6 +29,7 @@ class PageListFragment : Fragment() {
 	private lateinit var wikiviewModel: WikiViewModel
 	
 	private lateinit var swipeRefresh: SwipeRefreshLayout
+	private lateinit var searchFilter: SearchView
 	
 	private var pageListAdapter: PageListAdapter? = null
 	
@@ -48,12 +50,26 @@ class PageListFragment : Fragment() {
 		// 2: Inflate the layout, attach listeners
 		root = inflater.inflate(R.layout.fragment_pagelist, container, false)
 		
-		// Swipe-to-refresh
+		// 3: Find views
 		swipeRefresh = root.findViewById(R.id.swipe_refresh_pagelist)
+		searchFilter = root.findViewById(R.id.pagelist_filter)
+		
+		
+		// Swipe-to-refresh
 		swipeRefresh.setOnRefreshListener {
 			updatePageList()
 		}
 		
+		searchFilter.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+			override fun onQueryTextChange(query : String?): Boolean {
+				pageListAdapter?.filter?.filter(query)
+				return true
+			}
+			override fun onQueryTextSubmit(query : String?): Boolean {
+				pageListAdapter?.filter?.filter(query)
+				return true
+			}
+		})
 		
 		// 3: Fill in the UI
 		updatePageList()
@@ -112,7 +128,6 @@ class PageListFragment : Fragment() {
 		}
 		
 	}
-	
 	private fun pageListAdapterSelectionHandler(_source: PageListAdapter, args: PageListAdapter.ItemSelectedEventArgs) {
 		viewPage(args.pagename)
 	}

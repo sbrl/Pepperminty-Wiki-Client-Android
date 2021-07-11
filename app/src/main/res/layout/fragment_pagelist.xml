@@ -7,7 +7,12 @@
     android:padding="0dp"
     android:orientation="vertical"
     tools:context=".ui.pagelist.PageListFragment">
-
+    
+    <SearchView android:id="@+id/pagelist_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="@string/pagelist_filter_start_typing" />
+    
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_pagelist"
         android:layout_width="match_parent"
