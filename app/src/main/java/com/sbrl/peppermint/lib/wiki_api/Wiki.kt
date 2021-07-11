@@ -31,7 +31,7 @@ class Wiki(
 	}
 	
 	/**
-	 * Pages a list of pages currently on this wiki.
+	 * A list of pages currently on this wiki.
 	 * @return A list of pages as a list of strings.
 	 */
 	fun pages(): WikiResult<List<String>>? {
@@ -51,6 +51,28 @@ class Wiki(
 			}
 		
 		return WikiResult(source, data.lines())
+	}
+	
+	/**
+	 * A list of changes recently made to this wiki.
+	 */
+	fun recentChanges() : WikiResult<List<WikiRecentChange>>? {
+		val response = if(!settings.offline) api.makeGetRequest("recentchanges", mapOf<String, String>(
+			"format" to "json"
+		)) else null
+		var source = Source.Internet
+		val data: String = if(response !== null) {
+			// Download successful, cache it
+			dataManager.cacheString("recentchanges", "$name.json", response.body)
+			response.body
+		}
+		else {
+			// Fetch from Internet failed, try the cache
+			source = Source.Cache
+			dataManager.getCachedString("recentchanges", "$name.json") ?: return null
+		}
+		
+		return WikiResult(source, parse_recent_changes(data))
 	}
 	
 	/**
