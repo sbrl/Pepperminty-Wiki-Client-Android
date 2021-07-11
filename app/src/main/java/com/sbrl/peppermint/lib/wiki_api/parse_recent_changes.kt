@@ -1,0 +1,60 @@
+package com.sbrl.peppermint.lib.wiki_api
+
+import org.json.JSONArray
+import org.json.JSONObject
+import java.time.*
+import java.time.LocalDateTime
+
+private fun parse_recent_change(change: JSONObject) : WikiRecentChange {
+	val type = WikiRecentChangeType.parse(
+		if(change.has("type")) change.getString("type") else "unknown"
+	)
+	val datetime = parse_datetime(change.get("timestamp")) ?: LocalDateTime.of(
+		1970, 0, 1,
+		0, 1, 0)
+	val pageName = change.getString("page")
+	val user = change.getString("user")
+	
+	val payload: Any = when(type) {
+		WikiRecentChangeType.Move -> RecentChangePayloadMove(
+			change.getString("oldpage")
+		)
+		WikiRecentChangeType.Delete -> RecentChangePayloadDelete()
+		WikiRecentChangeType.Upload -> RecentChangePayloadUpload(
+			change.getInt("filesize")
+		)
+		WikiRecentChangeType.Comment -> RecentChangePayloadComment(
+			change.getString("comment_id"),
+			change.getInt("reply_depth")
+		)
+		else -> RecentChangePayloadEdit(
+			change.getInt("newsize"),
+			change.getInt("sizediff"),
+			change.has("newpage") && change.getBoolean("newpage")
+		)
+	}
+	
+	return WikiRecentChange(datetime, type, pageName, user, payload)
+}
+
+private fun parse_datetime(datetime: Any) : LocalDateTime? {
+	if(datetime is Long || datetime is Int)
+		return LocalDateTime.ofInstant(Instant.ofEpochMilli(datetime as Long), ZoneOffset.of("UTC"))
+	if(datetime is String)
+		return LocalDateTime.parse(datetime)
+	return null
+}
+
+/**
+ * Parses a list of recent changes stored in a string of JSON.
+ */
+fun parse_recent_changes(jsonText: String): List<WikiRecentChange> {
+	val result = mutableListOf<WikiRecentChange>()
+	val changes = JSONArray(jsonText)
+	
+	for (i in 0 until changes.length()) {
+		val next = changes.getJSONObject(i)
+		result.add(parse_recent_change(next))
+	}
+	return result
+}
