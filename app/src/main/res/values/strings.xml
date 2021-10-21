@@ -27,6 +27,7 @@
 	<!-- Custom -->
 	<string name="toast_page_list_refreshed">Page list refreshed</string>
 	<string name="toast_page_view_refreshed">Page content refreshed</string>
+	<string name="toast_recentchanges_list_refreshed">Recent changes list refreshed</string>
 	<string name="toast_addon_from_cache">from the cache</string>
 	<string name="toast_addon_from_internet">from the Internet</string>
 	<string name="title_activity_page_view">View</string>
@@ -56,4 +57,7 @@
 	<string name="test_connection">Test Connection</string>
 	<string name="filter_start_typing">Start typing to filter</string>
 	<string name="description_recent_change_item_icon">Recent change item icon</string>
+	<string name="recent_change_user_by">By {0}</string>
+	<string name="recent_change_move_details">From {0}</string>
+	<string name="human_time_since_ago">{0} ago</string>
 </resources>

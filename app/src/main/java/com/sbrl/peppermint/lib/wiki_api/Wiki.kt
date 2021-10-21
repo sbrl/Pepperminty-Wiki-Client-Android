@@ -57,7 +57,7 @@ class Wiki(
 	 * A list of changes recently made to this wiki.
 	 */
 	fun recentChanges() : WikiResult<List<WikiRecentChange>>? {
-		val response = if(!settings.offline) api.makeGetRequest("recentchanges", mapOf<String, String>(
+		val response = if(!settings.offline) api.makeGetRequest("recent-changes", mapOf<String, String>(
 			"format" to "json"
 		)) else null
 		var source = Source.Internet

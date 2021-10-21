@@ -1,31 +1,119 @@
 package com.sbrl.peppermint.ui.recentchanges
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.ui.view_page
+import com.sbrl.peppermint.lib.wiki_api.Wiki
+import com.sbrl.peppermint.lib.wiki_api.WikiRecentChange
+import com.sbrl.peppermint.ui.WikiViewModel
+import com.sbrl.peppermint.ui.adapters.RecentChangesListAdapter
+import kotlin.concurrent.thread
 
 class RecentChangesFragment : Fragment() {
-
-    private lateinit var recentChangesViewModel: RecentChangesViewModel
-
+    
+    private lateinit var root: View
+    
+    private lateinit var wikiViewModel: WikiViewModel
+    
+    private lateinit var swipeRefresh: SwipeRefreshLayout
+    
+    private var recentChangesListAdapter: RecentChangesListAdapter? = null
+    
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
-        recentChangesViewModel =
-                ViewModelProvider(this).get(RecentChangesViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_recentchanges, container, false)
-        val textView: TextView = root.findViewById(R.id.text_recentchanges)
-        recentChangesViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+    ): View {
+        // 1: Fetch the wiki view model containing the wiki manager
+        wikiViewModel =
+                ViewModelProvider(requireActivity()).get(WikiViewModel::class.java)
+        wikiViewModel.init(context)
+        wikiViewModel.currentWiki.observe(viewLifecycleOwner, {
+            Log.i("RecentChangesFragment", "Current wiki changed, updating recent changes list")
+            updateRecentChangesList()
         })
+        
+        
+        // 2: Inflate the layout, attach listeners
+        root = inflater.inflate(R.layout.fragment_recentchanges, container, false)
+        
+        
+        // 3: Find views
+        swipeRefresh = root.findViewById(R.id.swipe_refresh_recentchanges)
+
+
+        // Swipe-to-refresh
+        swipeRefresh.setOnRefreshListener {
+            updateRecentChangesList()
+        }
+
+
+        // 4: Fill in the UI
+        updateRecentChangesList()
+
         return root
+    }
+    
+    private fun uiStartRecentChangesListRefresh() {
+        swipeRefresh.isRefreshing = true
+    }
+    private fun uiFinishRecentChangesListRefresh(fromCache: Boolean) {
+        val message = getString(R.string.toast_recentchanges_list_refreshed) + " " +
+                (if(fromCache) getString(R.string.toast_addon_from_cache)
+                else getString(R.string.toast_addon_from_internet))
+
+        swipeRefresh.isRefreshing = false
+        Toast.makeText(context,
+                message,
+                Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateRecentChangesList() {
+        uiStartRecentChangesListRefresh()
+
+        Log.i("PageListFragment", "Updating page list")
+        val viewRecentChangesList: RecyclerView = root.findViewById(R.id.recentchanges_list)
+
+        // Fetching the current wiki has to be on the ui thread to get the latest value, apparently
+        val currentWiki = wikiViewModel.currentWiki.value ?: return
+
+        Log.i("PageListFragment", "Current wiki is ${currentWiki.name}")
+
+        // Fetching the page list might block for the network - spawn a thread
+        // Non-blocking Kotlin is *hard* :-(
+        thread {
+            // Fetch a new page list
+            val recentChangesList: Wiki.WikiResult<List<WikiRecentChange>> =
+                    currentWiki.recentChanges() ?: return@thread
+
+
+            // Create a new adapter, and tell the RecyclerView about it on the main thread
+            activity?.runOnUiThread {
+                // Attach / detach event listeners
+                recentChangesListAdapter?.itemSelected?.off(::recentChangesListAdapterSelectionHandler)
+                recentChangesListAdapter = RecentChangesListAdapter(context ?: return@runOnUiThread, recentChangesList.value)
+                recentChangesListAdapter?.itemSelected?.on(::recentChangesListAdapterSelectionHandler)
+    
+                viewRecentChangesList.adapter = recentChangesListAdapter
+                viewRecentChangesList.setHasFixedSize(true) // Apparently improves performance
+
+
+                uiFinishRecentChangesListRefresh(recentChangesList.source == Wiki.Source.Cache)
+            }
+        }
+
+    }
+    
+    private fun recentChangesListAdapterSelectionHandler(_source: RecentChangesListAdapter, args: RecentChangesListAdapter.ItemSelectedEventArgs) {
+        view_page(context, wikiViewModel, args.recentChange.pageName)
     }
 }

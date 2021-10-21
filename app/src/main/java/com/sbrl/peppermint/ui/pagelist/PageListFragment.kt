@@ -1,6 +1,5 @@
 package com.sbrl.peppermint.ui.pagelist
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,15 +8,12 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.ui.view_page
 import com.sbrl.peppermint.lib.wiki_api.Wiki
-import com.sbrl.peppermint.ui.EXTRA_PAGE_NAME
-import com.sbrl.peppermint.ui.EXTRA_WIKI_ID
-import com.sbrl.peppermint.ui.PageActivity
 import com.sbrl.peppermint.ui.adapters.PageListAdapter
 import com.sbrl.peppermint.ui.WikiViewModel
 import kotlin.concurrent.thread
@@ -26,7 +22,7 @@ class PageListFragment : Fragment() {
 	
 	private lateinit var root: View
 	
-	private lateinit var wikiviewModel: WikiViewModel
+	private lateinit var wikiViewModel: WikiViewModel
 	
 	private lateinit var swipeRefresh: SwipeRefreshLayout
 	private lateinit var searchFilter: SearchView
@@ -39,10 +35,10 @@ class PageListFragment : Fragment() {
 		savedInstanceState: Bundle?
 	): View {
 		// 1: Fetch the wiki view model containing the wiki manager
-		wikiviewModel =
+		wikiViewModel =
 			ViewModelProvider(requireActivity()).get(WikiViewModel::class.java)
-		wikiviewModel.init(context)
-		wikiviewModel.currentWiki.observe(viewLifecycleOwner, {
+		wikiViewModel.init(context)
+		wikiViewModel.currentWiki.observe(viewLifecycleOwner, {
 			Log.i("PageListFragment", "Current wiki changed, updating page list")
 			updatePageList()
 		})
@@ -101,7 +97,7 @@ class PageListFragment : Fragment() {
 		val viewPageList: RecyclerView = root.findViewById(R.id.pagelist_list)
 		
 		// Fetching the current wiki has to be on the ui thread to get the latest value, apparently
-		val currentWiki = wikiviewModel.currentWiki.value ?: return
+		val currentWiki = wikiViewModel.currentWiki.value ?: return
 		
 		Log.i("PageListFragment", "Current wiki is ${currentWiki.name}")
 		
@@ -129,24 +125,6 @@ class PageListFragment : Fragment() {
 		
 	}
 	private fun pageListAdapterSelectionHandler(_source: PageListAdapter, args: PageListAdapter.ItemSelectedEventArgs) {
-		viewPage(args.pagename)
-	}
-	
-	/**
-	 * Opens an activity to view the current page.
-	 * This has to be here because ViewModels are per-activity or per-fragment :-/
-	 * @param pagename: The name of the page to view.
-	 */
-	private fun viewPage(pagename: String) : Boolean {
-		val currentWiki = wikiviewModel.currentWiki.value ?: return false
-		val ctx = context ?: return false
-		
-		val intent = Intent(ctx, PageActivity::class.java).apply {
-			putExtra(EXTRA_WIKI_ID, currentWiki.id)
-			putExtra(EXTRA_PAGE_NAME, pagename)
-		}
-		
-		ctx.startActivity(intent)
-		return true
+		view_page(context, wikiViewModel, args.pagename)
 	}
 }

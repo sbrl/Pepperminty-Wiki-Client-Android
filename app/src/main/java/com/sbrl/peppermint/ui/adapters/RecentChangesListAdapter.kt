@@ -1,17 +1,22 @@
 package com.sbrl.peppermint.ui.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.events.EventManager
+import com.sbrl.peppermint.lib.polyfill.human_filesize
+import com.sbrl.peppermint.lib.polyfill.human_time_since
+import com.sbrl.peppermint.lib.wiki_api.Wiki
+import com.sbrl.peppermint.lib.wiki_api.WikiRecentChange
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Mediates between a dataset and a list of items being displayed on the screen through a list of
@@ -21,16 +26,16 @@ import kotlin.collections.ArrayList
  */
 class RecentChangesListAdapter (
 	private val context: Context,
-	private val raw_dataset: List<String>
-	) : RecyclerView.Adapter<RecentChangesListAdapter.PageItemHolder>(), Filterable {
+	private val raw_dataset: List<WikiRecentChange>
+	) : RecyclerView.Adapter<RecentChangesListAdapter.RecentChangeItemHolder>(), Filterable {
 	
-	private val dataset = mutableListOf<String>()
+	private val dataset = mutableListOf<WikiRecentChange>()
 	
 	init {
 		dataset.addAll(raw_dataset)
 	}
 	
-	class ItemSelectedEventArgs(val pagename: String)
+	class ItemSelectedEventArgs(val recentChange: WikiRecentChange)
 	
 	val itemSelected: EventManager<RecentChangesListAdapter, ItemSelectedEventArgs> = EventManager("PageListAdapter:itemSelected")
 	
@@ -39,23 +44,39 @@ class RecentChangesListAdapter (
 	 * RecyclerViews don't interact directly with the items in the list - preferring a
 	 * helper class instance instead.
 	 */
-	class PageItemHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+	class RecentChangeItemHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+		/**
+		 * The icon next to the recent change.
+		 */
+		val viewIcon: ImageView = view.findViewById(R.id.recent_change_item_icon)
 		/**
 		 * The text box that holds the name of the page.
 		 */
-		val viewPageName: TextView = view.findViewById(R.id.pagelist_list_name)
+		val viewPageName: TextView = view.findViewById(R.id.recent_change_item_page_name)
+		/**
+		 * The text box that holds the datetime the change was made.
+		 */
+		val viewDateTime: TextView = view.findViewById(R.id.recent_change_item_datetime)
+		/**
+		 * The text box that holds additional details about the change.
+		 */
+		val viewDetails: TextView = view.findViewById(R.id.recent_change_item_datetime)
+		/**
+		 * The text box that holds the name of the user who made the change.
+		 */
+		val viewUsername: TextView = view.findViewById(R.id.recent_change_user)
 	}
 	
 	/**
 	 * Called when the RecyclerView wants to create a new item to display in the list
 	 */
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemHolder {
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentChangeItemHolder {
 		// Inflate a new instance of the view for this particular item
 		val itemLayout = LayoutInflater.from(parent.context)
-			.inflate(R.layout.item_pagelist, parent, false)
+			.inflate(R.layout.item_recentchangeslist, parent, false)
 		
 		// Return a new Holder class instance
-		return PageItemHolder(itemLayout)
+		return RecentChangeItemHolder(itemLayout)
 	}
 	
 	/**
@@ -64,11 +85,55 @@ class RecentChangesListAdapter (
 	 * @param holder: The holder class instance to fill with the data from the dataset.
 	 * @param i: The index of the item in the dataset that is being requested.
 	 */
-	override fun onBindViewHolder(holder: PageItemHolder, i: Int) {
+	override fun onBindViewHolder(holder: RecentChangeItemHolder, i: Int) {
 		val item = dataset[i] // Find the item
 		
 		// Fill the holder with the item's data
-		holder.viewPageName.text = item
+		holder.viewPageName.text = item.pageName
+		holder.viewUsername.text = context.getString(R.string.recent_change_user_by)
+			.replace("{0}", item.user)
+		holder.viewDateTime.text = context.getString(R.string.human_time_since_ago)
+			.replace("{0}", human_time_since(item.datetime))
+		
+		holder.viewIcon.setImageResource(
+			when(item.type.name.lowercase()) {
+				"edit" -> R.drawable.icon_edit
+				"upload" -> R.drawable.icon_upload
+				"move" -> R.drawable.icon_move
+				"deletion" -> R.drawable.icon_delete
+				"comment" -> R.drawable.icon_comment
+				else -> R.drawable.icon_unknown
+			}
+		)
+		if(item.type.name == "edit" && item.payloadEdit()?.isNewPage == true) 
+			holder.viewIcon.setImageResource(R.drawable.icon_add)
+		
+		holder.viewDetails.setTextColor(context.getColor(R.color.black))
+		Log.i("RecentChangesListAdapter", "ITEM TYPE NAME '${item.type.name.lowercase()}'")
+		holder.viewDetails.text = when(item.type.name.lowercase()) {
+			"edit" -> {
+				val sizeDiff = item.payloadEdit()?.sizeDiff ?: 0
+				holder.viewDetails.setTextColor(context.getColor(
+					when {
+						sizeDiff > 0 -> R.color.colorOk
+						sizeDiff < 0 -> R.color.colorError
+						else -> R.color.black_soft
+					}
+				))
+				"${if(sizeDiff >= 0) "+" else ""}${sizeDiff}"
+			}
+			"upload" -> {
+				human_filesize(item.payloadUpload()?.fileSize?.toLong() ?: 0)
+			}
+			"move" -> {
+				context.getString(R.string.recent_change_move_details)
+					.replace("{0}", item.payloadMove()?.oldPageName ?: "")
+			}
+			"comment" -> {
+				"${item.payloadComment()?.commentId ?: "(unknown)"} @ ${item.payloadComment()?.depth ?: ""}"
+			}
+			else -> ""
+		}
 		
 		holder.itemView.setOnClickListener {
 			itemSelected.emit(this, ItemSelectedEventArgs(dataset[i]))
@@ -90,15 +155,16 @@ class RecentChangesListAdapter (
 	private val filter: Filter = object : Filter() {
 		override fun performFiltering(constraint: CharSequence): FilterResults {
 			val filterPattern = constraint.toString()
-				.toLowerCase(Locale.getDefault())
+				.lowercase(Locale.getDefault())
 				.trim()
 			
-			val filteredList = mutableListOf<String>()
+			val filteredList = mutableListOf<WikiRecentChange>()
 			if (filterPattern.isEmpty()) {
 				filteredList.addAll(raw_dataset)
 			} else {
 				for (item in raw_dataset) {
-					if (item.toLowerCase(Locale.getDefault()).contains(filterPattern))
+					if (item.pageName.lowercase(Locale.getDefault()).contains(filterPattern)
+						|| item.user.lowercase().contains(filterPattern))
 						filteredList.add(item)
 				}
 			}
@@ -108,7 +174,7 @@ class RecentChangesListAdapter (
 		}
 		
 		override fun publishResults(constraint: CharSequence, results: FilterResults) {
-			val values : List<String> = (results.values as List<*>).filterIsInstance<String>()
+			val values : List<WikiRecentChange> = (results.values as List<*>).filterIsInstance<WikiRecentChange>()
 			dataset.clear()
 			dataset.addAll(values)
 			notifyDataSetChanged()

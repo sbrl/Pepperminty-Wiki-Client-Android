@@ -4,6 +4,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.time.*
 import java.time.LocalDateTime
+import kotlin.reflect.typeOf
 
 private fun parse_recent_change(change: JSONObject) : WikiRecentChange {
 	val type = WikiRecentChangeType.parse(
@@ -38,8 +39,11 @@ private fun parse_recent_change(change: JSONObject) : WikiRecentChange {
 }
 
 private fun parse_datetime(datetime: Any) : LocalDateTime? {
-	if(datetime is Long || datetime is Int)
-		return LocalDateTime.ofInstant(Instant.ofEpochMilli(datetime as Long), ZoneOffset.of("UTC"))
+	if(datetime is Long || datetime is Int) {
+		val number: Long = if(datetime is Long) datetime else (datetime as Int).toLong()
+		return LocalDateTime.ofInstant(Instant.ofEpochMilli(number), ZoneOffset.UTC)
+	}
+		
 	if(datetime is String)
 		return LocalDateTime.parse(datetime)
 	return null
