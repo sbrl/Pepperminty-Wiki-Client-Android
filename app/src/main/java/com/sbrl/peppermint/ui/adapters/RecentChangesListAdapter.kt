@@ -108,7 +108,7 @@ class RecentChangesListAdapter (
 		if(item.type.name == "edit" && item.payloadEdit()?.isNewPage == true) 
 			holder.viewIcon.setImageResource(R.drawable.icon_add)
 		
-		holder.viewDetails.setTextColor(context.getColor(R.color.black))
+		holder.viewDetails.setTextColor(context.getColor(R.color.black_soft))
 		Log.i("RecentChangesListAdapter", "ITEM TYPE NAME '${item.type.name.lowercase()}'")
 		holder.viewDetails.text = when(item.type.name.lowercase()) {
 			"edit" -> {

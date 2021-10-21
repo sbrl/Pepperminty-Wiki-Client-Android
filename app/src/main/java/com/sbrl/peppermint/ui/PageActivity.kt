@@ -13,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.ui.show_toast
 
 class PageActivity : AppCompatActivity() {
     private lateinit var wikiViewModel: WikiViewModel
@@ -51,16 +52,12 @@ class PageActivity : AppCompatActivity() {
 	    
 	    // Make sure a wiki and page name were specified
 	    if(!intent.hasExtra(EXTRA_WIKI_ID)) {
-	    	Toast.makeText(this,
-			    getString(R.string.error_no_wiki_name_specified),
-			    Toast.LENGTH_SHORT).show()
+	    	show_toast(this, getString(R.string.error_no_wiki_name_specified))
 		    finish()
 	    }
 	    if(!intent.hasExtra(EXTRA_PAGE_NAME)) {
-		    Toast.makeText(this,
-			    getString(R.string.error_no_page_name_specified),
-			    Toast.LENGTH_SHORT).show()
-		    finish()
+			show_toast(this, getString(R.string.error_no_page_name_specified))
+			finish()
 	    }
 	    
 	    val wikiId = intent.getStringExtra(EXTRA_WIKI_ID)!!

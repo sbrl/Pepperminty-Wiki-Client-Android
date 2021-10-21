@@ -4,6 +4,7 @@ import android.content.Intent
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.ui.show_toast
 
 class ViewPageJSInterface(private val parent : WebViewManager) {
 	
@@ -30,9 +31,6 @@ class ViewPageJSInterface(private val parent : WebViewManager) {
 	@Suppress("unused")
 	@JavascriptInterface
 	fun NotifyRedlink(pagename : String) {
-		Toast.makeText(parent.context,
-			parent.context.getString(R.string.error_redlink, pagename),
-			Toast.LENGTH_SHORT
-		).show()
+		show_toast(parent.context, parent.context.getString(R.string.error_redlink, pagename))
 	}
 }

@@ -1,14 +1,9 @@
 package com.sbrl.peppermint.ui.pageview
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.CookieManager
-import android.webkit.WebView
-import android.widget.AbsSpinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -16,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
-import com.sbrl.peppermint.lib.PageHTMLProcessor
+import com.sbrl.peppermint.lib.ui.show_toast
 import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.ui.PageViewModel
 import com.sbrl.peppermint.ui.WikiViewModel
@@ -81,9 +76,7 @@ class PageViewFragment : Fragment() {
 				else getString(R.string.toast_addon_from_internet))
 		
 		swipeRefresh.isRefreshing = false
-		Toast.makeText(context,
-			message,
-			Toast.LENGTH_SHORT).show()
+		show_toast(context, message)
 	}
 	
 	/**
@@ -110,9 +103,7 @@ class PageViewFragment : Fragment() {
 			
 			activity?.runOnUiThread {
 				if(pageContent == null) {
-					Toast.makeText(context,
-						getString(R.string.error_failed_load_page_content, pagename),
-						Toast.LENGTH_SHORT).show()
+					show_toast(context, getString(R.string.error_failed_load_page_content, pagename))
 					swipeRefresh.isRefreshing = false
 					return@runOnUiThread
 				}

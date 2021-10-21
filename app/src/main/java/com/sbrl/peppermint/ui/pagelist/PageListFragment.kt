@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.ui.show_toast
 import com.sbrl.peppermint.lib.ui.view_page
 import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.ui.adapters.PageListAdapter
@@ -82,9 +83,7 @@ class PageListFragment : Fragment() {
 			else getString(R.string.toast_addon_from_internet))
 		
 		swipeRefresh.isRefreshing = false
-		Toast.makeText(context,
-			message,
-			Toast.LENGTH_SHORT).show()
+		show_toast(context, message)
 	}
 	
 	/**

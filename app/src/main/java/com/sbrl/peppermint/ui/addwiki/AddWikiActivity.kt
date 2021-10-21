@@ -157,7 +157,7 @@ class AddWikiActivity : AppCompatActivity() {
 	private fun showStatus(@StringRes stringId: Int) {
 		labelStatus.visibility = View.VISIBLE
 		labelStatus.text = getString(stringId)
-		//Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+		//show_toast(applicationContext, errorString)
 	}
 	
 }
