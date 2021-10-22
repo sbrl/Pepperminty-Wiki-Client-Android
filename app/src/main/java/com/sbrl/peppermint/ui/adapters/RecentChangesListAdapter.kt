@@ -14,7 +14,6 @@ import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.events.EventManager
 import com.sbrl.peppermint.lib.polyfill.human_filesize
 import com.sbrl.peppermint.lib.polyfill.human_time_since
-import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.lib.wiki_api.WikiRecentChange
 import java.util.*
 
@@ -44,7 +43,7 @@ class RecentChangesListAdapter (
 	 * RecyclerViews don't interact directly with the items in the list - preferring a
 	 * helper class instance instead.
 	 */
-	class RecentChangeItemHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+	class RecentChangeItemHolder(/*private val*/ view: View) : RecyclerView.ViewHolder(view) {
 		/**
 		 * The icon next to the recent change.
 		 */
@@ -60,7 +59,7 @@ class RecentChangesListAdapter (
 		/**
 		 * The text box that holds additional details about the change.
 		 */
-		val viewDetails: TextView = view.findViewById(R.id.recent_change_item_datetime)
+		val viewDetails: TextView = view.findViewById(R.id.recent_change_item_details)
 		/**
 		 * The text box that holds the name of the user who made the change.
 		 */
@@ -109,7 +108,6 @@ class RecentChangesListAdapter (
 			holder.viewIcon.setImageResource(R.drawable.icon_add)
 		
 		holder.viewDetails.setTextColor(context.getColor(R.color.black_soft))
-		Log.i("RecentChangesListAdapter", "ITEM TYPE NAME '${item.type.name.lowercase()}'")
 		holder.viewDetails.text = when(item.type.name.lowercase()) {
 			"edit" -> {
 				val sizeDiff = item.payloadEdit()?.sizeDiff ?: 0

@@ -43,7 +43,7 @@
 			android:layout_height="wrap_content"
 			android:orientation="horizontal">
 			
-			<TextView android:id="@+id/recent_change_details"
+			<TextView android:id="@+id/recent_change_item_details"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="10" />

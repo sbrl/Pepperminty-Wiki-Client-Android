@@ -1,8 +1,8 @@
 package com.sbrl.peppermint.lib.polyfill
 
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
+import android.util.Log
+import java.time.*
+import java.time.temporal.Temporal
 import java.util.*
 import kotlin.math.floor
 
@@ -17,7 +17,13 @@ fun human_filesize(v: Long): String {
 }
 
 fun human_time_since(date: LocalDateTime) : String {
-	return human_time(floor(((Date().time / 1000f) - (date.atZone(ZoneOffset.UTC).toEpochSecond())).toDouble()).toLong())
+	val secondsNow = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+	val secondsThen = date.toEpochSecond(ZoneOffset.UTC)
+	val secondsDifferent = secondsNow - secondsThen
+	Log.i("human_time_since", "NOW $secondsNow (${LocalDateTime.now()}), THEN $secondsThen ($date), DIFFERENT $secondsDifferent")
+	return human_time(
+		secondsDifferent
+	)
 }
 
 fun human_time(seconds : Long) : String {
