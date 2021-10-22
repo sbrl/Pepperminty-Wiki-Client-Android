@@ -1,18 +1,20 @@
 package com.sbrl.peppermint.ui.addwiki
 
-import androidx.lifecycle.ViewModelProvider
+import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.wiki_api.ConnectionStatus
 import com.sbrl.peppermint.lib.wiki_api.Wiki
+import com.sbrl.peppermint.ui.EXTRA_SWAP_MAIN
+import com.sbrl.peppermint.ui.MainActivity
 import com.sbrl.peppermint.ui.WikiViewModel
 import kotlin.concurrent.thread
 
@@ -30,11 +32,22 @@ class AddWikiActivity : AppCompatActivity() {
 	private lateinit var buttonTest: Button
 	private lateinit var buttonLogin: Button
 	
+	/**
+	 * If set to true, then instead of exiting as normal and going back 1 in the activity stack,
+	 * we instead swap out for the MainActivity.
+	 * Used on first run, to avoid letting MainActivity continue and crash when we don't have any
+	 * wikis initialised.
+	 */
+	private var swapToMainOnExit: Boolean = false
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
+		
+		// 1: Preamble
 		super.onCreate(savedInstanceState)
 		
 		setContentView(R.layout.activity_add_wiki)
 		
+		// 2: Find views
 		labelStatus = findViewById(R.id.connection_status_display)
 		textEndpoint = findViewById(R.id.endpoint)
 		textDisplayName = findViewById(R.id.display_name)
@@ -44,10 +57,12 @@ class AddWikiActivity : AppCompatActivity() {
 		buttonLogin = findViewById(R.id.add_wiki)
 		progressBarLoading = findViewById(R.id.loading)
 		
+		// 3: Fetch the ViewModel
 		wikiViewModel = ViewModelProvider(this).get(WikiViewModel::class.java)
 		wikiViewModel.init(this)
 		addWikiManager = AddWikiManager(this, wikiViewModel)
 		
+		// 4: Attach events
 		textEndpoint.setOnFocusChangeListener { _target : View, hasFocus : Boolean ->
 			if(hasFocus) return@setOnFocusChangeListener
 			checkDetails()
@@ -64,6 +79,10 @@ class AddWikiActivity : AppCompatActivity() {
 		}
 		
 		// We don't live update on the username / password, because we could leak data about the username / password combo over the Internet
+		
+		// 5: Read Intent
+		if(intent.hasExtra(EXTRA_SWAP_MAIN))
+			swapToMainOnExit = intent.getBooleanExtra(EXTRA_SWAP_MAIN, false)
 	}
 	
 	/**
@@ -149,7 +168,14 @@ class AddWikiActivity : AppCompatActivity() {
 				progressBarLoading.visibility = View.GONE
 				
 				// We're done here - close the add wiki activity
-				finish()
+				if(swapToMainOnExit) {
+					val intent = Intent(this, MainActivity::class.java).apply {
+						flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+					}
+					startActivity(intent)
+				}
+				else
+					finish()
 			}
 		}
 	}

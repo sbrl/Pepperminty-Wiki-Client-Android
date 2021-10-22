@@ -38,6 +38,17 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 	}
 	
 	/**
+	 * Returns the number of wikis registered.
+	 * The default wiki (with the key __default) doesn't count.
+	 */
+	fun count() : Int {
+		var count = wikis.count()
+		if(wikis.containsKey("__default"))
+			count -= 1
+		return count
+	}
+	
+	/**
 	 * Returns a random wiki.
 	 */
 	private fun randomWiki() : Wiki {
@@ -99,7 +110,13 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 	fun addWiki(wiki: Wiki) : Boolean {
 		if(wikis.contains(wiki.id)) return false
 		
+		val count = count()
+		
 		wikis[wiki.id] = wiki
+		
+		// If this is the first wiki to be added, then remove the default wiki
+		if(count == 0 && wikis.containsKey("__default"))
+			wikis.remove("__default")
 		
 		saveWikis()
 		return true

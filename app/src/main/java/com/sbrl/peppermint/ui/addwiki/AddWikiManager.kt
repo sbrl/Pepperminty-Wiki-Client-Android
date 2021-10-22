@@ -36,10 +36,15 @@ class AddWikiManager(private val context: Context, private val wikiViewModel: Wi
 	/**
 	 * Adds a wiki to the current wiki manager.
 	 */
-	fun addWiki(wiki: Wiki) {
+	fun addWiki(wiki: Wiki) : Boolean {
+		val wikiManager = wikiViewModel.wikiManager.value ?: return false
+		val wiki_count = wikiManager.count()
 		// This also saves it to disk
-		if(!wikiViewModel.wikiManager.value!!.addWiki(wiki))
+		if(!wikiManager.addWiki(wiki)) {
 			Log.e("AddWikiManager", "Error: Wiki.addWiki returned false!")
+			return false
+		}
+		return true
 	}
 	
 	/**

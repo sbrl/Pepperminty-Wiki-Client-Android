@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.ui.send_add_wiki
 import com.sbrl.peppermint.ui.drawers.MainDrawerManager
 
 
@@ -38,6 +37,10 @@ class MainActivity : AppCompatActivity() {
 		wikiViewModel = ViewModelProvider(this).get(WikiViewModel::class.java)
 		wikiViewModel.init(this)
 		
+		if(wikiViewModel.wikiManager.value?.count() ?: 99 == 0) {
+			send_add_wiki(this, clear_stack = true)
+			return
+		}
 		
 		// 3: Find references to views
 		navBottom = findViewById(R.id.nav_view)

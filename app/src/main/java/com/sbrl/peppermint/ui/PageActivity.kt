@@ -15,6 +15,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.ui.show_toast
 
+/**
+ * Displays a single page.
+ * INTENT EXTRA IDS
+ * 
+ * EXTRA_WIKI_ID
+ * EXTRA_PAGE_NAME
+ */
 class PageActivity : AppCompatActivity() {
     private lateinit var wikiViewModel: WikiViewModel
     private lateinit var pageViewModel: PageViewModel
