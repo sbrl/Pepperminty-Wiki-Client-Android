@@ -20,7 +20,6 @@ fun human_time_since(date: LocalDateTime) : String {
 	val secondsNow = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
 	val secondsThen = date.toEpochSecond(ZoneOffset.UTC)
 	val secondsDifferent = secondsNow - secondsThen
-	Log.i("human_time_since", "NOW $secondsNow (${LocalDateTime.now()}), THEN $secondsThen ($date), DIFFERENT $secondsDifferent")
 	return human_time(
 		secondsDifferent
 	)

@@ -40,17 +40,14 @@ private fun parse_recent_change(change: JSONObject) : WikiRecentChange {
 }
 
 private fun parse_datetime(datetime: Any) : LocalDateTime? {
-	Log.i("parse_datetime", "Source: $datetime")
 	if(datetime is Long || datetime is Int) {
 		val number: Long = if(datetime is Long) datetime else (datetime as Int).toLong()
-		Log.i("parse_datetime", "number: $number")
 		return LocalDateTime.ofInstant(Instant.ofEpochSecond(number), ZoneOffset.UTC)
 	}
 	
 	if(datetime is String)
 		return LocalDateTime.parse(datetime)
 	
-	Log.i("parse_datetime", "Don't know what it is, so we can't parse it")
 	
 	return null
 }
