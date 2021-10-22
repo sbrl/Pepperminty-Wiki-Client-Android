@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +27,7 @@ class RecentChangesFragment : Fragment() {
     private lateinit var wikiViewModel: WikiViewModel
     
     private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var searchFilter: SearchView
     
     private var recentChangesListAdapter: RecentChangesListAdapter? = null
     
@@ -50,12 +52,23 @@ class RecentChangesFragment : Fragment() {
         
         // 3: Find views
         swipeRefresh = root.findViewById(R.id.swipe_refresh_recentchanges)
+        searchFilter = root.findViewById(R.id.recentchanges_filter)
 
 
         // Swipe-to-refresh
         swipeRefresh.setOnRefreshListener {
             updateRecentChangesList()
         }
+        searchFilter.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(query : String?): Boolean {
+                recentChangesListAdapter?.filter?.filter(query)
+                return true
+            }
+            override fun onQueryTextSubmit(query : String?): Boolean {
+                recentChangesListAdapter?.filter?.filter(query)
+                return true
+            }
+        })
 
 
         // 4: Fill in the UI
