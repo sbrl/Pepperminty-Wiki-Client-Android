@@ -69,7 +69,8 @@ class PageListFragment : Fragment() {
 		})
 		
 		// 3: Fill in the UI
-		updatePageList()
+		// Doesn't seem to be needed since the WikiViewModel observe call seems to always fire at least once
+		//updatePageList()
 		
 		return root
 	}

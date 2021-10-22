@@ -10,11 +10,18 @@ import org.json.JSONObject
 class WikiManager(private val settings: SettingsManager, private val dataManager: DataManager) {
 	private val WIKI_ID_DEFAULT: String = "::DEFAULT::"
 	
+	/**
+	 * Property that holds the current wiki.
+	 * When a new current wiki is set, a new wikiChanged event is fired - but only if the new wiki
+	 * has a different ID to the current one.
+	 */
 	var currentWiki: Wiki = defaultWiki()
 		get() = field
 		set(value) {
+			val is_different = value.id != field.id
 			field = value
-			wikiChanged.emit(this, WikiChangedEventArgs(field))
+			if(is_different)
+				wikiChanged.emit(this, WikiChangedEventArgs(field))
 		}
 	
 	/**
@@ -53,7 +60,7 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 	 */
 	private fun randomWiki() : Wiki {
 		if(wikis.isEmpty()) return defaultWiki()
-		return wikis[wikis.keys.asSequence().toList()[0]]!!
+		return wikis[wikis.keys.toList()[0]]!!
 	}
 	private fun defaultWiki() : Wiki {
 		return Wiki(

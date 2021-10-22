@@ -4,7 +4,7 @@ import android.util.Log
 import com.sbrl.peppermint.lib.io.DataManager
 import com.sbrl.peppermint.lib.io.SettingsManager
 import org.json.JSONObject
-
+import java.lang.Exception
 
 
 class Wiki(

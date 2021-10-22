@@ -19,6 +19,7 @@
 		android:theme="@style/Theme.PeppermintyWiki">
 		<activity
 		android:name=".ui.MainActivity"
+			android:exported="true"
 		android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -28,12 +29,15 @@
 		</activity>
 		<activity
 			android:name=".ui.addwiki.AddWikiActivity"
+			android:exported="false"
 			android:label="@string/title_activity_add_wiki" />
 		<activity
 			android:name=".ui.PageActivity"
+			android:exported="true"
 			android:label="@string/title_activity_page_view" />
 		<activity
 			android:name=".ui.settings.SettingsActivity"
+			android:exported="false"
 			android:label="@string/title_activity_settings" />
 	</application>
 
