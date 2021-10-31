@@ -79,12 +79,13 @@ class PageListFragment : Fragment() {
 		swipeRefresh.isRefreshing = true
 	}
 	private fun uiFinishPageListRefresh(fromCache: Boolean) {
-		val message = getString(R.string.toast_page_list_refreshed) + " " +
-			(if(fromCache) getString(R.string.toast_addon_from_cache)
-			else getString(R.string.toast_addon_from_internet))
-		
-		swipeRefresh.isRefreshing = false
-		show_toast(context, message)
+		if (fromCache) {
+			val message = getString(R.string.toast_page_list_refreshed) + " " +
+				getString(R.string.toast_addon_from_cache)
+			
+			swipeRefresh.isRefreshing = false
+			show_toast(context, message)
+		}
 	}
 	
 	/**
