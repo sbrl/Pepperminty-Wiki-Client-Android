@@ -3,6 +3,7 @@ package com.sbrl.peppermint.lib.wiki_api
 import android.util.Log
 import com.sbrl.peppermint.lib.io.DataManager
 import com.sbrl.peppermint.lib.io.SettingsManager
+import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -101,6 +102,36 @@ class Wiki(
 				dataManager.getCachedString("wiki:$name", "$pagename.$ext") ?: return null
 			}
 		return WikiResult(source, data)
+	}
+	
+	/**
+	 * Searches the wiki for a query query string.
+	 * Returns an ordered list of WikiSearchResult objects.
+	 * Important: An Internet connection is *required* for this method to work!
+	 * Any search results we cache are not guaranteed to be up to date, and it's also questionable
+	 * as to whether a user will search for the same thing twice. If I'm wrong here and you do
+	 * search for the same thing more than once and caching searches would in fact be useful,
+	 * please open an issue. 
+	 * @param	query: The query string to search for.
+	 * @return	An ordered list of WikiSearchResult objects.
+	 */
+	fun search(query: String) : WikiResult<List<WikiSearchResult>>? {
+		Log.i("Wiki", "Searching for '$query'")
+		
+		if(settings.offline) return null
+		
+		val response : WikiApiResponse = api.makeGetRequest("search", mapOf(
+			"format" to "json",
+			"query" to query
+		)) ?: return null
+		
+		try {
+			return WikiResult(Source.Internet, parse_search_results(response.body))
+		}
+		catch (error: JSONException) {
+			Log.w("Wiki", "Warning: Caught error while parsing JSON: '${error.message}")
+			return null
+		}
 	}
 	
 	// --------------------------------------------------------------------------------------------
