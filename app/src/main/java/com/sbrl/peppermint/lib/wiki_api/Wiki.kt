@@ -125,12 +125,11 @@ class Wiki(
 			"query" to query
 		)) ?: return null
 		
-		try {
-			return WikiResult(Source.Internet, parse_search_results(response.body))
-		}
-		catch (error: JSONException) {
+		return try {
+			WikiResult(Source.Internet, parse_search_results(response.body))
+		} catch (error: JSONException) {
 			Log.w("Wiki", "Warning: Caught error while parsing JSON: '${error.message}")
-			return null
+			null
 		}
 	}
 	
