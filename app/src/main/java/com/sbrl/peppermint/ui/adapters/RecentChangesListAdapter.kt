@@ -104,8 +104,7 @@ class RecentChangesListAdapter (
 				else -> R.drawable.icon_unknown
 			}
 		)
-		val isNewPage = item.payloadEdit()?.isNewPage
-		Log.i("RCLA", "isnewpage: $isNewPage, type.name: ${item.type.name}")
+		
 		if(item.type.name.lowercase(Locale.getDefault()) == "edit" && item.payloadEdit()?.isNewPage == true) 
 			holder.viewIcon.setImageResource(R.drawable.icon_add)
 		
