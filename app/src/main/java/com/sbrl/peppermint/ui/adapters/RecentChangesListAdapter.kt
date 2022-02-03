@@ -104,7 +104,9 @@ class RecentChangesListAdapter (
 				else -> R.drawable.icon_unknown
 			}
 		)
-		if(item.type.name == "edit" && item.payloadEdit()?.isNewPage == true) 
+		val isNewPage = item.payloadEdit()?.isNewPage
+		Log.i("RCLA", "isnewpage: $isNewPage, type.name: ${item.type.name}")
+		if(item.type.name.lowercase(Locale.getDefault()) == "edit" && item.payloadEdit()?.isNewPage == true) 
 			holder.viewIcon.setImageResource(R.drawable.icon_add)
 		
 		holder.viewDetails.setTextColor(context.getColor(R.color.black_soft))
