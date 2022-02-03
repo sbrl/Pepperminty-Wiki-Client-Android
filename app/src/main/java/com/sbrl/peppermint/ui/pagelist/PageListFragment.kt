@@ -37,12 +37,12 @@ class PageListFragment : Fragment() {
 	): View {
 		// 1: Fetch the wiki view model containing the wiki manager
 		wikiViewModel =
-			ViewModelProvider(requireActivity()).get(WikiViewModel::class.java)
+			ViewModelProvider(requireActivity())[WikiViewModel::class.java]
 		wikiViewModel.init(context)
-		wikiViewModel.currentWiki.observe(viewLifecycleOwner, {
+		wikiViewModel.currentWiki.observe(viewLifecycleOwner) {
 			Log.i("PageListFragment", "Current wiki changed, updating page list")
 			updatePageList()
-		})
+		}
 		
 		// 2: Inflate the layout, attach listeners
 		root = inflater.inflate(R.layout.fragment_pagelist, container, false)

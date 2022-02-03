@@ -50,8 +50,8 @@ class PageActivity : AppCompatActivity() {
 	    supportActionBar?.setDisplayHomeAsUpEnabled(true)
 	    
 	    // 2: View models
-	    pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java)
-	    wikiViewModel = ViewModelProvider(this).get(WikiViewModel::class.java)
+	    pageViewModel = ViewModelProvider(this)[PageViewModel::class.java]
+	    wikiViewModel = ViewModelProvider(this)[WikiViewModel::class.java]
 	    
 	    wikiViewModel.init(this)
 	    

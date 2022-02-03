@@ -58,7 +58,7 @@ class AddWikiActivity : AppCompatActivity() {
 		progressBarLoading = findViewById(R.id.loading)
 		
 		// 3: Fetch the ViewModel
-		wikiViewModel = ViewModelProvider(this).get(WikiViewModel::class.java)
+		wikiViewModel = ViewModelProvider(this)[WikiViewModel::class.java]
 		wikiViewModel.init(this)
 		addWikiManager = AddWikiManager(this, wikiViewModel)
 		

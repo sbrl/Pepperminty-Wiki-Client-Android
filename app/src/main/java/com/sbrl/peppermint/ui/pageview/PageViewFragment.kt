@@ -32,8 +32,8 @@ class PageViewFragment : Fragment() {
 	): View? {
 		// 1: Fetch the ViewModels
 		// Each context gets it's own ViewModel instance
-		pageViewModel = ViewModelProvider(requireActivity()).get(PageViewModel::class.java)
-		wikiViewModel = ViewModelProvider(requireActivity()).get(WikiViewModel::class.java)
+		pageViewModel = ViewModelProvider(requireActivity())[PageViewModel::class.java]
+		wikiViewModel = ViewModelProvider(requireActivity())[WikiViewModel::class.java]
 		
 		
 		// 2: Inflate the layout

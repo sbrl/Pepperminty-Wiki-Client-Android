@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sbrl.peppermint.R
-import com.sbrl.peppermint.ui.history.EditViewModel
 
 class EditFragment : Fragment() {
 	
@@ -21,7 +20,7 @@ class EditFragment : Fragment() {
 		savedInstanceState: Bundle?
 	): View? {
 		editViewModel =
-			ViewModelProvider(this).get(EditViewModel::class.java)
+			ViewModelProvider(this)[EditViewModel::class.java]
 		val root = inflater.inflate(R.layout.fragment_edit, container, false)
 		val textView: TextView = root.findViewById(R.id.text_edit)
 		editViewModel.text.observe(viewLifecycleOwner, Observer {

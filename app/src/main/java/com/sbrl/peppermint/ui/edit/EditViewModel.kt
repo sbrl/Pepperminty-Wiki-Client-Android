@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.ui.history
+package com.sbrl.peppermint.ui.edit
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_main)
 		
 		// 2: View models
-		wikiViewModel = ViewModelProvider(this).get(WikiViewModel::class.java)
+		wikiViewModel = ViewModelProvider(this)[WikiViewModel::class.java]
 		wikiViewModel.init(this)
 		
 		if(wikiViewModel.wikiManager.value?.count() ?: 99 == 0) {
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 	}
 	
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		// HACK: We just blindly open the drawer here, because we can't figure out an effective way to tellt he buttons on the action bar (that's the bar at the top of the screen) apart without replacing it with our own toolbar...... grumble
+		// HACK: We just blindly open the drawer here, because we can't figure out an effective way to tell the buttons on the action bar (that's the bar at the top of the screen) apart without replacing it with our own toolbar...... grumble
 		
 		Log.i("MainActivity", "onOptionsItemSelected")
 		

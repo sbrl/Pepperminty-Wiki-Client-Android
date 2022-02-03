@@ -4,7 +4,7 @@ Your data is yours. This app will not collect _any_ of your data and send it any
 The following information is sent along with requests to wikis you add to the app:
 
  - Your IP address
- - The version of [khttp](https://github.com/jkcclemens/khttp/) (the HTTP client library used by this app) in use
+ - The version of [okhttp](https://square.github.io/okhttp/) (the HTTP client library used by this app) in use
  
 The wiki owner may keep server logs containing the URLs you visit, and the information above.
 

@@ -12,6 +12,6 @@ import java.util.regex.Pattern
  */
 fun is_valid_url(str: String): Boolean {
 	val p: Pattern = Patterns.WEB_URL
-	val m: Matcher = p.matcher(str.toLowerCase(Locale.getDefault()))
+	val m: Matcher = p.matcher(str.lowercase(Locale.getDefault()))
 	return m.matches()
 }

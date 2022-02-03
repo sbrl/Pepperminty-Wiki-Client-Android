@@ -1,4 +1,4 @@
-package com.sbrl.peppermint.ui.home
+package com.sbrl.peppermint.ui.pageview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

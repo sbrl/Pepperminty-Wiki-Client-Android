@@ -39,12 +39,12 @@ class RecentChangesFragment : Fragment() {
 	): View {
 		// 1: Fetch the wiki view model containing the wiki manager
 		wikiViewModel =
-			ViewModelProvider(requireActivity()).get(WikiViewModel::class.java)
+			ViewModelProvider(requireActivity())[WikiViewModel::class.java]
 		wikiViewModel.init(context)
-		wikiViewModel.currentWiki.observe(viewLifecycleOwner, {
+		wikiViewModel.currentWiki.observe(viewLifecycleOwner) {
 			Log.i("RecentChangesFragment", "Current wiki changed, updating recent changes list")
 			updateRecentChangesList()
-		})
+		}
 		
 		
 		// 2: Inflate the layout, attach listeners
