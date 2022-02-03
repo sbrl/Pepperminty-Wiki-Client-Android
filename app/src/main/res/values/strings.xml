@@ -61,4 +61,5 @@
 	<string name="recent_change_move_details">From {0}</string>
 	<string name="human_time_since_ago">{0} ago</string>
 	<string name="add_wiki_welcome">Connect to an existing Pepperminty Wiki server.</string>
+	<string name="pagelist_list_icon_description_default">page</string>
 </resources>

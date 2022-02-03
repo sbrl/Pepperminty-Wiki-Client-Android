@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:src="@drawable/icon_wiki_page"
-        app:tint="@color/orange_200" />
+        app:tint="@color/orange_200"
+        android:contentDescription="@string/pagelist_list_icon_description_default" />
 
     <TextView
         android:id="@+id/pagelist_list_name"

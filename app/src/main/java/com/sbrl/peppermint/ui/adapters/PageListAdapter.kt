@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sbrl.peppermint.R
@@ -44,6 +45,12 @@ class PageListAdapter (
 		 * The text box that holds the name of the page.
 		 */
 		val viewPageName: TextView = view.findViewById(R.id.pagelist_list_name)
+		
+		/**
+		 * The icon next to the name of the page.
+		 * FUTURE: In the future, we might want to assign a different icon to different types of page.
+		 */
+		val viewIcon: ImageView = view.findViewById(R.id.pagelist_list_icon)
 	}
 	
 	/**
@@ -90,7 +97,7 @@ class PageListAdapter (
 	private val filter: Filter = object : Filter() {
 		override fun performFiltering(constraint: CharSequence): FilterResults {
 			val filterPattern = constraint.toString()
-				.toLowerCase(Locale.getDefault())
+				.lowercase(Locale.getDefault())
 				.trim()
 			
 			val filteredList = mutableListOf<String>()
@@ -98,7 +105,7 @@ class PageListAdapter (
 				filteredList.addAll(raw_dataset)
 			} else {
 				for (item in raw_dataset) {
-					if (item.toLowerCase(Locale.getDefault()).contains(filterPattern))
+					if (item.lowercase(Locale.getDefault()).contains(filterPattern))
 						filteredList.add(item)
 				}
 			}
