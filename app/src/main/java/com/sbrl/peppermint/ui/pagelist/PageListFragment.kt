@@ -79,11 +79,11 @@ class PageListFragment : Fragment() {
 		swipeRefresh.isRefreshing = true
 	}
 	private fun uiFinishPageListRefresh(fromCache: Boolean) {
+		swipeRefresh.isRefreshing = false
 		if (fromCache) {
 			val message = getString(R.string.toast_page_list_refreshed) + " " +
 				getString(R.string.toast_addon_from_cache)
 			
-			swipeRefresh.isRefreshing = false
 			show_toast(context, message)
 		}
 	}
