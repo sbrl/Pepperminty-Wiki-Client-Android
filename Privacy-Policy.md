@@ -16,4 +16,4 @@ The following information is stored locally on your device:
  
 If you have rooted your phone, then it is your responsibility to make sure that this app's private data is secure.
 
-_Have a question? Get in touch by [opening an issue](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/issues/new), or via any contact method detailed on [my website](https://starbeamrainbowlabs.com/)._
+_Have a question? Get in touch by [opening an discussion](https://github.com/sbrl/Pepperminty-Wiki-Client-Android/discussions/new), or via any contact method detailed on [my website](https://starbeamrainbowlabs.com/)._
