@@ -60,7 +60,7 @@ class SearchFragment : Fragment() {
 		}
 		query.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 			override fun onQueryTextSubmit(query : String?): Boolean {
-				searchResultsListAdapter?.filter?.filter(query)
+				updateSearchResultsList()
 				return true
 			}
 			
