@@ -59,7 +59,8 @@ class SearchFragment : Fragment() {
 			updateSearchResultsList()
 		}
 		query.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-			override fun onQueryTextSubmit(query : String?): Boolean {
+			override fun onQueryTextSubmit(newText : String?): Boolean {
+				query.clearFocus()
 				updateSearchResultsList()
 				return true
 			}
