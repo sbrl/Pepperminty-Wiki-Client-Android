@@ -83,6 +83,7 @@ class SearchFragment : Fragment() {
 	}
 	private fun uiFinishSearchResultsListRefresh() {
 		swipeRefresh.isRefreshing = false
+		resultslist.scrollToPosition(0)
 	}
 	
 	private fun updateSearchResultsList() {

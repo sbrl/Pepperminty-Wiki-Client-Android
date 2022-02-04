@@ -36,7 +36,7 @@
 			card_view:layout_constraintRight_toLeftOf="@+id/search_list_rank"/>
 		
 		<TextView android:id="@+id/search_list_rank"
-			android:layout_width="0dp"
+			android:layout_width="30sp"
 			android:layout_height="wrap_content"
 			android:textAlignment="textEnd"
 			android:textSize="16sp"
@@ -44,7 +44,7 @@
 			card_view:layout_constraintTop_toTopOf="parent"
 			card_view:layout_constraintBottom_toTopOf="@id/search_list_spacer"
 			card_view:layout_constraintLeft_toRightOf="@+id/search_list_pagename"
-			card_view:layout_constraintRight_toRightOf="parent"/>
+			card_view:layout_constraintRight_toRightOf="parent" />
 		
 		<View android:id="@+id/search_list_spacer"
 			android:layout_width="match_parent"
