@@ -2,15 +2,17 @@
     <!-- Base application theme. -->
     <style name="Theme.PeppermintyWiki" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/purple_700</item>
+        <item name="colorPrimaryVariant">@color/purple_200</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/orange_200</item>
         <item name="colorSecondaryVariant">@color/orange_200</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Status bar colour -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <!-- Navigation bar colour -->
+        <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <!-- Controls the colour of the preference category header
 			ref https://stackoverflow.com/a/58765090/1460422 -->
         <item name="colorAccent">?attr/colorSecondaryVariant</item>

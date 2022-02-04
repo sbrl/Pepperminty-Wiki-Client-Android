@@ -29,7 +29,7 @@
             android:id="@+id/nav_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/purple_200"
+            android:background="?attr/colorPrimary"
             app:itemIconTint="@color/orange_200"
             app:itemTextColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -47,9 +47,9 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:itemTextAppearance="@style/Theme.PeppermintyWiki.NavigationDrawText"
-        android:background="@color/purple_700"
+        android:background="?attr/colorPrimary"
         app:itemTextColor="@color/white_alt"
-        app:itemIconTint="@color/orange_200"
+        app:itemIconTint="?attr/colorSecondary"
         app:menu="@menu/navdrawer_main" />
     
 </androidx.drawerlayout.widget.DrawerLayout>
