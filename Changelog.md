@@ -1,6 +1,17 @@
 # Changelog
 This is the changelog for the Pepperminty Wiki Android Client. This is the master list of things that have changed (second only to the commit history!) - though the information for any particular release can also be found in the description of it's page for every release made on GitHub too.
 
+
+## v2.1
+ - Add the full-text search function! :D
+
+
+## v2.0
+ - Completely rewrite! It's much better written now.... and there are a number of extra features coming soon that you can see in the bottom navigation bar!
+ - Unfortunately devices on Android 8.0 and below won't be able to update to the new version :-/
+	 - As far as I can tell I can keep the old version in the release so that older devices can still download it though
+
+
 ## v0.3-dev
  - Bugfix: Don't say that the page list / recent changes lists have been refresh when they haven't
  - Fix colours on Android 9 Pie dark mode thingy (todo: implement a dark theme, but this is a step towards it)
