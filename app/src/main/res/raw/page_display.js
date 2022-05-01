@@ -1,5 +1,8 @@
+// Note to self: We *can* console.log() here - it will turn up in the logcat console because chromium helpfully writes it there
+
 window.addEventListener("load", function(event) {
 	document.querySelectorAll("a").forEach(function(element) {
+	    // TODO: Make sure that the user tapped for a given length of time
 		element.addEventListener("click", handle_link_click, { capture: true });
 		element.addEventListener("touchend", handle_link_click, { capture: true });
 	});

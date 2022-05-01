@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_pageview"
+        android:icon="@drawable/icon_wiki_page"
+        android:title="@string/nav_pageview_view" />
+
+    <item
+        android:id="@+id/navigation_edit"
+        android:icon="@drawable/icon_edit"
+        android:title="@string/nav_pageview_edit" />
+
+    <item
+        android:id="@+id/navigation_history"
+        android:icon="@drawable/icon_hourglass"
+        android:title="@string/nav_pageview_history" />
+
+</menu>

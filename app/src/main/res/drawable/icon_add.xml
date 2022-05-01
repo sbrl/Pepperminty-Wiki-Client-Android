@@ -3,7 +3,12 @@
         android:height="24dp"
         android:viewportWidth="24.0"
         android:viewportHeight="24.0">
+<!--
+Original: M19,13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z
+Fattened: M 19 14 L 14 14 L 14 19 L 10 19 L 10 14 L 5 14 L 5 10 L 10 10 L 10 5 L 14 5 L 14 10 L 19 10 Z
+Scaled: 
+-->
     <path
         android:fillColor="#FF000000"
-        android:pathData="M19,13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        android:pathData="M 22 15 L 15 15 L 15 22 L 9 22 L 9 15 L 2 15 L 2 9 L 9 9 L 9 2 L 15 2 L 15 9 L 22 9 Z"/>
 </vector>

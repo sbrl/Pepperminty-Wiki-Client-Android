@@ -4,12 +4,18 @@ app/release/
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
+/.idea/caches
 /.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
 .DS_Store
 /build
 /captures
 .externalNativeBuild
+.cxx
+local.properties
 
 # Created by https://www.gitignore.io/api/androidstudio,android,gradle,idea
 

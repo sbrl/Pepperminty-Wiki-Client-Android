@@ -25,6 +25,11 @@ Any issues should be reported here as an issue. I am exponentially more likely t
 
 ~~Currently, the _Pepperminty Wiki Android Client_ is in closed testing, which is available only upon invitation. Contact me (@sbrl) if you'd like access though!~~
 
+## Notes
+Google Play policies are wildly complicated. Notes here are to remind me about various things.
+
+ - Use the `EmojiCompat` class for all user-supplied strings to ensure the newest emojis are always supported
+
 ## Contributions
 Contributions are welcome! Simply send open a pull request :smiley_cat:
 

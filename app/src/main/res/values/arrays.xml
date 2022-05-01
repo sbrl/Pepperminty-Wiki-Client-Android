@@ -1,0 +1,29 @@
+<resources>
+    
+    <!-- Load Images Preference -->
+    <string-array name="settings_load_images_entries">
+        <item>Always</item>
+        <item>Only over WiFi</item>
+        <item>Never</item>
+    </string-array>
+
+    <string-array name="settings_load_images_values">
+        <item>always</item>
+        <item>only_wifi</item>
+        <item>never</item>
+    </string-array>
+    
+    <!-- Theme preference -->
+    <string-array name="settings_theme_entries">
+        <item>Use system theme</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    
+    <string-array name="settings_theme_values">
+        <item>use_system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+    
+</resources>
