@@ -3,6 +3,7 @@ package com.sbrl.peppermint.ui.pageview
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.wifi.WifiManager
+import android.util.Log
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.WebView
@@ -29,7 +30,6 @@ class WebViewManager(internal val context: Context, private val webview: WebView
 	 */
 	@SuppressLint("SetJavaScriptEnabled")
 	fun displayContent(contentHTML: String) {
-		val displayHTML = pageHTMLProcessor.transform(contentHTML)
 		// Configure the WebView
 		webview.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
 		webview.settings.javaScriptEnabled = true
@@ -58,6 +58,8 @@ class WebViewManager(internal val context: Context, private val webview: WebView
 			webviewCookies.setCookie(endpoint, cookie.toString())
 		}
 		
+		val displayHTML = pageHTMLProcessor.transform(endpoint, contentHTML)
+		Log.i("WebViewManager", "PAGE CONTENT: $displayHTML")
 		
 		// Load the data into the webview
 		webview.loadDataWithBaseURL(

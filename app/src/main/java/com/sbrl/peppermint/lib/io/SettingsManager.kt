@@ -1,6 +1,8 @@
 package com.sbrl.peppermint.lib.io
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.preference.PreferenceManager
 
@@ -23,6 +25,15 @@ class SettingsManager(val context: Context) {
 			"dark" -> Theme.Dark
 			"light" -> Theme.Light
 			else -> Theme.UseSystem
+		}
+	
+	
+	val isDark: Boolean
+		get() = when(theme) {
+			Theme.Dark -> true
+			Theme.Light -> false
+			Theme.UseSystem -> context.resources.configuration.uiMode and
+					Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
 		}
 	
 	// When to load images

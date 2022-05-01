@@ -1,11 +1,9 @@
 package com.sbrl.peppermint.ui.settings
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.io.SettingsManager
 

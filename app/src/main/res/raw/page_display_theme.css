@@ -1,9 +1,39 @@
+:root {
+    --bg: #faf8fb;
+    --text: #111111;
+    
+    --redlink: #e60707;
+    --redlink-visited: #820f0f;
+    --redlink-active: hsl(0, 59%, 20%);
+    
+	--link-interwiki: hsl(160, 73%, 26%);
+	--link-interwiki-visited: hsl(159, 76%, 23%);
+	--link-interwiki-active: hsl(160, 80%, 70%);
+}
+
+/* Can't use the prefers-color-scheme media query here, 'cause Android is funky */
+body.dark {
+    --bg: hsl(273, 15%, 16%);
+    --text: hsl(277, 38%, 89%);
+    
+	--redlink: hsl(5, 100%, 76%);
+	--redlink-visited: hsl(4, 95%, 68%); /*#8b1a1a*/
+	--redlink-active: hsl(2, 90%, 58%);
+	
+	--accent-interwiki: hsl(160, 73%, 46%);
+}
+
+body.dark a { color: hsl(208, 67%, 67%); }
+body.dark a:hover { color: hsl(214, 67%, 75%); }
+body.dark a:active, a:focus { color: hsl(214, 87%, 85%); }
+body.dark a:visited { color: hsl(264, 77%, 65%); }
+
 html, body { font-size: 100%; }
 body
 {
-    background: #faf8fb;
+    background: var(--bg);
     
-    color: #111111;
+    color: var(--text);
     font-family: sans-serif;
 
     margin-bottom: 5em;
@@ -13,6 +43,15 @@ iframe, img, video, audio {
     max-width: 100% !important;
 }
 
+a.redlink:link { color: var(--redlink); }
+a.redlink:visited { color: var(--redlink-visited); }
+
 a { cursor: pointer; }
-a.redlink:link { color: rgb(230, 7, 7); }
-a.redlink:visited { color: rgb(130, 15, 15); }
+a:focus { outline-width: 0.1em; }
+a.redlink:link { color: var(--redlink); }
+a.redlink:visited { color: var(--redlink-visited); }
+a.redlink:active, a.redlink:focus { color: var(--redlink-active); }
+a.interwiki_link::before { content: "\\1f6f8"; display: inline-block; margin-right: 0.25em; }
+a.interwiki_link { color: var(--link-interwiki); }
+a.interwiki_link:visited { color: var(--interwiki-visited); }
+a.interwiki_link:active { color: var(--interwiki-active); }
