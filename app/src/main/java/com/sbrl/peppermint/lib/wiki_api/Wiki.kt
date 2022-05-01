@@ -105,6 +105,21 @@ class Wiki(
 	}
 	
 	/**
+	 * Returns the page's markdown (i.e. the raw source of the page).
+	 * CAUTION: ALWAYS fetches from the Internet - there's no cache here!
+	 * @param pagename: The name of the page to fetch the source for.
+	 * @return The raw source of the specified page.
+	 */
+	fun pageSource(pagename: String) : WikiResult<String>? {
+		Log.i("Wiki", "Fetching page source for $pagename")
+		val response : WikiApiResponse? = api.makeGetRequest("raw", mapOf(
+			"page" to pagename
+		))
+		return if(response == null) null
+		else WikiResult(Source.Internet, response.body)
+	}
+	
+	/**
 	 * Searches the wiki for a query query string.
 	 * Returns an ordered list of WikiSearchResult objects.
 	 * Important: An Internet connection is *required* for this method to work!

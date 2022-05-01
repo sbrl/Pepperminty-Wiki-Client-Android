@@ -42,7 +42,6 @@ class PageViewFragment : Fragment() {
 		
 		
 		// 3: Initial UI updates & webview manager
-		activity?.title = pageViewModel.currentPageName.value
 		
 		// The WebviewManager is responsible for managing the web view. Note that the page stack
 		// is managed in this fragment and not webview manager.

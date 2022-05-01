@@ -19,11 +19,6 @@
 	<string name="settings_offlinemode_off">Content will be downloaded from the Internet</string>
 	<string name="settings_offlinemode_on">Internet access disabled</string>
 	
-	<string name="attachment_title">Download incoming attachments</string>
-	<string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-	<string name="attachment_summary_off">Only download attachments when manually requested</string>
-	
 	<!-- Custom -->
 	<string name="toast_page_list_refreshed">Page list refreshed</string>
 	<string name="toast_page_view_refreshed">Page content refreshed</string>
@@ -38,6 +33,7 @@
 	<string name="error_no_wiki_name_specified">No wiki name specified</string>
 	
 	<string name="error_failed_load_page_content">Error: Failed to load content for page \'%1$s\'</string>
+	<string name="error_failed_load_page_source">Error: Failed to load source for page \'%1$s\'</string>
 	<string name="error_redlink">The page \'%1$s\' doesn\'t exist</string>
 	<string name="navdrawer_main_add_wiki">Add Wiki</string>
 	<string name="navdrawer_main_settings">Settings</string>
@@ -63,4 +59,8 @@
 	<string name="add_wiki_welcome">Connect to an existing Pepperminty Wiki server.</string>
 	<string name="pagelist_list_icon_description_default">page</string>
 	<string name="search_list_item_icon">Search list item icon</string>
+	<string name="editor_button_save">Save</string>
+	<string name="editor_toast_error_offline">You\'re offline, but editing pages requires you to be online.</string>
+	<string name="editor_toast_error_nopagename">Error: You\'re not currently viewing a page. This is a bug.</string>
+	<string name="editor_title"><![CDATA[%1$s ▶ Edit]]></string>
 </resources>

@@ -59,7 +59,6 @@ class WebViewManager(internal val context: Context, private val webview: WebView
 		}
 		
 		val displayHTML = pageHTMLProcessor.transform(endpoint, contentHTML)
-		Log.i("WebViewManager", "PAGE CONTENT: $displayHTML")
 		
 		// Load the data into the webview
 		webview.loadDataWithBaseURL(
