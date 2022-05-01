@@ -17,7 +17,7 @@ import kotlin.math.truncate
 class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	private val client: OkHttpClient = OkHttpClient.Builder()
 		.followRedirects(false)    // Redirects are a valuable source of info from Pepperminty Wiki
-		.cookieJar(MemoryCookieJar())           // Without this okhttp wouldn't save any cookies
+		.cookieJar(MemoryCookieJar)           // Without this okhttp wouldn't save any cookies
 		.build()
 	
 	var endpoint: String = inEndpoint

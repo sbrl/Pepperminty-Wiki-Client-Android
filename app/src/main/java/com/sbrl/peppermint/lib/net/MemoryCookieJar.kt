@@ -9,7 +9,7 @@ import okhttp3.HttpUrl
  * @source https://github.com/square/okhttp/issues/2890#issuecomment-600171522
  */
 
-class MemoryCookieJar : CookieJar {
+object MemoryCookieJar : CookieJar {
 	private val cache = mutableSetOf<WrappedCookie>()
 	
 	@Synchronized
