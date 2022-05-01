@@ -4,7 +4,7 @@ import android.content.Context
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.io.readTextAndClose
 import org.jsoup.Jsoup
-import org.jsoup.safety.Whitelist
+import org.jsoup.safety.Safelist
 
 class PageHTMLProcessor(private val context: Context) {
 	
@@ -18,17 +18,17 @@ class PageHTMLProcessor(private val context: Context) {
 	/**
 	 * Allows structural HTML + images, but not javascript
 	 */
-	private val htmlWhitelist = Whitelist.relaxed()
+	private val htmlSafelist = Safelist.relaxed()
 		.preserveRelativeLinks(true)
 	
-	public fun transform(pageHtml : String) : String {
+	fun transform(pageHtml : String) : String {
 		return sanitizeHTML(htmlTemplate)
 			.replace("{footer}", footerInjectionCode())
 			.replace("{content}", pageHtml)
 	}
 	
 	private fun sanitizeHTML(html : String) : String {
-		return Jsoup.clean(html, htmlWhitelist)
+		return Jsoup.clean(html, htmlSafelist)
 	}
 	
 	private fun footerInjectionCode() : String {
