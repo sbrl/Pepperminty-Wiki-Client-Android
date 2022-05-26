@@ -90,15 +90,11 @@ class WikiVersion(private val inVersionString: String) : Comparable<WikiVersion>
 		return type.compareTo(other.type)
 	}
 	
-	override fun hashCode(): Int {
-		var result = major
-		result = 31 * result + minor
-		result = 31 * result + patch
-		result = 31 * result + type.hashCode()
-		return result
-	}
-	
 	override fun toString(): String {
 		return inVersionString
+	}
+	
+	override fun hashCode(): Int {
+		return inVersionString.hashCode()
 	}
 }
