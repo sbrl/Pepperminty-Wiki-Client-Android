@@ -5,7 +5,6 @@ import com.sbrl.peppermint.lib.io.DataManager
 import com.sbrl.peppermint.lib.io.SettingsManager
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.Exception
 
 
 class Wiki(
@@ -18,9 +17,15 @@ class Wiki(
 	constructor(settings: SettingsManager, inDataManager: DataManager, inId: String, inName: String, inEndpoint: String)
 		: this(settings, inDataManager, inId, inName, inEndpoint, null)
 	
-	var api: WikiAPIBroker = WikiAPIBroker(inEndpoint, inCredentials)
+	private var api: WikiAPIBroker = WikiAPIBroker(inEndpoint, inCredentials)
 	
 	enum class Source { Internet, Cache }
+	enum class SaveResult {
+		Success, NetworkError, ServerError,
+		PermissionsError, PageProtectedError, NoEditsAllowedError,
+		ConflictError,
+		UnknownClientError, UnknownError
+	}
 	
 	data class WikiResult<T>(val source: Source, val value: T)
 	
@@ -36,7 +41,7 @@ class Wiki(
 	 * @return A list of pages as a list of strings.
 	 */
 	fun pages(): WikiResult<List<String>>? {
-		val response = if(!settings.offline) api.makeGetRequest("list", mapOf<String, String>(
+		val response = if(!settings.offline) api.makeGetRequest("list", mapOf(
 			"format" to "text"
 		)) else null
 		var source = Source.Internet
@@ -58,7 +63,7 @@ class Wiki(
 	 * A list of changes recently made to this wiki.
 	 */
 	fun recentChanges() : WikiResult<List<WikiRecentChange>>? {
-		val response = if(!settings.offline) api.makeGetRequest("recent-changes", mapOf<String, String>(
+		val response = if(!settings.offline) api.makeGetRequest("recent-changes", mapOf(
 			"format" to "json"
 		)) else null
 		var source = Source.Internet
@@ -117,6 +122,72 @@ class Wiki(
 		))
 		return if(response == null) null
 		else WikiResult(Source.Internet, response.body)
+	}
+	
+	/**
+	 * Acquires an edit key for the given page name.
+	 * Call this as *soon* as you fetch the raw source for a page!
+	 * This edit eky si a hash of the content of the page. This hash *must* be returned to the server on save in order to detect edit conflicts! 
+	 * @param	pagename: The name of the page to fetch an edit key for.
+	 * @return	The edit key as a string.
+	 */
+	fun editKey(pagename: String) : WikiResult<String>? {
+		Log.i("Wiki", "Obtaining edit key for $pagename")
+		val response : WikiApiResponse = api.makeGetRequest("acquire-edit-key", mapOf(
+			"page" to pagename,
+			"format" to "json"
+		)) ?: return null
+		
+		return try {
+			val response_obj = JSONObject(response.body)
+			WikiResult(Source.Internet, response_obj.getString("key"))
+		} catch (error: JSONException) {
+			Log.w("Wiki", "Error parsing JSON when acquiring edit key!")
+			null
+		}
+	}
+	
+	/**
+	 * Save a page's content back to the remote wiki.
+	 * @param pagename: The page name to save content back to.
+	 * @param editKey: The edit key obtained BEFORE editing begun from the editKey() function.
+	 * @param newContent: The new page content to save back.
+	 * @param newTags: The new page pages to save back.
+	 * @return An enum that represents what happened. SaveResult.Success is returned if the save operation was successful, but otherwise the value indicates what kind of error was encountered.
+	 */
+	fun saveSource(pagename: String, editKey: String, newContent: String, newTags: String): WikiResult<SaveResult> {
+		Log.i("Wiki", "Saving page content for $pagename with edit key $editKey")
+		val response : WikiApiResponse = api.makePostRequest("save", mapOf(
+			"page" to pagename
+		), mapOf(
+			"content" to newContent,
+			"tags" to newTags,
+			"prev-content-hash" to editKey
+		)) ?: return WikiResult(Source.Internet, SaveResult.NetworkError)
+		
+		
+		val error : SaveResult? = when(response.headers["x-failure-reason"]) {
+			"editing-disabled" -> SaveResult.NoEditsAllowedError
+			"protected-page" -> SaveResult.PageProtectedError
+			"edit-conflict" -> SaveResult.ConflictError
+			"permissions-other-user-page" -> SaveResult.PermissionsError
+			else -> null
+		}
+		if(error != null) return WikiResult(Source.Internet, error)
+		
+		// If a login is required, this can either mean:
+		// 1. The user is not logged in and anonymous editing is disabled
+		// 2. The user IS logged in, but doesn't have enough privileges to save an edit
+		// #2 will only be the case here with old servers that haven't yet been updated to return an x-failure-reason for protected page errors.
+		if(response.isLoginRequired() && api.credentials == null)
+			return WikiResult(Source.Internet, SaveResult.PermissionsError)
+		
+		return WikiResult(Source.Internet, when(response.statusCode) {
+			in 200..299 -> SaveResult.Success
+			in 400..499 -> SaveResult.UnknownClientError
+			in 500..599 -> SaveResult.ServerError
+			else -> SaveResult.UnknownError
+		}) 
 	}
 	
 	/**

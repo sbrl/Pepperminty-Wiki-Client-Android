@@ -1,24 +1,28 @@
 package com.sbrl.peppermint.lib.wiki_api
 
-import android.annotation.SuppressLint
 import android.util.Log
 import com.sbrl.peppermint.lib.net.MemoryCookieJar
 import okhttp3.Cookie
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.IOException
+import org.json.JSONException
+import org.json.JSONObject
 import java.net.URLEncoder
-import kotlin.math.truncate
 
 class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 	private val client: OkHttpClient = OkHttpClient.Builder()
 		.followRedirects(false)    // Redirects are a valuable source of info from Pepperminty Wiki
 		.cookieJar(MemoryCookieJar)           // Without this okhttp wouldn't save any cookies
 		.build()
+	
+	/**
+	 * The remote version string of the wiki.
+	 */
+	var versionRemote: WikiVersion? = null
 	
 	var endpoint: String = inEndpoint
 		get() = field
@@ -157,6 +161,21 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 			return ConnectionStatus.ConnectionFailed
 		}
 		
+		versionRemote = extractServerVersion(response.body)
+		
 		return ConnectionStatus.Ok
+	}
+	
+	private fun extractServerVersion(statusText: String) : WikiVersion? {
+		return try {
+			val statusInfo = JSONObject(statusText)
+			if(statusInfo.has("version"))
+				WikiVersion(statusInfo.getString("version"))
+			else
+				null
+		} catch(error : JSONException) {
+			Log.w("WikiApiBroker", "Failed to parse JSON or version number from status request.")
+			null
+		}
 	}
 }
