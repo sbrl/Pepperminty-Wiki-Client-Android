@@ -1,6 +1,6 @@
 package com.sbrl.peppermint.lib.wiki_api
 
-class WikiVersion(inVersionString: String) : Comparable<WikiVersion> {
+class WikiVersion(private val inVersionString: String) : Comparable<WikiVersion> {
 	/**
 	 * The major version of the wiki.
 	 * For example, given the version v0.24-beta2, the major version is 0.
@@ -96,5 +96,9 @@ class WikiVersion(inVersionString: String) : Comparable<WikiVersion> {
 		result = 31 * result + patch
 		result = 31 * result + type.hashCode()
 		return result
+	}
+	
+	override fun toString(): String {
+		return inVersionString
 	}
 }
