@@ -5,8 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.MultiAutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +24,10 @@ class EditFragment : Fragment() {
 	private lateinit var wikiViewModel: WikiViewModel
 	
 	private lateinit var editorMain : EditText
+	private lateinit var editorTags : MultiAutoCompleteTextView
 	private lateinit var buttonSave : Button
+	
+	private var editKey: String? = null
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -40,6 +45,7 @@ class EditFragment : Fragment() {
 		
 		// 3: Find ids
 		editorMain = root.findViewById(R.id.editor_editor)
+		editorTags = root.findViewById(R.id.editor_tags)
 		buttonSave = root.findViewById(R.id.editor_button_save)
 		
 		
@@ -48,6 +54,7 @@ class EditFragment : Fragment() {
 		
 		
 		// 5: Initial UI population
+		editorTags.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
 		populateEditor()
 		
 		return root
@@ -65,19 +72,52 @@ class EditFragment : Fragment() {
 		}
 		
 		thread {
-			val source = wikiViewModel.currentWiki.value!!.pageSource(pagename)
+			val wiki = wikiViewModel.currentWiki.value!!
+			val source = wiki.pageSource(pagename)
+			val newEditKey = wiki.editKey(pagename)
+			val tagList = wiki.tags()
 			
 			activity?.runOnUiThread {
-				if(source == null) {
-					show_toast(context, getString(R.string.error_failed_load_page_source, pagename))
-					editorMain.isEnabled = false
+				editorMain.isEnabled = false
+				editorTags.isEnabled = false
+				
+				if(!source.ok) {
+					show_toast(context, getString(R.string.error_failed_load_page_source, 
+						pagename,
+						source.errorText(context)
+					))
 					return@runOnUiThread
 				}
+				if(!tagList.ok) {
+					show_toast(context, getString(
+						R.string.error_failed_load_tag_list,
+						tagList.errorText(context)
+					))
+					return@runOnUiThread
+				}
+				if(newEditKey == null) {
+					show_toast(context, getString(R.string.error_failed_acquire_edit_key, pagename))
+					return@runOnUiThread
+				}
+				
+				val page = source.value!!
+				
 				editorMain.isEnabled = true
+				editorTags.isEnabled = true
 				
 				(requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.editor_title, pageViewModel.currentPageName.value ?: "")
 				
-				editorMain.setText(source.value)
+				val contextTemp = context
+				if(contextTemp !== null)
+					editorTags.setAdapter(ArrayAdapter(
+						contextTemp,
+						android.R.layout.simple_dropdown_item_1line,
+						tagList.value!!.toMutableList()
+					))
+				
+				editorMain.setText(page.content)
+				editorTags.setText(page.tags as CharSequence)
+				editKey = newEditKey.value
 			}
 			
 		}

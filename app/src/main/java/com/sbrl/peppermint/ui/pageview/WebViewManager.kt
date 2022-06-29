@@ -51,9 +51,9 @@ class WebViewManager(internal val context: Context, private val webview: WebView
 		webview.addJavascriptInterface(jsInterface, "App")
 		
 		// Sort out the cookies so that the webview can fetch images
-		val endpoint = wikiViewModel.currentWiki.value!!.api.endpoint
+		val endpoint = wikiViewModel.currentWiki.value!!.endpoint
 		val webviewCookies = CookieManager.getInstance()
-		for(cookie in wikiViewModel.currentWiki.value!!.api.getCookies()) {
+		for(cookie in wikiViewModel.currentWiki.value!!.cookies()) {
 //			Log.d("PageViewFragment", "Adding cookie '${cookie.toString()}'")
 			webviewCookies.setCookie(endpoint, cookie.toString())
 		}

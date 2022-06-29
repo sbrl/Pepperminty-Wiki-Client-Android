@@ -161,7 +161,9 @@ class WikiAPIBroker (inEndpoint: String, inCredentials: WikiCredentials?) {
 			return ConnectionStatus.ConnectionFailed
 		}
 		
-		versionRemote = extractServerVersion(response.body)
+//		versionRemote = extractServerVersion(response.body)
+		
+		// FUTURE: Check minimum supported version here.
 		
 		return ConnectionStatus.Ok
 	}

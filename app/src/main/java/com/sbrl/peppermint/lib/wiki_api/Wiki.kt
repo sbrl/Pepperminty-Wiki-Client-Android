@@ -3,6 +3,7 @@ package com.sbrl.peppermint.lib.wiki_api
 import android.util.Log
 import com.sbrl.peppermint.lib.io.DataManager
 import com.sbrl.peppermint.lib.io.SettingsManager
+import okhttp3.Cookie
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -19,6 +20,9 @@ class Wiki(
 	
 	private var api: WikiAPIBroker = WikiAPIBroker(inEndpoint, inCredentials)
 	
+	val endpoint: String
+		get() = api.endpoint
+	
 	enum class Source { Internet, Cache }
 	enum class SaveResult {
 		Success, NetworkError, ServerError,
@@ -27,7 +31,9 @@ class Wiki(
 		UnknownClientError, UnknownError
 	}
 	
-	data class WikiResult<T>(val source: Source, val value: T)
+	fun cookies() : List<Cookie> {
+		return api.getCookies()
+	}
 	
 	fun connectionStatus(): ConnectionStatus {
 		if(api.connectionStatus == ConnectionStatus.Untested)
@@ -57,6 +63,27 @@ class Wiki(
 			}
 		
 		return WikiResult(source, data.lines())
+	}
+	
+	/**
+	 * Returns a list of tags on the wiki.
+	 * Caches the result locally, but only uses the cache if we are unable to fetch a fresh copy.
+	 */
+	fun tags() : WikiResult<List<String>?> {
+		val response = if(!settings.offline) api.makeGetRequest("list-tags", mapOf(
+			"format" to "text"
+		)) else null
+		
+		return if(response == null) {
+			val tagListCache = dataManager.getCachedString("listtags", "$name.txt")
+			if(tagListCache == null)
+				WikiResult.CacheError(WikiError.NetworkErrorAndNoCache)
+			else
+				WikiResult(Source.Cache, tagListCache.split("""\n""".toRegex()))
+		}
+		else {
+			WikiResult(Source.Internet, response.body.split("""\n""".toRegex()))
+		}
 	}
 	
 	/**
@@ -115,13 +142,21 @@ class Wiki(
 	 * @param pagename: The name of the page to fetch the source for.
 	 * @return The raw source of the specified page.
 	 */
-	fun pageSource(pagename: String) : WikiResult<String>? {
+	fun pageSource(pagename: String) : WikiResult<WikiPage?> {
 		Log.i("Wiki", "Fetching page source for $pagename")
-		val response : WikiApiResponse? = api.makeGetRequest("raw", mapOf(
+		val response : WikiApiResponse = api.makeGetRequest("raw", mapOf(
 			"page" to pagename
+		)) ?: return WikiResult.Error(WikiError.NetworkError)
+		
+		if(!response.hasHeader("x-tags")) return WikiResult.Error(
+			WikiError.OutdatedServer,
+			requiredVersion = WikiVersion("0.24") 
+		)
+		
+		return WikiResult(Source.Internet, WikiPage(
+			response.body,
+			response.headers["x-tags"]!!.split(""",\s+""".toRegex())
 		))
-		return if(response == null) null
-		else WikiResult(Source.Internet, response.body)
 	}
 	
 	/**

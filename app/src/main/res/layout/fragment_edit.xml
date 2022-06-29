@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/editor_button_save"
+        app:layout_constraintBottom_toTopOf="@+id/editor_tags"
         android:scrollbars="vertical"
         android:inputType="textMultiLine"
         android:text="This is the page editor. Coming soon!"
@@ -20,13 +20,32 @@
         android:gravity="top"
         />
     
+    <TextView android:id="@+id/editor_tags_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/editor_editor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/editor_tags"
+        android:text="@string/editor_label_tags"
+        android:textColor="@color/black"
+        />
+    
+    <MultiAutoCompleteTextView android:id="@+id/editor_tags"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/editor_editor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/editor_tags_label"
+        app:layout_constraintRight_toLeftOf="@id/editor_button_save" />
+    
     <Button android:id="@+id/editor_button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@+id/editor_editor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/editor_tags"
         app:layout_constraintRight_toRightOf="parent"
         android:text="@string/editor_button_save" />
 </androidx.constraintlayout.widget.ConstraintLayout>
