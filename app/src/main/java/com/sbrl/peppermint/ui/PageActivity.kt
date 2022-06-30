@@ -5,13 +5,16 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.Window
 import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.snackbar.Snackbar
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.ui.show_toast
 
@@ -25,6 +28,8 @@ import com.sbrl.peppermint.lib.ui.show_toast
 class PageActivity : AppCompatActivity() {
     private lateinit var wikiViewModel: WikiViewModel
     private lateinit var pageViewModel: PageViewModel
+	
+	private lateinit var coordinatorLayout: CoordinatorLayout
     
     override fun onCreate(savedInstanceState: Bundle?) {
 	    // 0: Preamble
@@ -33,7 +38,9 @@ class PageActivity : AppCompatActivity() {
 	    window.requestFeature(Window.FEATURE_ACTION_BAR)
 	    // Fill out the activity with content
         setContentView(R.layout.activity_pageview)
-        
+		
+		coordinatorLayout = findViewById(R.id.coordinator_pageview)
+		
 	    // 1: Navigation view
 	    val navView: BottomNavigationView = findViewById(R.id.nav_view_page)
 	    
@@ -100,5 +107,11 @@ class PageActivity : AppCompatActivity() {
 		}
 		
 		Log.i("PageActivity", "Page stack pop success, intercepting back button operation")
+	}
+	
+	fun showMessage(message: String) {
+		show_toast(this, message)
+		// SnackBars aren't working right at the moment, as they aren't always displaying :-/
+//		Snackbar.make(coordinatorLayout, message, LENGTH_SHORT).show()
 	}
 }

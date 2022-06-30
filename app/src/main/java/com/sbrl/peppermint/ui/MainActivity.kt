@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.ViewModelProvider
@@ -15,8 +17,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.ui.send_add_wiki
+import com.sbrl.peppermint.lib.ui.show_toast
 import com.sbrl.peppermint.ui.drawers.MainDrawerManager
 
 
@@ -25,20 +29,24 @@ class MainActivity : AppCompatActivity() {
 	lateinit var wikiViewModel: WikiViewModel
 	lateinit var drawerManager: MainDrawerManager
 	
-	lateinit var navBottom: BottomNavigationView
+	private lateinit var navBottom: BottomNavigationView
 	lateinit var drawerLayout: DrawerLayout
 	lateinit var navDrawer: NavigationView
+	
+	private lateinit var coordinatorLayout: CoordinatorLayout
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		// 1: Preamble
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
 		
+		coordinatorLayout = findViewById(R.id.coordinator_main)
+		
 		// 2: View models
 		wikiViewModel = ViewModelProvider(this)[WikiViewModel::class.java]
 		wikiViewModel.init(this)
 		
-		if(wikiViewModel.wikiManager.value?.count() ?: 99 == 0) {
+		if((wikiViewModel.wikiManager.value?.count() ?: 99) == 0) {
 			send_add_wiki(this, clear_stack = true)
 			return
 		}
@@ -107,4 +115,9 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 	
+	fun showSnackMessage(message: String) {
+		show_toast(this, message)
+		// SnackBars aren't working right at the moment, as they aren't always displaying :-/
+//		Snackbar.make(coordinatorLayout, message, LENGTH_SHORT).show()
+	}
 }
