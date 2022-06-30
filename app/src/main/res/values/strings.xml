@@ -33,7 +33,7 @@
 	<string name="error_no_wiki_name_specified">No wiki name specified</string>
 	
 	<string name="error_failed_load_page_content">Error: Failed to load content for page \'%1$s\'</string>
-	<string name="error_failed_load_page_source">Error: Failed to load source for page \'%1$s\': %2$s</string>
+	<string name="error_failed_load_page_source">Error: Failed loading page source: %1$s</string>
 	<string name="error_redlink">The page \'%1$s\' doesn\'t exist</string>
 	<string name="navdrawer_main_add_wiki">Add Wiki</string>
 	<string name="navdrawer_main_settings">Settings</string>
@@ -64,7 +64,7 @@
 	<string name="editor_toast_error_nopagename">Error: You\'re not currently viewing a page. This is a bug.</string>
 	<string name="editor_title"><![CDATA[%1$s ▶ Edit]]></string>
 	<string name="error_failed_acquire_edit_key"><![CDATA[Error: Failed to acquire edit key for page \'%1$s\'.]]></string>
-	<string name="editor_label_tags">Tags</string>
+	<string name="editor_label_tags">Tags:</string>
 	<string name="wikiresult_error_outdatedserver"><![CDATA[Your server version is outdated. Please update it to at least Pepperminty Wiki %1$s.]]></string>
 	<string name="wikiresult_error_unknown">An unknown error occurred.</string>
 	<string name="wikiresult_error_network">A network error occurred.</string>
