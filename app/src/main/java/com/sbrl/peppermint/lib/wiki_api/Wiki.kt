@@ -148,10 +148,13 @@ class Wiki(
 			"page" to pagename
 		)) ?: return WikiResult.Error(WikiError.NetworkError)
 		
-		if(!response.hasHeader("x-tags")) return WikiResult.Error(
-			WikiError.OutdatedServer,
-			requiredVersion = WikiVersion("0.24") 
-		)
+		if(!response.hasHeader("x-tags")) {
+			Log.w("Wiki", "pageSource: No x-tags header present - the server is probably too old")
+			return WikiResult.Error(
+				WikiError.OutdatedServer,
+				requiredVersion = WikiVersion("0.24")
+			)
+		}
 		
 		return WikiResult(Source.Internet, WikiPage(
 			response.body,

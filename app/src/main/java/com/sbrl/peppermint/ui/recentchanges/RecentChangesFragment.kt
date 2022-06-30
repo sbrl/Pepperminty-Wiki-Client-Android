@@ -6,19 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
-import com.sbrl.peppermint.lib.ui.show_toast
 import com.sbrl.peppermint.lib.ui.view_page
 import com.sbrl.peppermint.lib.wiki_api.Wiki
 import com.sbrl.peppermint.lib.wiki_api.WikiRecentChange
+import com.sbrl.peppermint.lib.wiki_api.WikiResult
+import com.sbrl.peppermint.ui.MainActivity
 import com.sbrl.peppermint.ui.WikiViewModel
 import com.sbrl.peppermint.ui.adapters.RecentChangesListAdapter
-import java.lang.Exception
 import kotlin.concurrent.thread
 
 class RecentChangesFragment : Fragment() {
@@ -31,6 +30,9 @@ class RecentChangesFragment : Fragment() {
 	private lateinit var searchFilter: SearchView
 	
 	private var recentChangesListAdapter: RecentChangesListAdapter? = null
+	
+	private val mainActivity: MainActivity
+		get() = activity as MainActivity
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -89,7 +91,7 @@ class RecentChangesFragment : Fragment() {
 			else getString(R.string.toast_addon_from_internet))
 		
 		swipeRefresh.isRefreshing = false
-		show_toast(context, message)
+		mainActivity.showSnackMessage(message)
 	}
 	
 	private fun updateRecentChangesList() {
@@ -106,7 +108,7 @@ class RecentChangesFragment : Fragment() {
 		// Non-blocking Kotlin is *hard* :-(
 		thread {
 			// Fetch a new page list
-			val recentChangesList: Wiki.WikiResult<List<WikiRecentChange>> =
+			val recentChangesList: WikiResult<List<WikiRecentChange>> =
 				currentWiki.recentChanges() ?: return@thread
 			
 			

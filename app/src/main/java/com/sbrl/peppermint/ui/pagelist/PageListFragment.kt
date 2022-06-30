@@ -6,15 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
-import com.sbrl.peppermint.lib.ui.show_toast
 import com.sbrl.peppermint.lib.ui.view_page
 import com.sbrl.peppermint.lib.wiki_api.Wiki
+import com.sbrl.peppermint.lib.wiki_api.WikiResult
+import com.sbrl.peppermint.ui.MainActivity
 import com.sbrl.peppermint.ui.adapters.PageListAdapter
 import com.sbrl.peppermint.ui.WikiViewModel
 import kotlin.concurrent.thread
@@ -29,6 +29,9 @@ class PageListFragment : Fragment() {
 	private lateinit var searchFilter: SearchView
 	
 	private var pageListAdapter: PageListAdapter? = null
+	
+	private val mainActivity: MainActivity
+		get() = activity as MainActivity
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -84,7 +87,7 @@ class PageListFragment : Fragment() {
 			val message = getString(R.string.toast_page_list_refreshed) + " " +
 				getString(R.string.toast_addon_from_cache)
 			
-			show_toast(context, message)
+			mainActivity.showSnackMessage(message)
 		}
 	}
 	
@@ -106,7 +109,7 @@ class PageListFragment : Fragment() {
 		// Non-blocking Kotlin is *hard* :-(
 		thread {
 			// Fetch a new page list
-			val pageList: Wiki.WikiResult<List<String>> = currentWiki.pages() ?: return@thread
+			val pageList: WikiResult<List<String>> = currentWiki.pages() ?: return@thread
 			
 			
 			// Create a new adapter, and tell the RecyclerView about it on the main thread

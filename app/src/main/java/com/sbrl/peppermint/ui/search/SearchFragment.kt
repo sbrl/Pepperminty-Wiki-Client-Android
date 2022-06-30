@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.ui.view_page
-import com.sbrl.peppermint.lib.wiki_api.Wiki
-import com.sbrl.peppermint.lib.wiki_api.WikiRecentChange
+import com.sbrl.peppermint.lib.wiki_api.WikiResult
 import com.sbrl.peppermint.lib.wiki_api.WikiSearchResult
 import com.sbrl.peppermint.ui.WikiViewModel
 import com.sbrl.peppermint.ui.adapters.SearchResultsListAdapter
@@ -30,6 +29,9 @@ class SearchFragment : Fragment() {
 	private lateinit var resultslist: RecyclerView
 	
 	private var searchResultsListAdapter: SearchResultsListAdapter? = null
+	
+//	private val mainActivity: MainActivity
+//		get() = activity as MainActivity
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -100,7 +102,7 @@ class SearchFragment : Fragment() {
 			
 			if(queryText.isNotEmpty()) {
 				Log.i("SearchFragment", "Searching for query '$queryText'")
-				val searchResultsWrapped: Wiki.WikiResult<List<WikiSearchResult>> =
+				val searchResultsWrapped: WikiResult<List<WikiSearchResult>> =
 					currentWiki.search(queryText) ?: return@thread
 				
 				searchResults = searchResultsWrapped.value
