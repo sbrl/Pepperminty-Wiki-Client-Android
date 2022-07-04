@@ -158,26 +158,30 @@ class EditFragment : Fragment() {
 		uiUpdateLoadBegin()
 		
 		val wiki = wikiViewModel.currentWiki.value!!
+		
+		val submitEditKey = editKey
+		val submitContent = editorMain.text.toString()
+		val submitTags = editorTags.text.toString()
+		if(submitEditKey == null) {
+			pageActivity.showMessage(getString(R.string.editor_save_no_edit_key_found))
+			return
+		}
+		
 		thread {
-			val submitEditKey = editKey
-			val submitContent = editorMain.text.toString()
-			val submitTags = editorTags.text.toString()
-			if(submitEditKey == null) {
-				pageActivity.showMessage(getString(R.string.editor_save_no_edit_key_found))
-				return@thread
-			}
 			val result = wiki.saveSource(pagename, submitEditKey, submitContent, submitTags)
 			
-			if(result.ok) {
-				show_toast(context, "Content saved successfully!")
+			activity?.runOnUiThread {
+				if(result.ok) {
+					show_toast(context, "Content saved successfully!")
+					uiUpdateLoadComplete(true)
+					pageActivity.navigateTo(PageActivity.PageViewDestinations.View)
+					return@runOnUiThread
+				}
+				
+				pageActivity.showMessage(result.errorText(context))
 				uiUpdateLoadComplete(true)
-				pageActivity.navigateTo(PageActivity.PageViewDestinations.View)
-				return@thread
+				return@runOnUiThread
 			}
-			
-			pageActivity.showMessage(result.errorText(context))
-			uiUpdateLoadComplete(true)
-			return@thread
 		}
 	}
 }

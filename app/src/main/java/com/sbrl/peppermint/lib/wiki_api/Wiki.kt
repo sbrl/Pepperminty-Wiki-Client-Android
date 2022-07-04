@@ -220,7 +220,7 @@ class Wiki(
 		if(response.isLoginRequired() && api.credentials == null)
 			return WikiResult.Error(WikiError.PermissionsError)
 		
-		if(response.statusCode in 200..299)
+		if(response.statusCode in 200..399)
 			return WikiResult(Source.Internet, true)
 		
 		return WikiResult.Error(when(response.statusCode) {
