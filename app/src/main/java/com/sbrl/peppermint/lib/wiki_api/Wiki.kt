@@ -193,7 +193,7 @@ class Wiki(
 	 * @param newTags: The new page pages to save back.
 	 * @return An enum that represents what happened. SaveResult.Success is returned if the save operation was successful, but otherwise the value indicates what kind of error was encountered.
 	 */
-	fun saveSource(pagename: String, editKey: String, newContent: String, newTags: String): WikiResult<SaveResult> {
+	fun saveSource(pagename: String, editKey: String, newContent: String, newTags: String): WikiResult<Boolean?> {
 		Log.i("Wiki", "Saving page content for $pagename with edit key $editKey")
 		val response : WikiApiResponse = api.makePostRequest("save", mapOf(
 			"page" to pagename
@@ -201,31 +201,33 @@ class Wiki(
 			"content" to newContent,
 			"tags" to newTags,
 			"prev-content-hash" to editKey
-		)) ?: return WikiResult(Source.Internet, SaveResult.NetworkError)
+		)) ?: return WikiResult.Error(WikiError.NetworkError)
 		
 		
-		val error : SaveResult? = when(response.headers["x-failure-reason"]) {
-			"editing-disabled" -> SaveResult.NoEditsAllowedError
-			"protected-page" -> SaveResult.PageProtectedError
-			"edit-conflict" -> SaveResult.ConflictError
-			"permissions-other-user-page" -> SaveResult.PermissionsError
+		val error : WikiError? = when(response.headers["x-failure-reason"]) {
+			"editing-disabled" -> WikiError.NoEditsAllowedError
+			"protected-page" -> WikiError.PageProtectedError
+			"edit-conflict" -> WikiError.ConflictError
+			"permissions-other-user-page" -> WikiError.PermissionsError
 			else -> null
 		}
-		if(error != null) return WikiResult(Source.Internet, error)
+		if(error != null) return WikiResult.Error(error)
 		
 		// If a login is required, this can either mean:
 		// 1. The user is not logged in and anonymous editing is disabled
 		// 2. The user IS logged in, but doesn't have enough privileges to save an edit
 		// #2 will only be the case here with old servers that haven't yet been updated to return an x-failure-reason for protected page errors.
 		if(response.isLoginRequired() && api.credentials == null)
-			return WikiResult(Source.Internet, SaveResult.PermissionsError)
+			return WikiResult.Error(WikiError.PermissionsError)
 		
-		return WikiResult(Source.Internet, when(response.statusCode) {
-			in 200..299 -> SaveResult.Success
-			in 400..499 -> SaveResult.UnknownClientError
-			in 500..599 -> SaveResult.ServerError
-			else -> SaveResult.UnknownError
-		}) 
+		if(response.statusCode in 200..299)
+			return WikiResult(Source.Internet, true)
+		
+		return WikiResult.Error(when(response.statusCode) {
+			in 400..499 -> WikiError.UnknownClientError
+			in 500..599 -> WikiError.ServerError
+			else -> WikiError.UnknownError
+		})
 	}
 	
 	/**

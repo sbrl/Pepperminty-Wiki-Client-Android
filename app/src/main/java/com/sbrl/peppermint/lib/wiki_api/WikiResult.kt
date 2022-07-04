@@ -20,6 +20,12 @@ class WikiResult<T>(val source: Wiki.Source,
 			WikiError.NetworkError -> context.getString(R.string.wikiresult_error_network)
 			WikiError.NetworkErrorAndNoCache -> context.getString(R.string.wikiresult_error_networknocache)
 			WikiError.OutdatedServer -> context.getString(R.string.wikiresult_error_outdatedserver, requiredVersion)
+			WikiError.ConflictError -> context.getString(R.string.wikiresult_error_edit_conflict)
+			WikiError.NoEditsAllowedError -> context.getString(R.string.wikiresult_error_noeditsallowed)
+			WikiError.PageProtectedError -> context.getString(R.string.wikiresult_error_pageprotected)
+			WikiError.UnknownClientError -> context.getString(R.string.wikiresult_error_unknownclient)
+			WikiError.ServerError -> context.getString(R.string.wikiresult_error_server)
+			WikiError.PermissionsError -> context.getString(R.string.wikiresult_error_permissions)
 			else -> context.getString(R.string.wikiresult_error_unknown)
 		}
 	}
@@ -57,5 +63,12 @@ enum class WikiError {
 	None,
 	OutdatedServer,
 	NetworkError,
-	NetworkErrorAndNoCache
+	NetworkErrorAndNoCache,
+	ServerError,
+	PermissionsError,
+	PageProtectedError,
+	NoEditsAllowedError,
+	ConflictError,
+	UnknownClientError,
+	UnknownError
 }
