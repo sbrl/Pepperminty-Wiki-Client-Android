@@ -24,8 +24,8 @@
         app:layout_constraintBottom_toTopOf="@+id/editor_tags"
         android:scrollbars="vertical"
         android:inputType="textMultiLine"
-        android:text=""
         android:textAlignment="gravity"
+        android:imeOptions="actionNext"
         android:gravity="top"
         />
     
@@ -43,10 +43,15 @@
     <MultiAutoCompleteTextView android:id="@+id/editor_tags"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:inputType="text"
+        android:maxLines="1"
+        android:lines="1"
+        android:scrollHorizontally="true"
         app:layout_constraintTop_toBottomOf="@+id/editor_editor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/editor_tags_label"
-        app:layout_constraintRight_toLeftOf="@id/editor_button_save" />
+        app:layout_constraintRight_toLeftOf="@id/editor_button_save"
+        />
     
     <Button android:id="@+id/editor_button_save"
         android:layout_width="wrap_content"

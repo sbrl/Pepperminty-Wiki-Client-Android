@@ -24,6 +24,7 @@ class EditFragment : Fragment() {
 	
 	private lateinit var progressBar: ProgressBar
 	private lateinit var editorMain : EditText
+	private lateinit var labelTags : TextView
 	private lateinit var editorTags : MultiAutoCompleteTextView
 	private lateinit var buttonSave : Button
 	
@@ -49,6 +50,7 @@ class EditFragment : Fragment() {
 		// 3: Find ids
 		progressBar = root.findViewById(R.id.editor_progressbar)
 		editorMain = root.findViewById(R.id.editor_editor)
+		labelTags = root.findViewById(R.id.editor_tags_label)
 		editorTags = root.findViewById(R.id.editor_tags)
 		buttonSave = root.findViewById(R.id.editor_button_save)
 		
