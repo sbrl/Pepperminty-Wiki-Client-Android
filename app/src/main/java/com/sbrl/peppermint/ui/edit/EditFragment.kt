@@ -1,7 +1,6 @@
 package com.sbrl.peppermint.ui.edit
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -12,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.sbrl.peppermint.R
+import com.sbrl.peppermint.lib.ui.show_toast
 import com.sbrl.peppermint.ui.PageActivity
 import com.sbrl.peppermint.ui.PageViewModel
 import com.sbrl.peppermint.ui.WikiViewModel
@@ -49,14 +49,14 @@ class EditFragment : Fragment() {
 		
 		// 3: Find ids
 		progressBar = root.findViewById(R.id.editor_progressbar)
-		editorMain = root.findViewById(R.id.editor_editor)
+		editorMain = root.findViewById(R.id.editor_main)
 		labelTags = root.findViewById(R.id.editor_tags_label)
 		editorTags = root.findViewById(R.id.editor_tags)
 		buttonSave = root.findViewById(R.id.editor_button_save)
 		
 		
 		// 4: Listeners
-		buttonSave.setOnClickListener {	buttonClickSave(it) }
+		buttonSave.setOnClickListener { buttonClickSave() }
 		
 		
 		// 5: Initial UI population
@@ -68,22 +68,35 @@ class EditFragment : Fragment() {
 	
 	private fun uiUpdateLoadBegin() {
 		progressBar.visibility = VISIBLE
+		editorMain.isEnabled = false
+		editorTags.isEnabled = false
+		buttonSave.isEnabled = false
 	}
-	private fun uiUpdateLoadComplete() {
+	private fun uiUpdateLoadComplete(enableUI: Boolean) {
 		progressBar.visibility = GONE
+		if(enableUI) {
+			editorMain.isEnabled = true
+			editorTags.isEnabled = true
+			buttonSave.isEnabled = true
+		}
 	}
 	
-	private fun populateEditor() {
+	private fun validateState() : Boolean {
 		if(wikiViewModel.settings.offline) {
 			pageActivity.showMessage(getString(R.string.editor_toast_error_offline))
-			return
+			return false
 		}
 		val pagename: String? = pageViewModel.currentPageName.value
 		if(pagename == null) {
 			pageActivity.showMessage(getString(R.string.editor_toast_error_nopagename))
-			return
+			return false
 		}
-		
+		return true
+	}
+	
+	private fun populateEditor() {
+		if(!validateState()) return
+		val pagename: String = pageViewModel.currentPageName.value!!
 		uiUpdateLoadBegin()
 		
 		thread {
@@ -93,8 +106,6 @@ class EditFragment : Fragment() {
 			val tagList = wiki.tags()
 			
 			activity?.runOnUiThread {
-				editorMain.isEnabled = false
-				editorTags.isEnabled = false
 				var error = false
 				if(!source.ok) {
 					pageActivity.showMessage(getString(R.string.error_failed_load_page_source,
@@ -115,14 +126,11 @@ class EditFragment : Fragment() {
 				}
 				
 				if(error) {
-					uiUpdateLoadComplete()
+					uiUpdateLoadComplete(false)
 					return@runOnUiThread
 				}
 				
 				val page = source.value!!
-				
-				editorMain.isEnabled = true
-				editorTags.isEnabled = true
 				
 				(requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.editor_title, pageViewModel.currentPageName.value ?: "")
 				
@@ -138,13 +146,38 @@ class EditFragment : Fragment() {
 				editorTags.setText(page.tags.joinToString(", "))
 				editKey = newEditKey!!.value
 				
-				uiUpdateLoadComplete()
+				uiUpdateLoadComplete(true)
 			}
 			
 		}
 	}
 	
-	private fun buttonClickSave(view: View) {
-		pageActivity.showMessage("Coming soon! This hasn't been implemented yet.")
+	private fun buttonClickSave() {
+		if(!validateState()) return
+		val pagename: String = pageViewModel.currentPageName.value!!
+		uiUpdateLoadBegin()
+		
+		val wiki = wikiViewModel.currentWiki.value!!
+		thread {
+			val submitEditKey = editKey
+			val submitContent = editorMain.text.toString()
+			val submitTags = editorTags.text.toString()
+			if(submitEditKey == null) {
+				pageActivity.showMessage(getString(R.string.editor_save_no_edit_key_found))
+				return@thread
+			}
+			val result = wiki.saveSource(pagename, submitEditKey, submitContent, submitTags)
+			
+			if(result.ok) {
+				show_toast(context, "Content saved successfully!")
+				uiUpdateLoadComplete(true)
+				pageActivity.navigateTo(PageActivity.PageViewDestinations.View)
+				return@thread
+			}
+			
+			pageActivity.showMessage(result.errorText(context))
+			uiUpdateLoadComplete(true)
+			return@thread
+		}
 	}
 }

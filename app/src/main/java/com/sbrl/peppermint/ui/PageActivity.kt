@@ -10,6 +10,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -29,6 +30,7 @@ class PageActivity : AppCompatActivity() {
     private lateinit var wikiViewModel: WikiViewModel
     private lateinit var pageViewModel: PageViewModel
 	
+	private lateinit var navController: NavController
 	private lateinit var coordinatorLayout: CoordinatorLayout
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +46,7 @@ class PageActivity : AppCompatActivity() {
 	    // 1: Navigation view
 	    val navView: BottomNavigationView = findViewById(R.id.nav_view_page)
 	    
-        val navController = findNavController(R.id.nav_host_fragment_page)
+        navController = findNavController(R.id.nav_host_fragment_page)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
@@ -113,5 +115,18 @@ class PageActivity : AppCompatActivity() {
 		show_toast(this, message)
 		// SnackBars aren't working right at the moment, as they aren't always displaying :-/
 //		Snackbar.make(coordinatorLayout, message, LENGTH_SHORT).show()
+	}
+	
+	enum class PageViewDestinations { View, Edit, History }
+	
+	/**
+	 * Navigate to a specific fragment.
+	 */
+	fun navigateTo(destination: PageViewDestinations) {
+		navController.navigate(when(destination) {
+			PageViewDestinations.View -> R.id.navigation_pageview
+			PageViewDestinations.Edit -> R.id.navigation_history
+			PageViewDestinations.History -> R.id.navigation_history
+		})
 	}
 }

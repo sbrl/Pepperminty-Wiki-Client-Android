@@ -70,4 +70,12 @@
 	<string name="wikiresult_error_network">A network error occurred.</string>
 	<string name="wikiresult_error_networknocache">A network error occurred, and when I tried to check the cache I found it empty.</string>
 	<string name="error_failed_load_tag_list"><![CDATA[Error: Failed to load tag list: %1$s]]></string>
+	<string name="editor_save_no_edit_key_found">Saving error: No edit key found.</string>
+	<string name="wikiresult_error_permissions">You do not have permission to edit this page.</string>
+	<string name="wikiresult_error_server">The server is currently experiencing an error.</string>
+	<string name="wikiresult_error_unknownclient">The server claimed our request was malformed, and we don\'t know why.</string>
+	<string name="wikiresult_error_pageprotected">This page is protected, and you do not have permission to edit it.</string>
+	<string name="wikiresult_error_noeditsallowed">This wiki does not allow edits.</string>
+	<string name="wikiresult_error_edit_conflict">There was an edit conflict, and edit conflict resolution is not yet implemented.</string>
+	<string name="editor_main_label_hint">Page content:</string>
 </resources>
