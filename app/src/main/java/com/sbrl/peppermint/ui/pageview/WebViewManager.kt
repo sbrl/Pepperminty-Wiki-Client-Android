@@ -47,7 +47,7 @@ class WebViewManager(internal val context: Context, private val webview: WebView
 		// They're deprecated anyway, so best to see if we can do without them if possible
 //		webview.settings.allowFileAccessFromFileURLs = false
 //		webview.settings.allowUniversalAccessFromFileURLs = false
-		
+		webview.settings.textZoom
 		webview.addJavascriptInterface(jsInterface, "App")
 		
 		// Sort out the cookies so that the webview can fetch images

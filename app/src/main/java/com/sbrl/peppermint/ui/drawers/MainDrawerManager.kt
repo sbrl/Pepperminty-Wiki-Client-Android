@@ -79,10 +79,11 @@ class MainDrawerManager(val context: Context,
 	 * @return Whether we were able to successfully switch wiki. If false, then we couldn't find a wiki id attached to the given menu item.
 	 */
 	private fun handleSelectWiki(it: MenuItem) : Boolean {
-		if(it.intent == null || !it.intent.hasExtra(EXTRA_WIKI_ID)) return false
+		val intent = it.intent
+		if(intent == null || !intent.hasExtra(EXTRA_WIKI_ID)) return false
 		
 		
-		val wikiId = it.intent.getStringExtra(EXTRA_WIKI_ID) ?: return false
+		val wikiId = intent.getStringExtra(EXTRA_WIKI_ID) ?: return false
 		
 		Log.i("MainDrawerManager", "Selecting wiki with id $wikiId and display text ${it.title}")
 		wikiManager.setWiki(wikiId)

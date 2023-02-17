@@ -23,8 +23,6 @@ Be sure to leave a good review :P
 
 Any issues should be reported here as an issue. I am exponentially more likely to respond on here than to a review in the Google Play store.
 
-~~Currently, the _Pepperminty Wiki Android Client_ is in closed testing, which is available only upon invitation. Contact me (@sbrl) if you'd like access though!~~
-
 ## Notes
 Google Play policies are wildly complicated. Notes here are to remind me about various things.
 
