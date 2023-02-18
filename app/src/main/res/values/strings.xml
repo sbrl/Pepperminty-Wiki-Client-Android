@@ -82,4 +82,6 @@
 	<string name="navdrawer_main_manage_wikis">Manage Wikis</string>
 	<string name="title_activity_manage_wikis">Manage Wikis</string>
 	<string name="managewikis_action_wiki_wikiname_removed">Wiki {0} removed</string>
+	<string name="wik_list_icon_connection_status_placeholder">Connection status will be shown here.</string>
+	<string name="action_remove_wiki">Remove Wiki</string>
 </resources>

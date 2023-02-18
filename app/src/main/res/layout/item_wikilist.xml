@@ -39,6 +39,7 @@
         <ImageView android:id="@+id/wiki_list_icon_connection_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/wik_list_icon_connection_status_placeholder"
             android:padding="5dp"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintBottom_toTopOf="@id/wiki_list_endpoint"
@@ -82,6 +83,7 @@
             android:src="@drawable/icon_delete"
             card_view:tint="@color/orange_200"
             android:backgroundTint="@color/white_alt"
+            android:contentDescription="@string/action_remove_wiki"
         
             card_view:layout_constraintTop_toBottomOf="@+id/wiki_list_spacer1"
             card_view:layout_constraintBottom_toBottomOf="parent"

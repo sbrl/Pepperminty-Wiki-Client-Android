@@ -1,9 +1,7 @@
 package com.sbrl.peppermint.ui.adapters
 
 import android.app.Activity
-import android.content.Context
 import android.content.res.ColorStateList
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +15,7 @@ import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.events.EventManager
 import com.sbrl.peppermint.lib.wiki_api.ConnectionStatus
 import com.sbrl.peppermint.lib.wiki_api.Wiki
-import java.util.*
+import java.util.Locale
 import kotlin.concurrent.thread
 
 /**
@@ -123,6 +121,7 @@ class WikiListAdapter (
 					ConnectionStatus.Untested -> R.color.colorInfo
 					else -> R.color.colorWarning
 				}))
+				holder.viewWikiConnectionStatus.contentDescription = context.getString(ConnectionStatus.toMessage(connStatus))
 				
 				// 2: Attach events
 				holder.viewButtonRemove.setOnClickListener {

@@ -114,22 +114,13 @@ class AddWikiActivity : AppCompatActivity() {
 	 */
 	private fun updateUI(status: ConnectionStatus) {
 		buttonLogin.isEnabled = false
-		showStatus(when(status) {
-			ConnectionStatus.Ok -> {
-				buttonLogin.isEnabled = true
-				R.string.connection_ok
-			}
-			ConnectionStatus.CredentialsRequired -> {
-				buttonLogin.isEnabled = true
-				R.string.login_required
-			}
-			ConnectionStatus.CredentialsIncorrect ->
-				R.string.login_failed
-			ConnectionStatus.ConnectionFailed ->
-				R.string.connection_failed
-			ConnectionStatus.Untested ->
-				R.string.connection_untested
-		})
+		
+		buttonLogin.isEnabled = when(status) {
+			ConnectionStatus.Ok, ConnectionStatus.CredentialsRequired -> true
+			else -> false
+		}
+		
+		showStatus(ConnectionStatus.toMessage(status))
 	}
 	
 	/**
