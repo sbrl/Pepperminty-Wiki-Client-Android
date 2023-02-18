@@ -1,7 +1,8 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <PreferenceCategory app:title="@string/data_header">
-        <SwitchPreferenceCompat
+        
+        <Preference
             app:key="comment"
             app:title="Settings are work-in-progress" />
         
@@ -10,6 +11,10 @@
 <!--            app:title="@string/signature_title"-->
 <!--            app:useSimpleSummaryProvider="true" />-->
     
+        <Preference app:title="Manage Wikis"
+            app:key="@string/manage_wikis"
+            />
+        
         <ListPreference
             app:key="load_images"
             app:defaultValue="always"
@@ -38,5 +43,5 @@
             app:useSimpleSummaryProvider="true" />
         
     </PreferenceCategory>
-
+    
 </PreferenceScreen>

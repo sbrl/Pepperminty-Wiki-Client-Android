@@ -8,20 +8,18 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.contains
-import androidx.core.view.iterator
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.wiki_api.WikiManager
 import com.sbrl.peppermint.ui.*
-import com.sbrl.peppermint.ui.addwiki.AddWikiActivity
+import com.sbrl.peppermint.ui.managewikis.ManageWikisActivity
 import com.sbrl.peppermint.ui.settings.SettingsActivity
 
 class MainDrawerManager(val context: Context,
-                        val drawerLayout: DrawerLayout,
-                        val navDrawer: NavigationView,
-                        val wikiManager: WikiManager) {
+						private val drawerLayout: DrawerLayout,
+						private val navDrawer: NavigationView,
+						private val wikiManager: WikiManager) {
 	init {
 		navDrawer.setNavigationItemSelectedListener {
 			Log.i("MainDrawerManager", "setNavigationItemSelectedListener")
@@ -53,10 +51,9 @@ class MainDrawerManager(val context: Context,
 		
 		// It's not a wiki - let's go through the special buttons
 		return when(it.itemId) {
-			R.id.navdrawer_main_add_wiki -> {
-				val addWikiIntent = Intent(context, AddWikiActivity::class.java)
-				(context as Activity).startActivityForResult(addWikiIntent, RETURN_ADDED_WIKI)
-				
+			R.id.navdrawer_main_manage_wikis -> {
+				val manageWikisIntent = Intent(context, ManageWikisActivity::class.java)
+				(context as Activity).startActivity(manageWikisIntent)
 				true
 			}
 			R.id.navdrawer_main_settings -> {

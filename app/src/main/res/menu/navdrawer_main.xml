@@ -5,10 +5,11 @@
 	</group>
 	
 	<group android:id="@+id/navdrawer_main_wiki_options">
-		<item android:id="@+id/navdrawer_main_add_wiki"
-			android:icon="@drawable/icon_add"
-			android:title="@string/navdrawer_main_add_wiki"
-			android:orderInCategory="9990" />
+		<item android:id="@+id/navdrawer_main_manage_wikis"
+			android:icon="@drawable/icon_wiki_manage"
+			android:title="@string/navdrawer_main_manage_wikis"
+			android:orderInCategory="9990"
+			/>
 	</group>
 	
 	<group android:id="@+id/navdrawer_main_app_options">

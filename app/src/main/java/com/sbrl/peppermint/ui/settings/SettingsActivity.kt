@@ -3,9 +3,11 @@ package com.sbrl.peppermint.ui.settings
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.sbrl.peppermint.R
 import com.sbrl.peppermint.lib.io.SettingsManager
+
 
 class SettingsActivity : AppCompatActivity() {
 	
@@ -22,6 +24,8 @@ class SettingsActivity : AppCompatActivity() {
 		
 		SettingsManager(this).listAll()
 	}
+	
+	
 	
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		// Settings appear to be saved automatically, apparently

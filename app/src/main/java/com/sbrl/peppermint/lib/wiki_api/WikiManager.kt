@@ -129,6 +129,24 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 		return true
 	}
 	
+	/**
+	 * Removes an existing wiki from the WikiManager.
+	 */
+	fun removeWiki(wiki: Wiki) : Boolean {
+		if(!wikis.contains(wiki.id)) return false
+		
+		val count = count()
+		
+		wikis.remove(wiki.id)
+		
+		// If there are no more wikis wiki to be added, then remove the default wiki
+		if(count() == 0)
+			wikis["__default"] = defaultWiki()
+		
+		saveWikis()
+		return true
+	}
+	
 	// --------------------------------------------------------------------------------------------
 	
 	/**

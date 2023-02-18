@@ -78,4 +78,7 @@
 	<string name="wikiresult_error_noeditsallowed">This wiki does not allow edits.</string>
 	<string name="wikiresult_error_edit_conflict">There was an edit conflict, and edit conflict resolution is not yet implemented.</string>
 	<string name="editor_main_label_hint">Page content:</string>
+	<string name="manage_wikis">manage_wikis</string>
+	<string name="navdrawer_main_manage_wikis">Manage Wikis</string>
+	<string name="title_activity_manage_wikis">Manage Wikis</string>
 </resources>
