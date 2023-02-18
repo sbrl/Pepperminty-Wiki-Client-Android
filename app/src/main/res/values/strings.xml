@@ -81,4 +81,5 @@
 	<string name="manage_wikis">manage_wikis</string>
 	<string name="navdrawer_main_manage_wikis">Manage Wikis</string>
 	<string name="title_activity_manage_wikis">Manage Wikis</string>
+	<string name="managewikis_action_wiki_wikiname_removed">Wiki {0} removed</string>
 </resources>

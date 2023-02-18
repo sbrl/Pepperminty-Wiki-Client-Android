@@ -67,7 +67,7 @@ class WikiManager(private val settings: SettingsManager, private val dataManager
 			settings,
 			dataManager,
 			WIKI_ID_DEFAULT,
-			"Test Wiki",
+			"Test Wiki (will disappear when you add a wiki)",
 			"https://starbeamrainbowlabs.com/labs/peppermint/build/"
 		)
 	}

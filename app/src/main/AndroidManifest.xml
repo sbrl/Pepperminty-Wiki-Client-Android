@@ -40,7 +40,9 @@
 		<activity
 			android:name=".ui.managewikis.ManageWikisActivity"
 			android:exported="false"
-			android:label="@string/title_activity_manage_wikis" />
+			android:label="@string/title_activity_manage_wikis"
+			android:parentActivityName=".ui.MainActivity"
+			/>
 	</application>
 
 </manifest>

@@ -2,14 +2,10 @@ package com.sbrl.peppermint.ui.managewikis
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.AbsListView.RecyclerListener
 import android.widget.Button
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sbrl.peppermint.R
@@ -45,6 +41,16 @@ class ManageWikisActivity : AppCompatActivity() {
 		swipeRefresh.setOnRefreshListener {
 			updateWikiList()
 		}
+		
+		supportActionBar?.setDisplayHomeAsUpEnabled(true)
+		
+		updateWikiList()
+	}
+	
+	override fun onResume() {
+		wikiViewModel.wikiManager.value!!.reloadFromDisk()
+		updateWikiList()
+		super.onResume()
 	}
 	
 	private fun uiLaunchAddWiki() {
@@ -73,9 +79,16 @@ class ManageWikisActivity : AppCompatActivity() {
 			return
 		}
 		
+		val wikiList = wikiManager.getWikiList().values.toList()
+		
+		Log.i("ActivityManageWikis", "Wiki list update: ${wikiList.count()} wikis present")
+		
 		wikiListAdapter?.itemSelectedRemove?.off(::wikiListAdapterSelectionRemoveHandler)
-		wikiListAdapter = WikiListAdapter(this, wikiManager.getWikiList().values.toList())
+		wikiListAdapter = WikiListAdapter(this, wikiList)
 		wikiListAdapter?.itemSelectedRemove?.on(::wikiListAdapterSelectionRemoveHandler)
+		
+		viewWikiList.adapter = wikiListAdapter
+		viewWikiList.setHasFixedSize(true) // Apparently improves performance
 		
 		Log.i("ActivityManageWikis", "Wiki list update complete")
 		
@@ -88,6 +101,8 @@ class ManageWikisActivity : AppCompatActivity() {
 		wikiManager.removeWiki(args.wiki)
 		
 		updateWikiList()
+		
+		show_toast(this, getString(R.string.managewikis_action_wiki_wikiname_removed).replace("{0}", args.wiki.name))
 	}
 	
 }

@@ -1,7 +1,9 @@
 package com.sbrl.peppermint.ui.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +18,7 @@ import com.sbrl.peppermint.lib.events.EventManager
 import com.sbrl.peppermint.lib.wiki_api.ConnectionStatus
 import com.sbrl.peppermint.lib.wiki_api.Wiki
 import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * Mediates between a dataset and a list of items being displayed on the screen through a list of
@@ -24,7 +27,7 @@ import java.util.*
  * @source https://developer.android.com/codelabs/basic-android-kotlin-training-recyclerview-scrollable-list?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-kotlin-unit-2-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-training-recyclerview-scrollable-list#3
  */
 class WikiListAdapter (
-	private val context: Context,
+	private val context: Activity,
 	private val raw_dataset: List<Wiki>
 	) : RecyclerView.Adapter<WikiListAdapter.WikiItemHolder>(), Filterable {
 	
@@ -77,7 +80,7 @@ class WikiListAdapter (
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WikiItemHolder {
 		// Inflate a new instance of the view for this particular item
 		val itemLayout = LayoutInflater.from(parent.context)
-			.inflate(R.layout.item_pagelist, parent, false)
+			.inflate(R.layout.item_wikilist, parent, false)
 		
 		// Return a new Holder class instance
 		return WikiItemHolder(itemLayout)
@@ -97,31 +100,37 @@ class WikiListAdapter (
 		holder.viewWikiName.text = item.name
 		holder.viewWikiEndpoint.text = item.endpoint
 		
-		val connStatus = item.connectionStatus()
 		
-		holder.viewWikiConnectionStatus.setImageDrawable(context.getDrawable(
-			when(connStatus) {
-				ConnectionStatus.ConnectionFailed -> R.drawable.icon_cross
-				ConnectionStatus.CredentialsIncorrect -> R.drawable.icon_cross
-				ConnectionStatus.CredentialsRequired -> R.drawable.icon_cross
-				ConnectionStatus.Ok -> R.drawable.icon_ok
-				ConnectionStatus.Untested -> R.drawable.icon_unknown
-				else -> R.drawable.icon_warning
+		thread {
+			val connStatus = item.connectionStatus()
+			
+			context.runOnUiThread {
+				holder.viewWikiConnectionStatus.setImageDrawable(context.getDrawable(
+					when(connStatus) {
+						ConnectionStatus.ConnectionFailed -> R.drawable.icon_cross
+						ConnectionStatus.CredentialsIncorrect -> R.drawable.icon_cross
+						ConnectionStatus.CredentialsRequired -> R.drawable.icon_cross
+						ConnectionStatus.Ok -> R.drawable.icon_ok
+						ConnectionStatus.Untested -> R.drawable.icon_unknown
+						else -> R.drawable.icon_warning
+					}
+				))
+				holder.viewWikiConnectionStatus.imageTintList = ColorStateList.valueOf(context.getColor(when(connStatus) {
+					ConnectionStatus.CredentialsRequired -> R.color.colorError
+					ConnectionStatus.CredentialsIncorrect -> R.color.colorError
+					ConnectionStatus.ConnectionFailed -> R.color.colorError
+					ConnectionStatus.Ok -> R.color.colorOk
+					ConnectionStatus.Untested -> R.color.colorInfo
+					else -> R.color.colorWarning
+				}))
+				
+				// 2: Attach events
+				holder.viewButtonRemove.setOnClickListener {
+					itemSelectedRemove.emit(this, ItemSelectedRemoveEventArgs(dataset[i]))
+				}
 			}
-		))
-		holder.viewWikiConnectionStatus.imageTintList = ColorStateList.valueOf(context.getColor(when(connStatus) {
-			ConnectionStatus.CredentialsRequired -> R.color.colorError
-			ConnectionStatus.CredentialsIncorrect -> R.color.colorError
-			ConnectionStatus.ConnectionFailed -> R.color.colorError
-			ConnectionStatus.Ok -> R.color.colorOk
-			ConnectionStatus.Untested -> R.color.colorInfo
-			else -> R.color.colorWarning
-		}))
-		
-		// 2: Attach events
-		holder.itemView.setOnClickListener {
-			itemSelectedRemove.emit(this, ItemSelectedRemoveEventArgs(dataset[i]))
 		}
+		
 	}
 	
 	/**
